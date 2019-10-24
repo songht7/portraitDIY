@@ -23,7 +23,12 @@
 			<view class="editBtn" @click="toImage">
 				合成
 			</view>
-			<img class="imgs" v-if="newImg" :src="newImg" alt="">
+			<block v-if="newImg">
+				<view id="Generated">
+					<img class="imgs" :src="newImg" alt="">
+					<view>长按保存图片</view>
+				</view>
+			</block>
 		</view>
 	</view>
 </template>
@@ -39,7 +44,8 @@
 				maskImg: [],
 				newImg: "",
 				frame: "",
-				"slots": false
+				"slots": false,
+				loading: false
 			}
 		},
 		onLoad() {},
@@ -70,9 +76,16 @@
 			},
 			toImage() {
 				var that = this;
+				if (that.loading) {
+					return false
+				}
 				var obj = document.getElementById("ImageWrapper");
 				var width = obj.offsetWidth;
 				var height = obj.offsetHeight;
+				that.loading = true;
+				uni.showLoading({
+					title: "正在生成..."
+				})
 				html2canvas(obj, {
 					backgroundColor: null,
 					allowTaint: true,
@@ -80,6 +93,8 @@
 					width: width,
 					height: height
 				}).then((canvas) => {
+					that.loading = false;
+					uni.hideLoading()
 					let dataURL = canvas.toDataURL("image/png");
 					console.log(dataURL)
 					this.newImg = dataURL;
@@ -118,6 +133,17 @@
 
 	.imgs {
 		width: 100%;
+	}
+
+	#Generated {
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		align-content: center;
+		align-items: center;
+	}
+	#Generated .imgs{
+		width: 60%;
 	}
 
 	.imgSelect {
