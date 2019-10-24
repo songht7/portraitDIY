@@ -9,7 +9,8 @@
 				<img class="real_pic" :src="frame" />
 			</movable-view>
 			<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
-				<movable-view class="maskImg" direction="all" out-of-bounds=true>
+				<movable-view class="maskImg" direction="all" out-of-bounds=true @touchstart="touch(k)">
+					<view class="edit-btn edit-del" v-show="editType===k" @click="editImg('delt',k)">X</view>
 					<img :src="img" alt="">
 				</movable-view>
 			</block>
@@ -47,11 +48,29 @@
 			}
 		},
 		data() {
-			return {};
+			return {
+				editType: ""
+			};
 		},
 		onShow() {},
-		methods: {},
-		computed: {}
+		computed: {},
+		methods: {
+			touch(k) {
+				console.log(k)
+				this.editType = k;
+			},
+			editImg(type, k) {
+				var that = this;
+				console.log(type, k)
+				switch (type) {
+					case "delt":
+						that.maskImg.splice(that.maskImg.findIndex((item, key) => key === k), 1)
+						break;
+					default:
+						break;
+				}
+			}
+		}
 	}
 </script>
 
@@ -73,8 +92,18 @@
 		position: relative;
 	}
 
+	.edit-btn {
+		position: absolute;
+		top: -20upx;
+		left: -20upx;
+		color: #f40;
+	}
+
+	.edit-del {}
+
 	.maskImg {
 		z-index: 99;
+		position: relative;
 	}
 
 	movable-area {
