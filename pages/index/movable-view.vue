@@ -9,7 +9,8 @@
 				</imageWrapper>
 			</view>
 			<view class="imgSelect">
-				<view class="selBtn" @click="setBg()">
+				<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight" @confirm="confirm" @cancel="cancel"></image-cropper>
+				<view class="selBtn" @tap="upload">
 					添加背景
 				</view>
 				<view class="selBtn" @click="setDec()">
@@ -35,11 +36,16 @@
 
 <script>
 	var html2canvas = require("@/common/html2canvas.min.js");
-	import imageWrapper from '@/components/image-wrapper.vue'
+	import imageWrapper from '@/components/image-wrapper.vue';
+	import ImageCropper from "@/components/invinbg-image-cropper/invinbg-image-cropper.vue";
 	export default {
 		data() {
 			return {
 				base64Img: "",
+				tempFilePath: "",
+				cropFixed: true,
+				cropWidth: 250,
+				cropHeight: 250,
 				imgBg: "",
 				maskImg: [],
 				newImg: "",
@@ -53,9 +59,28 @@
 			//this.getBase64Image();
 		},
 		components: {
-			imageWrapper
+			imageWrapper,
+			ImageCropper
 		},
 		methods: {
+			upload() {
+				var that = this;
+				uni.chooseImage({
+					count: 1, //默认9
+					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+					sourceType: ['album'], //从相册选择
+					success: (res) => {
+						that.tempFilePath = res.tempFilePaths.shift()
+					}
+				});
+			},
+			confirm(e) {
+				this.tempFilePath = ''
+				this.imgBg = e.detail.tempFilePath;
+			},
+			cancel() {
+				console.log('canceled')
+			},
 			setBg() {
 				var that = this;
 				var bg =
@@ -100,10 +125,10 @@
 					this.newImg = dataURL;
 				});
 			},
-			getBase64Image() {
+			getBase64Image(dataURL) {
 				var that = this;
 				var img = new Image();
-				img.src = that.dataURL;
+				img.src = dataURL;
 				img.onload = function() {
 					var canvas = document.createElement("canvas");
 					canvas.width = img.width;
@@ -142,7 +167,8 @@
 		align-content: center;
 		align-items: center;
 	}
-	#Generated .imgs{
+
+	#Generated .imgs {
 		width: 60%;
 	}
 
