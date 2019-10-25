@@ -173,7 +173,6 @@
 		flex-direction: row;
 		align-content: center;
 		align-items: center;
-		background: #eee;
 	}
 
 	.imgs {

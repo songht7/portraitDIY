@@ -109,7 +109,7 @@
 	movable-area {
 		height: 600upx;
 		width: 600upx;
-		background-color: #D8D8D8;
+		background-color: #eee;
 		background-size: cover;
 		overflow: hidden;
 		position: relative;
