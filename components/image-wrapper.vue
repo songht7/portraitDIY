@@ -9,8 +9,8 @@
 				<img class="real_pic" :src="frame" />
 			</movable-view>
 			<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
-				<movable-view class="maskImg" direction="all" out-of-bounds=true @touchstart="touch(k)">
-					<view class="edit-btn edit-del" v-show="editType===k" @click="editImg('delt',k)">X</view>
+				<movable-view :id="['Mask'+k]" class="maskImg" direction="all" out-of-bounds=true @touchstart="touch(k)">
+					<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">X</view>
 					<img :src="img" alt="">
 				</movable-view>
 			</block>
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+	const hammer = require("@/common/hammer.min.js");
 	export default {
 		name: 'imageWrapper',
 		props: {
@@ -57,6 +58,15 @@
 		methods: {
 			touch(k) {
 				console.log(k)
+				var id = "Mask" + k;
+				var myElement = document.getElementById(id);
+				var mc = new Hammer(myElement);
+				mc.get('pinch').set({
+					enable: true
+				});
+				mc.get('rotate').set({
+					enable: true
+				});
 				this.editType = k;
 			},
 			editImg(type, k) {
@@ -100,6 +110,13 @@
 	}
 
 	.edit-del {}
+
+	.edit-rotate {
+		position: absolute;
+		top: 100%;
+		right: 100%;
+		background: none;
+	}
 
 	.maskImg {
 		z-index: 99;
