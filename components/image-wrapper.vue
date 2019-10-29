@@ -20,6 +20,9 @@
 				</movable-view>
 			</block>
 		</movable-area>
+		<view>
+			=={{hammerVal}}==
+		</view>
 	</div>
 </template>
 
@@ -50,7 +53,8 @@
 		},
 		data() {
 			return {
-				editType: ""
+				editType: "",
+				hammerVal: ""
 			};
 		},
 		onShow() {},
@@ -58,14 +62,26 @@
 		methods: {
 			touch(k) {
 				console.log(k)
+				var that = this;
 				var id = "Mask" + k;
+				console.log(id)
 				var myElement = document.getElementById(id);
 				var mc = new Hammer(myElement);
+				// var pinch = new Hammer.Pinch();
+				// var rotate = new Hammer.Rotate();
+				// pinch.recognizeWith(rotate);
+				// mc.add([pinch, rotate]);
+				// mc.on("pinch rotate", function(ev) {
 				mc.get('pinch').set({
 					enable: true
 				});
 				mc.get('rotate').set({
 					enable: true
+				});
+				mc.on("pinch rotate", function(ev) {
+					that.hammerVal = ev.type;
+					console.log(ev.type)
+					//myElement.textContent += ev.type + " ";
 				});
 				this.editType = k;
 			},
@@ -87,7 +103,7 @@
 
 <style>
 	#ImageWrapper {
-		height: 600upx;
+		height: 650upx;
 		width: 600upx;
 	}
 
