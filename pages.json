@@ -5,6 +5,11 @@
 			"style": {
 				"navigationBarTitleText": "头像DIY - TEST"
 			}
+		},{
+			"path": "pages/index/es",
+			"style": {
+				"navigationBarTitleText": "ECMAScript 6.0 - TEST"
+			}
 		}
 	],
 	"globalStyle": {
