@@ -67,8 +67,12 @@
 					c = [7, 9, 9, 10, 11],
 					n = [...a, ...b, ...c];
 				let st = new Set(n);
+				console.log("st:", st);
+				st.forEach((v, k, m) => {
+					console.log("Key: %s, Value: %s", k, v);
+				})
 				let s = [...new Set(n)]; //Array.from(st)
-				console.log(s);
+				console.log("s:", s);
 				// 交集
 				let _b = new Set(b);
 				let intersect = new Set([...a].filter(x => _b.has(x)));
@@ -76,25 +80,35 @@
 				// 差集
 				let difference = new Set([...a].filter(x => !_b.has(x)));
 				console.log("difference;", difference);
-				
+
 				let set = new Set([...a].map(val => val * 2));
 				console.log([...set])
 			},
 			es6Map() {
+				console.log("Map “键”的范围不限于字符串，各种类型的值（包括对象）都可以当作键")
 				let m = new Map();
-				let o = {p: 'Hello World'};
-				m.set(o,"content");
+				let o = {
+					p: 'Hello World',
+					404: "Not found"
+				};
+				m.set(o, "content");
+				m.set(true, 1);
+				m.set('true', 2);
 				console.log(m)
 				console.log(m.get(o))
 				let map = new Map([
-				  ['name', '张三'],
-				  ['title', 'Author']
+					['name', '张三'],
+					['title', 'Author']
 				]);
+				map.forEach((v, k, m) => {
+					console.log("Key: %s, Value: %s", k, v);
+				})
 				console.log(map)
-				
+				console.log(map.get("name"))
+
 				console.log("注意，只有对同一个对象的引用，Map 结构才将其视为同一个键。这一点要非常小心")
-				let a = new Map();			
-				let _a=['a'];
+				let a = new Map();
+				let _a = ['a'];
 				a.set(['a'], 555);
 				a.set(_a, 555);
 				console.log(a.get(['a']))
