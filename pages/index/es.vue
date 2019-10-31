@@ -88,12 +88,12 @@
 				console.log("Map “键”的范围不限于字符串，各种类型的值（包括对象）都可以当作键")
 				let m = new Map();
 				let o = {
-					p: 'Hello World',
-					404: "Not found"
+					p: 'Hello World'
 				};
 				m.set(o, "content");
 				m.set(true, 1);
 				m.set('true', 2);
+				m.set(404, "Not found");
 				console.log(m)
 				console.log(m.get(o))
 				let map = new Map([
