@@ -1,5 +1,6 @@
 <template>
 	<view class="content">
+		<view class="es6btn" @click="es6Des()">解构赋值</view>
 		<view class="es6btn" @click="es6Symbol()">Symbol</view>
 		<view class="es6btn" @click="es6Set()">Set</view>
 		<view class="es6btn" @click="es6Map()">Map</view>
@@ -15,7 +16,7 @@
 		},
 		onLoad() {
 			console.log("onLoad")
-			this.es6Map()
+			this.es6Des()
 		},
 		onShow() {
 			console.log("onShow")
@@ -34,6 +35,33 @@
 		},
 		components: {},
 		methods: {
+			es6Des(){
+				console.log("解构赋值Destructuring：按一定模式从数组和对象中提取值，后对变量赋值")
+				let [a,b,c]=[1,2,3],
+				[x,[[y],z]]=[a,[[4],5]];
+				console.log(x,z)
+				
+				let {foo,bar}={foo:"aaa",bar:"bbb"};
+				let {aaa}={fff:"cccc",rrr:"ddd"};
+				let {fff:bbb}={fff:"ccc",rrr:"dddd"};
+				//bbb/ccc , fff: not defined
+				//即：{a:b,c:d}={a:"1",c:"2"}
+				console.log(foo, bar);
+				console.log(aaa, bbb);
+				
+				let [q,w,e,r,t]='hello';
+				console.log(q, w, e, r, t);
+				
+				function f(){return [1,2,3]};
+				let [u,o,p]=f();
+				console.log(u, o ,p)
+				
+				function ee(){
+					return {ggg:1,hhh:2};
+				}
+				let {ggg:kkk,hhh}=ee();
+				console.log(kkk,hhh)
+			},
 			es6Symbol() {
 				console.log("凡是属性名属于 Symbol 类型，就都是独一无二的，可以保证不会与其他属性名产生冲突。")
 				const clr = {
