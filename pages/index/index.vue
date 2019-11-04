@@ -8,27 +8,30 @@
 					</view>
 				</imageWrapper>
 			</view>
-			<view class="imgSelect">
-				<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight" @confirm="confirm"
-				 @cancel="cancel"></image-cropper>
-				<view class="selBtn selPor" @tap="upload">上传头像</view>
-				<view class="editBtn" @click="toImage">完成！</view>
-			</view>
-			<view class="ctgs">
-				<view class="selBtn" @click="swithCth('dec')">装饰</view>
-				<view class="selBtn" @click="swithCth('frame')">相框</view>
-			</view>
-			<view class="ctgBox">
-				<block v-if="ctgis=='dec'">
-					<view class="ctgCont">
-						<img src="/static/3.png" @click="setDec('dec','/static/3.png')" class="ctgImg" alt="">
-					</view>
-				</block>
-				<block v-if="ctgis=='frame'">
-					<view class="ctgCont">
-						<img src="/static/2.png" @click="setDec('frame','/static/2.png')" class="ctgImg" alt="">
-					</view>
-				</block>
+			<view class="portrait-main">
+				<view class="ctgs">
+					<view :class="['selBtn',ctgis=='special'?'selBtnOn':'']" @click="swithCth('special')">圣诞专题</view>
+					<view :class="['selBtn',ctgis=='dec'?'selBtnOn':'']" @click="swithCth('dec')">挂件</view>
+					<view :class="['selBtn',ctgis=='frame'?'selBtnOn':'']" @click="swithCth('frame')">相框</view>
+				</view>
+				<view class="ctgBox">
+					<block v-if="ctgis=='dec'">
+						<view class="ctgCont">
+							<img src="/static/3.png" @click="setDec('dec','/static/3.png')" class="ctgImg" alt="">
+						</view>
+					</block>
+					<block v-if="ctgis=='frame'">
+						<view class="ctgCont">
+							<img src="/static/2.png" @click="setDec('frame','/static/2.png')" class="ctgImg" alt="">
+						</view>
+					</block>
+				</view>
+				<view class="imgSelect">
+					<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight" @confirm="confirm"
+					 @cancel="cancel"></image-cropper>
+					<view class="selPor" @tap="upload">更改头像</view>
+					<view class="editBtn" @click="toImage">完成</view>
+				</view>
 			</view>
 			<!-- <img src="" alt="" class="imgSmall"> -->
 			<uni-popup :show="poptype === 'showNewImg'" position="middle" mode="fixed" @hidePopup="togglePopup('')">
@@ -166,13 +169,33 @@
 	}
 </script>
 
-<style>
+<style scoped>
+	page {
+		height: 100%;
+	}
+
+	.content {
+		height: 100%;
+		background: #b0ecd2;
+	}
+
+	.uni-padding-wrap {
+		height: 100%;
+	}
+
 	.portrait-box {
+		padding: 40upx 0 0;
 		display: flex;
 		justify-content: center;
 		flex-direction: row;
 		align-content: center;
 		align-items: center;
+		background-image: linear-gradient(#e6eca6, #b0ecd2);
+	}
+
+	.portrait-main {
+		min-height: calc(100% - 690upx);
+		background-image: linear-gradient(#151c26, #242b3b);
 	}
 
 	.imgs {
@@ -192,13 +215,17 @@
 	}
 
 	.imgSelect {
+		position: fixed;
+		width: 90%;
+		padding: 10upx 5%;
+		left: 0;
+		bottom: 0;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		flex-wrap: wrap;
 		align-content: center;
 		align-items: center;
-		padding: 10upx;
 	}
 
 	.imgSmall {
@@ -209,21 +236,42 @@
 	.ctgs {
 		display: flex;
 		flex-direction: row;
-		justify-content: flex-start;
-		flex-wrap: wrap;
+		justify-content: space-between;
 		align-content: center;
+		text-align: center;
 		align-items: center;
-		padding-bottom: 10upx;
 		background: #FAFAFA;
+		overflow: hidden;
 	}
 
 	.selBtn {
 		font-size: 28upx;
 		padding: 20upx;
+		flex: 1;
+		position: relative;
 	}
 
+	.selBtn::after {
+		content: "";
+		height: 50%;
+		width: 1px;
+		background: #e7e7e7;
+		overflow: hidden;
+		position: absolute;
+		right: -1px;
+	}
+
+	.selBtnOn {
+		background: #151c26;
+		color: #f17f5a;
+	}
+
+	.selBtn:last-child()::after{
+		width: 0;
+		background: none;
+	}
 	.ctgBox {
-		padding: 10upx;
+		padding: 10upx 10upx 100upx;
 	}
 
 	.ctgCont {
@@ -243,23 +291,22 @@
 
 	.editBtn,
 	.selPor {
-		font-size: 32upx;
+		font-size: 28upx;
 		display: flex;
 		justify-content: center;
 		flex-direction: row;
 		align-content: center;
 		align-items: center;
-		color: #FFFFFF;
-		line-height: 20px;
+		color: #f17f5a;
+		line-height: 1;
 		border-radius: 10upx;
 		padding: 15upx 0;
-		width: 30%;
-		background-color: #528BF0;
-		background-image: linear-gradient(to right, #528BF0, #A5C1F0);
 	}
 
-	.selPor {
-		background-color: #E56CCE;
-		background-image: linear-gradient(to right, #EA17C1, #E56CCE);
+	.editBtn {
+		width: 20%;
+		color: #FFFFFF;
+		border-radius: 20upx;
+		background: #f17f5a;
 	}
 </style>

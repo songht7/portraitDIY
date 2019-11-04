@@ -13,7 +13,8 @@ const store = new Vuex.Store({
 		loading: "0",
 		data: {},
 		interface: common.Interface,
-		systemInfo: {}
+		systemInfo: {},
+		imgTemp:""
 	},
 	mutations: {
 		update_data(state, data) {

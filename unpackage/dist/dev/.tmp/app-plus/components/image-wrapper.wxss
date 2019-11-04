@@ -1,0 +1,73 @@
+
+#ImageWrapper {
+	height: 650rpx;
+	width: 600rpx;
+}
+movable-view {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	height: 150rpx;
+	width: 150rpx;
+	background-color: none;
+	color: #fff;
+	position: relative;
+}
+.edit-btn {
+	position: absolute;
+	top: -20rpx;
+	left: -20rpx;
+	color: #f40;
+}
+.edit-del {}
+.edit-rotate {
+	position: absolute;
+	top: 100%;
+	right: 100%;
+	background: none;
+}
+.maskImg {
+	z-index: 99;
+	position: relative;
+}
+movable-area {
+	height: 600rpx;
+	width: 600rpx;
+	background-color: #eee;
+	background-size: cover;
+	overflow: hidden;
+	position: relative;
+}
+._img {
+	max-width: 100%;
+}
+.imgbg {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+.frame {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 3;
+}
+.real_pic {
+	width: 100%;
+	height: 100%;
+}
+

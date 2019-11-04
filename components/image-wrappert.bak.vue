@@ -1,28 +1,31 @@
 <template>
 	<div id="ImageWrapper" class="imageWrapper">
-		<movable-area>
+		<view id="MovableBox">
 			<!-- 头像 -->
-			<movable-view class="imgbg" v-if="imgBg" direction="all" out-of-bounds=true>
+			<view class="movableView imgbg" v-if="imgBg">
 				<img class="real_pic" :src="imgBg" />
-			</movable-view>
+			</view>
 			<!-- 相框 -->
-			<movable-view class="imgbg frame" v-if="frame" direction="all" out-of-bounds=true>
+			<view class="movableView imgbg frame" v-if="frame">
 				<img class="real_pic" :src="frame" />
-			</movable-view>
+			</view>
 			<!-- 饰品 -->
 			<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
-				<movable-view :id="['Mask'+k]" class="maskImg" direction="all" out-of-bounds=true @touchstart="touch(k)">
+				<view :id="['Mask'+k]" class="movableView maskImg" @touchstart="touch(k)">
 					<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">X</view>
 					<img :src="img" alt="">
-				</movable-view>
+				</view>
 			</block>
 			<!-- slot -->
 			<block v-if="slots">
-				<movable-view direction="all" out-of-bounds=true>
+				<view class="movableView">
 					<slot></slot>
-				</movable-view>
+				</view>
 			</block>
-		</movable-area>
+		</view>
+		<view>
+			=={{hammerVal}}==
+		</view>
 	</div>
 </template>
 
@@ -78,7 +81,7 @@
 				mc.get('rotate').set({
 					enable: true
 				});
-				mc.on("pinch rotate", function(ev) {
+				mc.on("pinch rotate tap pan panleft panright", function(ev) {
 					that.hammerVal = ev.type;
 					console.log(ev)
 					//myElement.textContent += ev.type + " ";
@@ -107,7 +110,7 @@
 		width: 600upx;
 	}
 
-	movable-view {
+	.movableView {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -139,7 +142,7 @@
 		position: relative;
 	}
 
-	movable-area {
+	#MovableBox {
 		height: 600upx;
 		width: 600upx;
 		background-color: #eee;

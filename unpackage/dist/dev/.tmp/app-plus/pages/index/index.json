@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "头像DIY",
+  "usingComponents": {
+    "image-wrapper": "/components/image-wrapper",
+    "image-cropper": "/components/invinbg-image-cropper/invinbg-image-cropper",
+    "uni-popup": "/components/uni-popup"
+  }
+}
