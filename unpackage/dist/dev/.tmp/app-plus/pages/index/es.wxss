@@ -1,9 +1,0 @@
-
-.es6btn {
-	color: #666;
-	line-height: 1.6;
-	font-size: 32rpx;
-	margin: 5rpx 0;
-	padding-left: 50rpx;
-}
-
