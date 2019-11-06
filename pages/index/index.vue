@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="uni-padding-wrap uni-common-mt">
-			<view class="portrait-box">
+			<view class="portrait-box" v-show="!selectImg">
 				<imageWrapper ref="imageWrapper" :imgBg="imgBg" :maskImg="maskImg" :frame="frame">
 					<view class="text" v-if="slots">
 						头像
@@ -12,17 +12,31 @@
 				<view class="ctgs">
 					<view :class="['selBtn',ctgis=='special'?'selBtnOn':'']" @click="swithCth('special')">圣诞专题</view>
 					<view :class="['selBtn',ctgis=='dec'?'selBtnOn':'']" @click="swithCth('dec')">挂件</view>
-					<view :class="['selBtn',ctgis=='frame'?'selBtnOn':'']" @click="swithCth('frame')">相框</view>
+					<view :class="['selBtn',ctgis=='logo'?'selBtnOn':'']" @click="swithCth('logo')">企业LOGO</view>
 				</view>
 				<view class="ctgBox">
-					<block v-if="ctgis=='dec'">
+					<block v-if="ctgis=='special'">
 						<view class="ctgCont">
-							<img src="/static/3.png" @click="setDec('dec','/static/3.png')" class="ctgImg" alt="">
+							<view class="ctgImgBlock" @click="setDec('frame','/static/2.png')">
+							<img src="/static/2.png" class="ctgImg" alt="">
+							</view>
 						</view>
 					</block>
-					<block v-if="ctgis=='frame'">
+					<block v-if="ctgis=='dec'">
 						<view class="ctgCont">
-							<img src="/static/2.png" @click="setDec('frame','/static/2.png')" class="ctgImg" alt="">
+							<view class="ctgImgBlock" @click="setDec('dec','/static/3.png')">
+								<img src="/static/3.png" class="ctgImg" alt="">
+							</view>
+						</view>
+					</block>
+					<block v-if="ctgis=='logo'">
+						<view class="ctgCont">
+							<view class="ctgImgBlock" @click="setDec('dec','/static/3.png')">
+								<img src="/static/3.png" class="ctgImg" alt="">
+							</view>
+							<view class="ctgImgBlock" @click="setDec('dec','/static/3.png')">
+								<img src="/static/3.png" class="ctgImg" alt="">
+							</view>
 						</view>
 					</block>
 				</view>
@@ -64,7 +78,8 @@
 				"slots": false,
 				loading: false,
 				poptype: "",
-				ctgis: "dec"
+				ctgis: "logo",
+				selectImg: false
 			}
 		},
 		onLoad() {},
@@ -85,14 +100,17 @@
 					sourceType: ['album'], //从相册选择
 					success: (res) => {
 						that.tempFilePath = res.tempFilePaths.shift()
+						that.selectImg = true;
 					}
 				});
 			},
 			confirm(e) {
+				this.selectImg = false;
 				this.tempFilePath = ''
 				this.imgBg = e.detail.tempFilePath;
 			},
 			cancel() {
+				this.selectImg = false;
 				console.log('canceled')
 			},
 			swithCth(ctgis) {
@@ -266,10 +284,11 @@
 		color: #f17f5a;
 	}
 
-	.selBtn:last-child()::after{
+	.selBtn:last-child()::after {
 		width: 0;
 		background: none;
 	}
+
 	.ctgBox {
 		padding: 10upx 10upx 100upx;
 	}
@@ -283,10 +302,16 @@
 		align-items: center;
 		padding-bottom: 10upx;
 	}
-
+	.ctgImgBlock{
+		width: 16.66%;
+		display: flex;
+		justify-content: center;
+		align-content: center;
+		align-items: center;
+		padding-bottom: 10upx;
+	}
 	.ctgImg {
-		width: 100upx;
-		margin-bottom: 10upx;
+		width: 70%;
 	}
 
 	.editBtn,
