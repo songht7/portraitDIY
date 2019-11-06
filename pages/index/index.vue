@@ -17,9 +17,11 @@
 				<view class="ctgBox">
 					<block v-if="ctgis=='special'">
 						<view class="ctgCont">
-							<view class="ctgImgBlock" @click="setDec('frame','/static/2.png')">
-							<img src="/static/2.png" class="ctgImg" alt="">
-							</view>
+							<block v-for="i of 10" :key="i+1">
+								<view class="ctgImgBlock" @click="setDec('dec',`/static/c/${i}.png`)">
+									<img :src="`/static/c/${i}.png`" class="ctgImg" alt="">
+								</view>
+							</block>
 						</view>
 					</block>
 					<block v-if="ctgis=='dec'">
@@ -27,15 +29,15 @@
 							<view class="ctgImgBlock" @click="setDec('dec','/static/3.png')">
 								<img src="/static/3.png" class="ctgImg" alt="">
 							</view>
+							<view class="ctgImgBlock" @click="setDec('frame','/static/2.png')">
+								<img src="/static/2.png" class="ctgImg" alt="">
+							</view>
 						</view>
 					</block>
 					<block v-if="ctgis=='logo'">
 						<view class="ctgCont">
-							<view class="ctgImgBlock" @click="setDec('dec','/static/3.png')">
-								<img src="/static/3.png" class="ctgImg" alt="">
-							</view>
-							<view class="ctgImgBlock" @click="setDec('dec','/static/3.png')">
-								<img src="/static/3.png" class="ctgImg" alt="">
+							<view class="ctgImgBlock" @click="setDec('dec','/static/logo-1.png')">
+								<img src="/static/logo-1.png" class="ctgImg" alt="">
 							</view>
 						</view>
 					</block>
@@ -44,7 +46,10 @@
 					<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight" @confirm="confirm"
 					 @cancel="cancel"></image-cropper>
 					<view class="selPor" @tap="upload">更改头像</view>
-					<view class="editBtn" @click="toImage">完成</view>
+					<view class="editBtns">
+						<view class="editBtn reSet" @click="resetImg">重置</view>
+						<view class="editBtn" @click="toImage">完成</view>
+					</view>
 				</view>
 			</view>
 			<!-- <img src="" alt="" class="imgSmall"> -->
@@ -78,7 +83,7 @@
 				"slots": false,
 				loading: false,
 				poptype: "",
-				ctgis: "logo",
+				ctgis: "special",
 				selectImg: false
 			}
 		},
@@ -116,21 +121,30 @@
 			swithCth(ctgis) {
 				this.ctgis = ctgis;
 			},
-			async setDec(type, url) {
+			setDec(type, url) {
 				var that = this;
 				var _url = url;
+				console.log(type, _url)
 				//var url = "http://img95.699pic.com/element/40121/1517.png_300.png";
 				//var _base64Url = await getBase64Image(url);
-				switch (type) {
-					case "dec":
-						that.maskImg.push(_url);
-						break;
-					case "frame":
-						that.frame = _url;
-						break;
-					default:
-						break;
-				}
+				setTimeout(() => {
+					switch (type) {
+						case "dec":
+							that.maskImg.push(_url);
+							break;
+						case "frame":
+							that.frame = _url;
+							break;
+						default:
+							break;
+					}
+				}, 500)
+				console.log(that.maskImg)
+			},
+			resetImg() {
+				var that = this;
+				that.maskImg = [];
+				that.frame = "";
 			},
 			async toImage() {
 				var that = this;
@@ -232,20 +246,6 @@
 		width: 90%;
 	}
 
-	.imgSelect {
-		position: fixed;
-		width: 90%;
-		padding: 10upx 5%;
-		left: 0;
-		bottom: 0;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		flex-wrap: wrap;
-		align-content: center;
-		align-items: center;
-	}
-
 	.imgSmall {
 		width: 100upx;
 		height: 100upx;
@@ -260,6 +260,29 @@
 		align-items: center;
 		background: #FAFAFA;
 		overflow: hidden;
+	}
+
+	.imgSelect {
+		position: fixed;
+		width: 90%;
+		padding: 10upx 5%;
+		left: 0;
+		bottom: 0;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		align-content: center;
+		align-items: center;
+	}
+
+	.editBtns {
+		width: 50%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-content: center;
+		align-items: center;
 	}
 
 	.selBtn {
@@ -302,7 +325,8 @@
 		align-items: center;
 		padding-bottom: 10upx;
 	}
-	.ctgImgBlock{
+
+	.ctgImgBlock {
 		width: 16.66%;
 		display: flex;
 		justify-content: center;
@@ -310,6 +334,7 @@
 		align-items: center;
 		padding-bottom: 10upx;
 	}
+
 	.ctgImg {
 		width: 70%;
 	}
@@ -329,9 +354,13 @@
 	}
 
 	.editBtn {
-		width: 20%;
+		width: 48%;
 		color: #FFFFFF;
 		border-radius: 20upx;
 		background: #f17f5a;
+	}
+
+	.reSet {
+		background: #999999;
 	}
 </style>
