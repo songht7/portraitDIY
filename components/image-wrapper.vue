@@ -125,7 +125,20 @@
 		color: #f40;
 	}
 
-	.edit-del {}
+	.edit-del {
+		background: #FF4400;
+		color: #FFFFFF;
+		border-radius: 50%;
+		overflow: hidden;
+		font-size: 24upx;
+		width: 40upx;
+		height: 40upx;
+		display: flex;
+		justify-content: center;
+		flex-direction: row;
+		align-items: center;
+		align-content: center;
+	}
 
 	.edit-rotate {
 		position: absolute;
