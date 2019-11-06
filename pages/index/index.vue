@@ -73,7 +73,7 @@
 			return {
 				base64Img: "",
 				tempFilePath: "",
-				cropFixed: false, //true,
+				cropFixed: true, //true false,
 				cropWidth: 250,
 				cropHeight: 250,
 				imgBg: "",
