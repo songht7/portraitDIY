@@ -11,9 +11,12 @@
 			</movable-view>
 			<!-- 饰品 -->
 			<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
-				<movable-view :id="['Mask'+k]" class="maskImg" direction="all" out-of-bounds=true @touchstart="touch(k)">
+				<movable-view :id="['Mask'+k]" class="maskImg" direction="all" @touchstart="touch(k)" out-of-bounds=true scale
+				 scale-min="0.5" scale-max="4" :scale-value="img.scale" @scale="onScale">
 					<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">X</view>
-					<img :src="img" alt="">
+					<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" alt="">
+					<view class="edit-btn edit-pinch edit-set-small" v-show="editType===k" @click.stop.prevent="editImg('setSmall',k)">-</view>
+					<view class="edit-btn edit-pinch edit-set-big" v-show="editType===k" @click.stop.prevent="editImg('setBig',k)">+</view>
 				</movable-view>
 			</block>
 			<!-- slot -->
@@ -54,7 +57,11 @@
 		data() {
 			return {
 				editType: "",
-				hammerVal: ""
+				hammerVal: "",
+				scale: 1,
+				old: {
+					scale: 1
+				}
 			};
 		},
 		onShow() {},
@@ -80,21 +87,38 @@
 				});
 				mc.on("pinch rotate", function(ev) {
 					that.hammerVal = ev.type;
-					console.log(ev)
+					//console.log(ev)
 					//myElement.textContent += ev.type + " ";
 				});
 				this.editType = k;
 			},
 			editImg(type, k) {
 				var that = this;
-				console.log(type, k)
+				//console.log(type, k)
 				switch (type) {
 					case "delt":
 						that.maskImg.splice(that.maskImg.findIndex((item, key) => key === k), 1)
 						break;
+					case 'setSmall':
+						that.maskImg.map((item, key) => {
+							if (key === k) {
+								item.scale = item.scale - 0.1
+							}
+						})
+						break;
+					case 'setBig':
+						that.maskImg.map((item, key) => {
+							if (key === k) {
+								item.scale = item.scale + 0.1
+							}
+						})
+						break;
 					default:
 						break;
 				}
+			},
+			onScale: function(e) {
+				this.old.scale = e.detail.scale
 			}
 		}
 	}
@@ -125,7 +149,8 @@
 		color: #f40;
 	}
 
-	.edit-del {
+	.edit-del,
+	.edit-pinch {
 		background: #FF4400;
 		color: #FFFFFF;
 		border-radius: 50%;
@@ -138,6 +163,24 @@
 		flex-direction: row;
 		align-items: center;
 		align-content: center;
+	}
+
+	.edit-pinch {
+		top: auto;
+		left: auto;
+		right: -20upx;
+		bottom: -20upx;
+	}
+
+	.edit-set-small {
+		top: auto;
+		left: -20upx;
+		right: auto;
+		bottom: -20upx;
+	}
+
+	.imgBorder {
+		border: 1px solid #FF4400;
 	}
 
 	.edit-rotate {

@@ -130,7 +130,11 @@
 				setTimeout(() => {
 					switch (type) {
 						case "dec":
-							that.maskImg.push(_url);
+							var mk = {
+								"url": _url,
+								"scale": 1
+							}
+							that.maskImg.push(mk);
 							break;
 						case "frame":
 							that.frame = _url;
