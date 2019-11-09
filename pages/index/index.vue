@@ -45,7 +45,8 @@
 				<view class="imgSelect">
 					<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight" @confirm="confirm"
 					 @cancel="cancel"></image-cropper>
-					<view class="selPor" @tap="upload">更改头像</view>
+					<view class="selPor" @tap="upload()">更改头像</view>
+					<view class="selPor" @tap="upload('dec')">自定义挂件</view>
 					<view class="editBtns">
 						<view class="editBtn reSet" @click="resetImg">重置</view>
 						<view class="editBtn" @click="toImage">完成</view>
@@ -84,7 +85,8 @@
 				loading: false,
 				poptype: "",
 				ctgis: "special",
-				selectImg: false
+				selectImg: false,
+				decType: '',
 			}
 		},
 		onLoad() {},
@@ -97,22 +99,33 @@
 			uniPopup
 		},
 		methods: {
-			upload() {
+			upload(type) {
 				var that = this;
+				that.decType = type || '';
 				uni.chooseImage({
 					count: 1, //默认9
 					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 					sourceType: ['album'], //从相册选择
 					success: (res) => {
-						that.tempFilePath = res.tempFilePaths.shift()
-						that.selectImg = true;
+						if (type == 'dec') {
+							var mk = {
+								"url": res.tempFilePaths.shift(),
+								"scale": 1
+							}
+							that.maskImg.push(mk);
+							return
+						} else {
+							that.tempFilePath = res.tempFilePaths.shift()
+							that.selectImg = true;
+						}
 					}
 				});
 			},
 			confirm(e) {
-				this.selectImg = false;
-				this.tempFilePath = ''
-				this.imgBg = e.detail.tempFilePath;
+				var that = this;
+				that.selectImg = false;
+				that.tempFilePath = ''
+				that.imgBg = e.detail.tempFilePath;
 			},
 			cancel() {
 				this.selectImg = false;
