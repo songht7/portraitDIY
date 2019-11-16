@@ -77,7 +77,7 @@
 				cropFixed: true, //true false,
 				cropWidth: 250,
 				cropHeight: 250,
-				imgBg: "",
+				imgBg: "/static/c/default.jpg",
 				maskImg: [],
 				newImg: "",
 				frame: "",
@@ -374,10 +374,11 @@
 		width: 48%;
 		color: #FFFFFF;
 		border-radius: 20upx;
+		background-image: linear-gradient(to right, #E5A590, #f17f5a);
 		background: #f17f5a;
 	}
 
 	.reSet {
-		background: #999999;
+		background: #E5A590;
 	}
 </style>
