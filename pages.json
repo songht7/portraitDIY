@@ -12,6 +12,17 @@
 				}
 			}
 		},{
+			"path": "pages/index/star",
+			"style": {
+				"navigationBarTitleText": "star",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
+		},{
 			"path": "pages/index/es",
 			"style": {
 				"navigationBarTitleText": "ECMAScript 6.0 - TEST"

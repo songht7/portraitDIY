@@ -1,17 +1,17 @@
 <template>
 	<div id="ImageWrapper" class="imageWrapper">
-		<movable-area>
+		<movable-area out-of-bounds>
 			<!-- 头像 -->
-			<movable-view class="imgbg" v-if="imgBg" direction="all" out-of-bounds=true>
+			<movable-view class="imgbg" scale v-if="imgBg" direction="all" out-of-bounds>
 				<img class="real_pic" :src="imgBg" />
 			</movable-view>
 			<!-- 相框 -->
-			<movable-view class="imgbg frame" v-if="frame" direction="all" out-of-bounds=true>
+			<movable-view class="imgbg frame" v-if="frame" direction="all" out-of-bounds>
 				<img class="real_pic" :src="frame" />
 			</movable-view>
 			<!-- 饰品 -->
 			<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
-				<movable-view :id="['Mask'+k]" class="maskImg" direction="all" @touchstart="touch(k)" out-of-bounds=true scale
+				<movable-view :id="['Mask'+k]" class="maskImg" direction="all" @touchstart="touch(k)" out-of-bounds scale
 				 scale-min="0.5" scale-max="4" :scale-value="img.scale" @scale="onScale">
 					<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">X</view>
 					<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" alt="">
@@ -21,7 +21,7 @@
 			</block>
 			<!-- slot -->
 			<block v-if="slots">
-				<movable-view direction="all" out-of-bounds=true>
+				<movable-view direction="all" out-of-bounds>
 					<slot></slot>
 				</movable-view>
 			</block>
