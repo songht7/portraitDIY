@@ -119,15 +119,13 @@
 
 		let filePath = upload_picture_list[j]['path'];
 		var Key = "";
-		console.log("Key:", Key);
-		console.log("imgType:", upload_picture_list[j]['imgType']);
+		//console.log("imgType:", upload_picture_list[j]['imgType']);
 		if (upload_picture_list[j]['imgType'] && upload_picture_list[j]['imgType'] == 'base64Img') {
 			Key = Date.parse(new Date());
-			console.log(Key)
 		} else {
 			Key = filePath.substr(filePath.lastIndexOf('/') + 1); // 这里指定上传的文件名
-			console.log(Key)
 		}
+		console.log("Key:", Key);
 
 		let opt = {
 			Bucket: cosConfig.Bucket,

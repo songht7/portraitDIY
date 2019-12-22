@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import common from "../common.js"
+var jweixin = require('jweixin-module')
 Vue.use(Vuex)
 
 
@@ -14,7 +15,9 @@ const store = new Vuex.Store({
 		data: {},
 		interface: common.Interface,
 		systemInfo: {},
-		imgTemp:"",
+		imgTemp: "",
+		wxInfo: common.Interface.wxInfo,
+		isWeixin: false,
 		portrait: "",
 		cosConfig: common.Interface.cosConfig
 	},
@@ -62,6 +65,47 @@ const store = new Vuex.Store({
 				}
 			})
 		},
+		isWeixin(ctx) {
+			let _isWeixin = !!/micromessenger/i.test(navigator.userAgent.toLowerCase());
+			ctx.state.isWeixin = _isWeixin;
+		},
+		getWXCode(ctx) {
+			var appid = ctx.state.interface.wxInfo.AppID;
+			if (!ctx.state.isWeixin) {
+				return
+			}
+			var _uWXInfo = "";
+			uni.getStorage({
+				key: 'uWXInfo',
+				success: function(res) {
+					_uWXInfo = res.data;
+				},
+				complete: function() {
+					// console.log("=====getStorage-_uWXInfo======")
+					// console.log(_uWXInfo)
+					if (_uWXInfo && _uWXInfo.openid) {
+						var __openid = _uWXInfo.openid;
+					} else {
+						let redirect_uri = ctx.state.interface.domain;
+						let REDIRECT_URI = encodeURIComponent(redirect_uri), //授权后重定向的回调链接地址， 请使用 urlEncode 对链接进行处理
+							scope = "snsapi_userinfo", //snsapi_base，snsapi_userinfo （弹出授权页面，获取更多信息）
+							state = "STATE"; //重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值，最多128字节
+						var _url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' +
+							REDIRECT_URI +
+							'&response_type=code&scope=' + scope + '&state=' + state + '#wechat_redirect';
+						let code = ctx.dispatch("queryString", 'code');
+						//console.log(_url)
+						if (code) {
+							//console.log(code)
+							ctx.dispatch("userLogin", code);
+						} else {
+							window.location.href = _url;
+						}
+					}
+				}
+			});
+
+		},
 		getSystemInfo(ctx) {
 			var systemInfo = {}
 			uni.getSystemInfo({
@@ -75,7 +119,6 @@ const store = new Vuex.Store({
 			});
 		}
 	},
-	modules: {
-	}
+	modules: {}
 })
 export default store
