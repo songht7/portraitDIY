@@ -11,12 +11,14 @@
 			</movable-view>
 			<!-- 饰品 -->
 			<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
-				<movable-view :id="['Mask'+k]" class="maskImg" direction="all" @touchstart="touch(k)" out-of-bounds scale
-				 scale-min="0.5" scale-max="4" :scale-value="img.scale" @scale="onScale">
-					<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">X</view>
-					<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" alt="">
-					<view class="edit-btn edit-pinch edit-set-small" v-show="editType===k" @click.stop.prevent="editImg('setSmall',k)">-</view>
-					<view class="edit-btn edit-pinch edit-set-big" v-show="editType===k" @click.stop.prevent="editImg('setBig',k)">+</view>
+				<movable-view :id="['Mask'+k]" class="maskImg" direction="all" @touchstart="touch(k)" out-of-bounds scale scale-min="0.5"
+				 scale-max="4" :scale-value="img.scale" @scale="onScale">
+					<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">×</view>
+					<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" :style="{'transform':'rotate('+img.rotate+'deg)'}"
+					 alt="">
+					<view class="edit-btn edit-pinch edit-set-rotate" v-show="editType===k" @click.stop.prevent="editImg('rotate',k)">↻</view><!-- ↺ -->
+					<view class="edit-btn edit-pinch edit-set-small" v-show="editType===k" @click.stop.prevent="editImg('setSmall',k)">━</view>
+					<view class="edit-btn edit-pinch edit-set-big" v-show="editType===k" @click.stop.prevent="editImg('setBig',k)">✚</view>
 				</movable-view>
 			</block>
 			<!-- slot -->
@@ -113,6 +115,13 @@
 							}
 						})
 						break;
+					case 'rotate':
+						that.maskImg.map((item, key) => {
+							if (key === k) {
+								item.rotate = item.rotate + 15
+							}
+						})
+						break;
 					default:
 						break;
 				}
@@ -177,6 +186,11 @@
 		left: -20upx;
 		right: auto;
 		bottom: -20upx;
+	}
+
+	.edit-set-rotate {
+		top: -20upx;
+		right: -20upx;
 	}
 
 	.imgBorder {

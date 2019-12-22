@@ -140,6 +140,7 @@
 						if (type == 'dec') {
 							var mk = {
 								"url": res.tempFilePaths.shift(),
+								"rotate": 0,
 								"scale": 1
 							}
 							that.maskImg.push(mk);
@@ -175,6 +176,7 @@
 						case "dec":
 							var mk = {
 								"url": _url,
+								"rotate": 0,
 								"scale": 1
 							}
 							that.maskImg.push(mk);
