@@ -14,7 +14,9 @@ const store = new Vuex.Store({
 		data: {},
 		interface: common.Interface,
 		systemInfo: {},
-		imgTemp:""
+		imgTemp:"",
+		portrait: "",
+		cosConfig: common.Interface.cosConfig
 	},
 	mutations: {
 		update_data(state, data) {

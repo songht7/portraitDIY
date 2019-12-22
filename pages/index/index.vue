@@ -42,6 +42,9 @@
 						</view>
 					</block>
 				</view>
+				<sunui-upimg-tencent v-show="false" :upImgConfig="upImgCos" @onUpImg="upCosData" @onImgDel="delImgInfo" ref="uImage"></sunui-upimg-tencent>
+				<!-- <button type="primary" @tap="getUpImgInfoCos">获取上传Cos图片信息</button>
+				<button type="primary" @tap="uImageTap">手动上传图片</button> -->
 				<view class="imgSelect">
 					<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight" @confirm="confirm"
 					 @cancel="cancel"></image-cropper>
@@ -54,8 +57,11 @@
 				</view>
 			</view>
 			<!-- <img src="" alt="" class="imgSmall"> -->
-			<uni-popup :show="poptype === 'showNewImg'" position="middle" mode="fixed" @hidePopup="togglePopup('')">
+			<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100' @hidePopup="togglePopup('')">
 				<view id="Generated">
+					<view class="close-btn" @click="togglePopup('')">
+						X
+					</view>
 					<img class="imgs" v-if="newImg" :src="newImg" alt="">
 					<view>长按保存图片</view>
 				</view>
@@ -66,6 +72,7 @@
 
 <script>
 	var html2canvas = require("@/common/html2canvas.min.js");
+	import sunuiUpimgTencent from '@/components/sunui-upimg/sunui-upimg-tencent.vue'
 	import imageWrapper from '@/components/image-wrapper.vue';
 	import uniPopup from '@/components/uni-popup.vue'
 	import ImageCropper from "@/components/invinbg-image-cropper/invinbg-image-cropper.vue";
@@ -87,6 +94,28 @@
 				ctgis: "special",
 				selectImg: false,
 				decType: '',
+				picture_list: [],
+				cosFlag: true,
+				cosArr: [],
+				upImgCos: {
+					cosConfig: this.$store.state.cosConfig,
+					// 是否开启notli(开启的话就是选择完直接上传，关闭的话当count满足数量时才上传)
+					notli: false,
+					// 图片数量
+					count: 1,
+					// 上传图片背景修改 
+					upBgColor: '#E8A400',
+					// 上传icon图标颜色修改(仅限于iconfont)
+					upIconColor: '#eee',
+					// 上传svg图标名称
+					upSvgIconName: 'icon-certificate',
+					//是否压缩上传照片(仅小程序生效)
+					sizeType: true,
+					//相机来源(相机->camera,相册->album,两者都有->all,默认all)
+					sourceType: "all",
+					path: `user_path/portrait-diy/`,
+					photoType: "portrait-diy-"
+				}
 			}
 		},
 		onLoad() {},
@@ -94,6 +123,7 @@
 			//this.getBase64Image();
 		},
 		components: {
+			sunuiUpimgTencent,
 			imageWrapper,
 			ImageCropper,
 			uniPopup
@@ -186,8 +216,14 @@
 					that.loading = false;
 					uni.hideLoading()
 					let dataURL = canvas.toDataURL("image/png");
-					console.log(dataURL)
 					that.poptype = "showNewImg";
+					that.$store.state.portrait = [{
+						"path": dataURL,
+						"imgType": 'base64Img',
+						"upload_percent": 0
+					}];
+					console.log("portrait:", that.$store.state.portrait)
+					that.uImageTap();
 					that.newImg = dataURL;
 				});
 			},
@@ -212,7 +248,48 @@
 				}
 			},
 			togglePopup(type) {
-				this.poptype = type;
+				var that = this;
+				that.poptype = type;
+				if (type == '') {
+					that.$refs.uImage.upload_picture_list = [];
+					//console.log(that.$refs.uImage.upload_picture_list)
+				}
+			}, // 手动上传图片(适用于表单等上传)
+			uImageTap() {
+				this.$refs.uImage.uploadimage(this.upImgCos);
+			},
+			// 删除图片 -(本地图片进行删除)
+			async delImgInfo(e) {
+				console.log('你删除的图片地址为:', e);
+			},
+			// 腾讯云
+			async upCosData(e) {
+				if (this.cosFlag) {
+					this.cosArr = await e;
+					// 可以根据长度来判断图片是否上传成功.
+					if (this.cosArr.length == this.upImgCos.cosConfig.count) {
+						uni.showToast({
+							title: `上传成功`,
+							icon: 'none'
+						});
+					}
+				}
+				this.cosFlag = false;
+
+			},
+			// 获取上传图片腾讯云
+			async getUpImgInfoCos() {
+				let arrImg = [];
+				for (let i = 0, len = this.cosArr.length; i < len; i++) {
+					try {
+						if (this.cosArr[i].path_server != "") {
+							await arrImg.push(this.cosArr[i].path_server.split(','));
+						}
+					} catch (err) {
+						console.log('上传失败...');
+					}
+				}
+				console.log('腾讯云转成一维数组:', arrImg.join().split(','));
 			}
 		}
 	}

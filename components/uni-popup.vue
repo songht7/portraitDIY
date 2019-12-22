@@ -25,7 +25,7 @@
 				type: Boolean,
 				default: false
 			},
-			closeBtnShow:{
+			closeBtnShow: {
 				type: Boolean,
 				default: true
 			},
@@ -102,13 +102,13 @@
 		},
 		created() {
 			let offsetTop = 0;
-			//#ifdef H5
-			if (!this.h5Top) {
-				offsetTop = 44;
-			} else {
-				offsetTop = 0;
-			}
-			//#endif
+			// //#ifdef H5
+			// if (!this.h5Top) {
+			// 	offsetTop = 44;
+			// } else {
+			// 	offsetTop = 0;
+			// }
+			// //#endif
 			this.offsetTop = offsetTop;
 		}
 	};
@@ -158,6 +158,23 @@
 
 	.uni-popup-middle.uni-popup-posfixed {
 		position: fixed;
+	}
+
+	.uni-popup-full {
+		height: 100%;
+		width: 100%;
+		top: 0;
+		left: 0;
+	}
+
+	.uni-popup-full.uni-popup-insert {
+		min-width: 100%;
+		min-height: 100%;
+		max-width: 100%;
+		max-height: 100%;
+		transform: translate(-50%, -65%);
+		background: none;
+		box-shadow: none;
 	}
 
 	.uni-close-bottom,
