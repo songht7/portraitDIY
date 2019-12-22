@@ -46,7 +46,10 @@
 			"description": "",
 			"collectionId": "4dabb84a-4646-da23-5c1f-f35764b1ac12",
 			"order": [
-				"6fcbf1c4-0bb2-d17c-b7bf-a32d12616584"
+				"6fcbf1c4-0bb2-d17c-b7bf-a32d12616584",
+				"7efc1168-ca2b-6e46-c044-ad46a54e1321",
+				"50ce908c-0f27-f5ca-4992-5e33cc766978",
+				"0b43c40e-6c2f-39ee-2e00-fe52928e0ca2"
 			],
 			"owner": "1054562",
 			"folders_order": [],
@@ -103,6 +106,53 @@
 			"folder": "3075437d-79a5-ba9c-9535-8c62f3b3bffb"
 		},
 		{
+			"id": "0b43c40e-6c2f-39ee-2e00-fe52928e0ca2",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://aproject.lc/v6/ApiCustomer-headImage.htm?openid=123&eCode=aleinqi",
+			"queryParams": [
+				{
+					"key": "openid",
+					"value": "123",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "eCode",
+					"value": "aleinqi",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4dabb84a-4646-da23-5c1f-f35764b1ac12",
+			"data": [],
+			"dataMode": "raw",
+			"name": "上传头像接口",
+			"description": "该接口在保存头像时使用",
+			"descriptionFormat": "html",
+			"time": 1576997621714,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"folder": "1f8e480e-3f09-39fd-5867-57b6b86e19ec",
+			"rawModeData": "{\"path\":\"www.wsshanghai.com\"}"
+		},
+		{
 			"id": "201888cf-d111-12dc-4f1f-b1a0db2813cf",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
@@ -137,6 +187,38 @@
 			"rawModeData": "{\"name\":\"space\",\"enterprise_id\":\"3\"}"
 		},
 		{
+			"id": "50ce908c-0f27-f5ca-4992-5e33cc766978",
+			"headers": "",
+			"headerData": [],
+			"url": "http://aproject.lc/v6/ApiBase-slideShow.htm?id=1",
+			"queryParams": [
+				{
+					"key": "id",
+					"value": "1",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4dabb84a-4646-da23-5c1f-f35764b1ac12",
+			"data": null,
+			"dataMode": "params",
+			"name": "记录广告位点击",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1576995992422,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"folder": "1f8e480e-3f09-39fd-5867-57b6b86e19ec"
+		},
+		{
 			"id": "6fcbf1c4-0bb2-d17c-b7bf-a32d12616584",
 			"headers": "",
 			"headerData": [],
@@ -168,6 +250,38 @@
 			"description": "st:logo img\neCode:aleinqi(企业code 可在db中查阅)",
 			"descriptionFormat": "html",
 			"time": 1576932776227,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"folder": "1f8e480e-3f09-39fd-5867-57b6b86e19ec"
+		},
+		{
+			"id": "7efc1168-ca2b-6e46-c044-ad46a54e1321",
+			"headers": "",
+			"headerData": [],
+			"url": "http://aproject.lc/v6/ApiBase-slideShow.htm?eCode=aleinqi",
+			"queryParams": [
+				{
+					"key": "eCode",
+					"value": "aleinqi",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "4dabb84a-4646-da23-5c1f-f35764b1ac12",
+			"data": null,
+			"dataMode": "params",
+			"name": "广告位列表",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1576995550993,
 			"version": 2,
 			"responses": [],
 			"tests": null,
