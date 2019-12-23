@@ -5,8 +5,8 @@ var api = {
 		"cosConfig": { //`https://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/...`
 			"Bucket": 'plbs-test-1257286922',
 			"Region": 'ap-shanghai',
-			"SecretId": 'AKIDujJnIXMBSeeOuVMVt0sa2Jh5A90rcJoh',
-			"SecretKey": 'tDI8jS2VWaXPDwUryoGblz2Z8B1k1QtF'
+			"SecretId": '',
+			"SecretKey": ''
 		},
 		"wx": {
 			"AppID": "wx11eb371cd85adfd4",
@@ -19,8 +19,8 @@ var api = {
 		"cosConfig": { //`https://jobpassport-1259247972.cos.ap-shanghai.myqcloud.com/...`
 			"Bucket": 'plbs-test-1257286922',
 			"Region": 'ap-shanghai',
-			"SecretId": 'AKIDXt0yjgKr41jBMK7YrunRpztscbJe4W2J',
-			"SecretKey": 'EBsJ2WmnbgW6X3KL5Zqrc9j49G8oNgkk'
+			"SecretId": '',
+			"SecretKey": ''
 		},
 		"wx": {
 			"AppID": "wxb33e824504e4a764",
