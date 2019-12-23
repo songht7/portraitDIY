@@ -113,7 +113,7 @@
 					sizeType: true,
 					//相机来源(相机->camera,相册->album,两者都有->all,默认all)
 					sourceType: "all",
-					path: `user_path/portrait-diy/`,
+					path: 'data/portrait/',
 					photoType: "portrait-diy-"
 				}
 			}

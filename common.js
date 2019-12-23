@@ -19,8 +19,8 @@ var api = {
 		"cosConfig": { //`https://jobpassport-1259247972.cos.ap-shanghai.myqcloud.com/...`
 			"Bucket": 'plbs-test-1257286922',
 			"Region": 'ap-shanghai',
-			"SecretId": '',
-			"SecretKey": ''
+			"SecretId": 'AKIDXt0yjgKr41jBMK7YrunRpztscbJe4W2J',
+			"SecretKey": 'EBsJ2WmnbgW6X3KL5Zqrc9j49G8oNgkk'
 		},
 		"wx": {
 			"AppID": "wxb33e824504e4a764",
@@ -38,12 +38,12 @@ export default {
 		"wxInfo": api[lks]["wx"],
 		"addr": {
 			"getCos": "/v6/ApiBase-getCos.htm", //获取腾讯云cos临时密钥
-			"getWeChatInfo": "/v6/ApiWeChat-getWeChatInfo.htm", //用户授权后获取用户信息?code=xxx
-			"getWeChatOpenId": "/v6/ApiWeChat-getWeChatOpenId.htm", //静默授权后获取用户信息?code=xxx
+			"getWeChatInfo": "/v6/ApiWeChat-getWeChatInfo.htm", //用户授权后获取用户信息 ?code=xxx
+			"getWeChatOpenId": "/v6/ApiWeChat-getWeChatOpenId.htm", //静默授权后获取用户信息 ?code=xxx
 			"getMaterialList": "/v6/ApiMaterial-getMaterialList.htm?st=logo&eCode=aleinqi", //获取头像所需素材接口
 			"slideShow": "/v6/ApiBase-slideShow.htm?eCode=aleinqi", //广告位列表
 			"slideShow2": "/v6/ApiBase-slideShow.htm?id=1", //记录广告位点击 [POST]
-			"headImage": "/v6/ApiCustomer-headImage.htm?openid=123&eCode=aleinqi" //上传头像接口 [POST]
+			"headImage": "/v6/ApiCustomer-headImage.htm?eCode=aleinqi" //上传头像接口 [POST] &openid=123
 		}
 	}
 }

@@ -91,7 +91,7 @@
 			SecretKey: configs.cosConfig.SecretKey ? configs.cosConfig.SecretKey : ''
 		}
 
-		let cos = new COS({
+		let cos = await new COS({
 			getAuthorization: (params, callback) => { //获取签名 必填参数
 				console.log("params:", params)
 				// 推荐(服务器计算签名接口)
@@ -103,11 +103,17 @@
 					},
 					success: function(result) {
 						console.log(result.data)
-						var _data = result.data.data.info.credentials;
+						var credentials = result.data.data.info.credentials;
 						// console.log(_data)
+						var _data = {
+							SecretId: credentials.tmpSecretId,
+							SecretKey: credentials.tmpSecretKey,
+							Method: params.Method,
+							Key: params.Key
+						}
 						let authorization = COS.getAuthorization(_data);
 						callback(authorization);
-						//callback(result.data.data.info);
+						//callback(_data);
 					}
 				});
 				// 方便前端调试
@@ -144,7 +150,7 @@
 			if (err == null) {
 				// console.log(`%c 腾讯云上传(成功返回地址):${data.headers.Location}`, 'color:#1AAD19');
 				// upload_picture_list[j]['path_server'] = data.headers.Location;
-				let path_server = `https://${opt.Bucket}.cos.${opt.Region}.myqcloud.com/${opt.Key}`;
+				let path_server = `http://${opt.Bucket}.cos.${opt.Region}.myqcloud.com/${opt.Key}`;
 				upload_picture_list[j]['upload_percent'] = 100;
 				upload_picture_list[j]['path_server'] = path_server;
 				_this.$store.state.portrait = path_server;
