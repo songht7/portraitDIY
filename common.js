@@ -14,16 +14,16 @@ var api = {
 		}
 	},
 	"dev": {
-		"interface": "https://api-test.wsshanghai.com", //接口
-		"domain": "http://train.wsshanghai.com",
+		"interface": "http://api-head.wsshanghai.com", //接口
+		"domain": "http://portrait.bdmartech.com/",
 		"cosConfig": { //`https://jobpassport-1259247972.cos.ap-shanghai.myqcloud.com/...`
-			"Bucket": 'jobpassport-1259247972',
+			"Bucket": 'plbs-test-1257286922',
 			"Region": 'ap-shanghai',
-			"SecretId": 'AKIDRbLQM4DqRnKgpzR1NlEUWP9jD7pJt1K3',
-			"SecretKey": 'mNnzhBSUHtb6SWP4bulOmwwazA8RWTCV'
+			"SecretId": '',
+			"SecretKey": ''
 		},
 		"wx": {
-			"AppID": "wx11eb371cd85adfd4",
+			"AppID": "wxb33e824504e4a764",
 			"ast": ""
 		}
 	}
@@ -35,7 +35,7 @@ export default {
 		"apiurl": api[lks]["interface"],
 		"domain": api[lks]["domain"],
 		"cosConfig": api[lks]["cosConfig"],
-		"wxConfig": api[lks]["wx"],
+		"wxInfo": api[lks]["wx"],
 		"addr": {
 			"getCos": "/v6/ApiBase-getCos.htm", //获取腾讯云cos临时密钥
 			"getWeChatInfo": "/v6/ApiWeChat-getWeChatInfo.htm", //用户授权后获取用户信息?code=xxx

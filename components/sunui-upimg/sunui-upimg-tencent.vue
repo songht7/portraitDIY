@@ -87,33 +87,37 @@
 		let cosConfig = {
 			Bucket: configs.cosConfig.Bucket,
 			Region: configs.cosConfig.Region,
-			SecretId: configs.cosConfig.SecretId,
-			SecretKey: configs.cosConfig.SecretKey
+			SecretId: configs.cosConfig.SecretId ? configs.cosConfig.SecretId : '',
+			SecretKey: configs.cosConfig.SecretKey ? configs.cosConfig.SecretKey : ''
 		}
 
 		let cos = new COS({
 			getAuthorization: (params, callback) => { //获取签名 必填参数
 				console.log("params:", params)
 				// 推荐(服务器计算签名接口)
-				// 				 uni.request({
-				// 				    url: 'SIGN_SERVER_URL',
-				// 				    data: {
-				// 				        Method: params.Method,
-				// 				        Key: params.Key
-				// 				    },
-				// 				    dataType: 'text',
-				// 				    success: function (result) {
-				// 				        callback(result.data);
-				// 				    }
-				// 				});
-				// 方便前端调试
-				let authorization = COS.getAuthorization({
-					SecretId: cosConfig.SecretId,
-					SecretKey: cosConfig.SecretKey,
-					Method: params.Method,
-					Key: params.Key
+				uni.request({
+					url: _this.$store.state.interface.apiurl + _this.$store.state.interface.addr.getCos,
+					data: {
+						Method: params.Method,
+						Key: params.Key
+					},
+					success: function(result) {
+						console.log(result.data)
+						var _data = result.data.data.info.credentials;
+						// console.log(_data)
+						let authorization = COS.getAuthorization(_data);
+						callback(authorization);
+						//callback(result.data.data.info);
+					}
 				});
-				callback(authorization);
+				// 方便前端调试
+				// let authorization = COS.getAuthorization({
+				// 	SecretId: cosConfig.SecretId,
+				// 	SecretKey: cosConfig.SecretKey,
+				// 	Method: params.Method,
+				// 	Key: params.Key
+				// });
+				// callback(authorization);
 			}
 		});
 
