@@ -40,11 +40,11 @@
 			<!-- <img src="" alt="" class="imgSmall"> -->
 			<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100' @hidePopup="togglePopup('')">
 				<view id="Generated">
-					<view class="close-btn" @click="togglePopup('')">
-						X
-					</view>
 					<img class="imgs" v-if="newImg" :src="newImg" alt="">
 					<view>长按保存图片</view>
+					<view class="gen-btns">
+						<view class="close-btn" @click="togglePopup('')">返回</view>
+					</view>
 				</view>
 			</uni-popup>
 		</view>
@@ -371,14 +371,38 @@
 
 	#Generated {
 		display: flex;
-		justify-content: center;
+		justify-content:flex-start;
 		flex-direction: column;
 		align-content: center;
 		align-items: center;
+		position: relative;
+		height: 90%;
+		padding: 5% 0;
 	}
 
 	#Generated .imgs {
 		width: 90%;
+	}
+
+	.gen-btns {
+		position: absolute;
+		width: 90%;
+		left: 0;
+		bottom: 0;
+		padding: 40upx 5%;
+		display: flex;
+		flex-direction: row;
+		align-content: center;
+		align-items: center;
+		justify-content: space-around;
+	}
+
+	.close-btn {
+		background: #DDDDDD;
+		color: #999999;
+		border-radius: 10upx;
+		font-size: 32upx;
+		padding: 10upx 50upx;
 	}
 
 	.imgSmall {
