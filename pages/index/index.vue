@@ -60,6 +60,7 @@
 	export default {
 		data() {
 			return {
+				eCode: "aleinqi",
 				base64Img: "",
 				tempFilePath: "",
 				cropFixed: true, //true false,
@@ -125,14 +126,16 @@
 				}
 			}
 		},
-		onLoad() {
+		onLoad(option) {
 			var that = this;
 			var _imgType = that.imgType;
+			var eCode = option.eCode ? option.eCode : that.eCode;
+			that.eCode = eCode;
 			_imgType.forEach((obj, k) => {
 				var imgKey = obj;
 				var _data = {
 					inter: "getMaterialList",
-					parm: `&st=${imgKey}`,
+					parm: `?eCode=${eCode}&st=${imgKey}`,
 					fun: function(res) {
 						if (res.success) {
 							let result = res.data;
