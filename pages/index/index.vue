@@ -10,48 +10,18 @@
 			</view>
 			<view class="portrait-main">
 				<view class="ctgs">
-					<view :class="['selBtn',ctgis=='special'?'selBtnOn':'']" @click="swithCth('special')">圣诞专题</view>
-					<view :class="['selBtn',ctgis=='dec'?'selBtnOn':'']" @click="swithCth('dec')">挂件</view>
-					<view :class="['selBtn',ctgis=='frame'?'selBtnOn':'']" @click="swithCth('frame')">相框</view>
-					<view :class="['selBtn',ctgis=='logo'?'selBtnOn':'']" @click="swithCth('logo')">企业LOGO</view>
+					<block v-for="(obj,k) in swithCthType" :key="k">
+						<view :class="['selBtn',ctgis==obj.key?'selBtnOn':'']" @click="swithCth(obj.key)">{{obj.name}}</view>
+					</block>
 				</view>
 				<view class="ctgBox">
-					<block v-if="ctgis=='special'">
-						<view class="ctgCont">
-							<block v-for="(obj,k) in imgList['img']" :key="k">
-								<view class="ctgImgBlock" @click="setDec('dec',`${obj.original_src}`)">
-									<img :src="`${obj.original_src}`" class="ctgImg" alt="">
-								</view>
-							</block>
-						</view>
-					</block>
-					<block v-if="ctgis=='dec'">
-						<view class="ctgCont">
-							<block v-for="(obj,k) in imgList['img']" :key="k">
-								<view class="ctgImgBlock" @click="setDec('dec',`${obj.original_src}`)">
-									<img :src="`${obj.original_src}`" class="ctgImg" alt="">
-								</view>
-							</block>
-						</view>
-					</block>
-					<block v-if="ctgis=='frame'">
-						<view class="ctgCont">
-							<block v-for="(obj,k) in imgList['box']" :key="k">
-								<view class="ctgImgBlock" @click="setDec('frame',`${obj.original_src}`)">
-									<img :src="`${obj.original_src}`" class="ctgImg" alt="">
-								</view>
-							</block>
-						</view>
-					</block>
-					<block v-if="ctgis=='logo'">
-						<view class="ctgCont">
-							<block v-for="(obj,k) in imgList['logo']" :key="k">
-								<view class="ctgImgBlock" @click="setDec('dec',`${obj.original_src}`)">
-									<img :src="`${obj.original_src}`" class="ctgImg" alt="">
-								</view>
-							</block>
-						</view>
-					</block>
+					<view class="ctgCont">
+						<block v-for="(obj,k) in imgList[ctgis]" :key="k">
+							<view class="ctgImgBlock" @click="setDec(obj.st,`${obj.original_src}`)">
+								<img :src="`${obj.original_src}`" class="ctgImg" alt="">
+							</view>
+						</block>
+					</view>
 				</view>
 				<sunui-upimg-tencent v-show="false" :upImgConfig="upImgCos" @onUpImg="upCosData" @onImgDel="delImgInfo" ref="uImage"></sunui-upimg-tencent>
 				<!-- <button type="primary" @tap="getUpImgInfoCos">获取上传Cos图片信息</button>
@@ -102,14 +72,38 @@
 				"slots": false,
 				loading: false,
 				poptype: "",
-				ctgis: "special",
+				ctgis: "img",
 				selectImg: false,
 				decType: '',
 				picture_list: [],
 				cosFlag: true,
 				cosArr: [],
+				swithCthType: [{
+						"name": "圣诞专题",
+						"key": "img",
+						"myKey": "special"
+					},
+					// {
+					// 	"name": "挂件",
+					// 	"key": "dec",
+					// 	"myKey": "dec"
+					// }, 
+					{
+						"name": "相框",
+						"key": "box",
+						"myKey": "frame"
+					}, {
+						"name": "企业LOGO",
+						"key": "logo",
+						"myKey": "logo"
+					}
+				],
 				imgType: ['logo', 'img', 'box'],
-				imgList: {},
+				imgList: {
+					'logo': [],
+					'img': [],
+					'box': []
+				},
 				upImgCos: {
 					cosConfig: this.$store.state.cosConfig,
 					// 是否开启notli(开启的话就是选择完直接上传，关闭的话当count满足数量时才上传)
@@ -253,6 +247,11 @@
 			},
 			getBase64Image(type, dataURL) {
 				var that = this;
+				uni.showToast({
+					title: '',
+					icon: 'loading',
+					duration: 1500
+				});
 				var img = new Image();
 				img.crossOrigin = 'Anonymous'; // 重点！设置image对象可跨域请求
 				img.src = dataURL;
@@ -263,9 +262,9 @@
 					var ctx = canvas.getContext("2d");
 					ctx.drawImage(img, 0, 0, img.width, img.height);
 					var ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
-					console.log("ext：", ext);
 					var dataURL = canvas.toDataURL("image/" + ext);
 					that.base64Img = dataURL;
+					uni.hideToast();
 					that.setImgToCanvas(type, dataURL) //转译为base64后放入容器
 					return dataURL;
 				}
@@ -274,20 +273,15 @@
 			setImgToCanvas(type, _url) {
 				var that = this;
 				setTimeout(() => {
-					switch (type) {
-						case "dec":
-							var mk = {
-								"url": _url,
-								"rotate": 0,
-								"scale": 1
-							}
-							that.maskImg.push(mk);
-							break;
-						case "frame":
-							that.frame = _url;
-							break;
-						default:
-							break;
+					if (type == 'logo' || type == 'img') {
+						var mk = {
+							"url": _url,
+							"rotate": 0,
+							"scale": 1
+						}
+						that.maskImg.push(mk);
+					} else if (type == 'box') {
+						that.frame = _url;
 					}
 				}, 500)
 			},
@@ -360,7 +354,7 @@
 		flex-direction: row;
 		align-content: center;
 		align-items: center;
-		background-image: linear-gradient(#e6eca6, #b0ecd2);
+		background-image: linear-gradient(#FFFFFF, #EEEEEE);
 	}
 
 	.portrait-main {
@@ -452,6 +446,8 @@
 
 	.ctgBox {
 		padding: 10upx 10upx 100upx;
+		height: 400upx;
+		overflow-y: auto;
 	}
 
 	.ctgCont {

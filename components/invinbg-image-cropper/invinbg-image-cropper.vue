@@ -118,9 +118,9 @@
         computed: {
             containerTop() {
                 let top = 0
-                // #ifdef H5
-                    top = 44
-                // #endif
+                // // #ifdef H5
+                //     top = 44
+                // // #endif
                 return top;
             },
             // 容器高度

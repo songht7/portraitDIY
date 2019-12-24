@@ -156,6 +156,7 @@
 		top: -20upx;
 		left: -20upx;
 		color: #f40;
+		z-index: 2;
 	}
 
 	.edit-del,
