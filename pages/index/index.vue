@@ -12,33 +12,44 @@
 				<view class="ctgs">
 					<view :class="['selBtn',ctgis=='special'?'selBtnOn':'']" @click="swithCth('special')">圣诞专题</view>
 					<view :class="['selBtn',ctgis=='dec'?'selBtnOn':'']" @click="swithCth('dec')">挂件</view>
+					<view :class="['selBtn',ctgis=='frame'?'selBtnOn':'']" @click="swithCth('frame')">相框</view>
 					<view :class="['selBtn',ctgis=='logo'?'selBtnOn':'']" @click="swithCth('logo')">企业LOGO</view>
 				</view>
 				<view class="ctgBox">
 					<block v-if="ctgis=='special'">
 						<view class="ctgCont">
-							<block v-for="i of 10" :key="i+1">
-								<view class="ctgImgBlock" @click="setDec('dec',`/static/c/${i}.png`)">
-									<img :src="`/static/c/${i}.png`" class="ctgImg" alt="">
+							<block v-for="(obj,k) in imgList['img']" :key="k">
+								<view class="ctgImgBlock" @click="setDec('dec',`${obj.original_src}`)">
+									<img :src="`${obj.original_src}`" class="ctgImg" alt="">
 								</view>
 							</block>
 						</view>
 					</block>
 					<block v-if="ctgis=='dec'">
 						<view class="ctgCont">
-							<view class="ctgImgBlock" @click="setDec('dec','/static/3.png')">
-								<img src="/static/3.png" class="ctgImg" alt="">
-							</view>
-							<view class="ctgImgBlock" @click="setDec('frame','/static/2.png')">
-								<img src="/static/2.png" class="ctgImg" alt="">
-							</view>
+							<block v-for="(obj,k) in imgList['img']" :key="k">
+								<view class="ctgImgBlock" @click="setDec('dec',`${obj.original_src}`)">
+									<img :src="`${obj.original_src}`" class="ctgImg" alt="">
+								</view>
+							</block>
+						</view>
+					</block>
+					<block v-if="ctgis=='frame'">
+						<view class="ctgCont">
+							<block v-for="(obj,k) in imgList['box']" :key="k">
+								<view class="ctgImgBlock" @click="setDec('frame',`${obj.original_src}`)">
+									<img :src="`${obj.original_src}`" class="ctgImg" alt="">
+								</view>
+							</block>
 						</view>
 					</block>
 					<block v-if="ctgis=='logo'">
 						<view class="ctgCont">
-							<view class="ctgImgBlock" @click="setDec('dec','/static/logo-1.png')">
-								<img src="/static/logo-1.png" class="ctgImg" alt="">
-							</view>
+							<block v-for="(obj,k) in imgList['logo']" :key="k">
+								<view class="ctgImgBlock" @click="setDec('dec',`${obj.original_src}`)">
+									<img :src="`${obj.original_src}`" class="ctgImg" alt="">
+								</view>
+							</block>
 						</view>
 					</block>
 				</view>
@@ -97,6 +108,8 @@
 				picture_list: [],
 				cosFlag: true,
 				cosArr: [],
+				imgType: ['logo', 'img', 'box'],
+				imgList: {},
 				upImgCos: {
 					cosConfig: this.$store.state.cosConfig,
 					// 是否开启notli(开启的话就是选择完直接上传，关闭的话当count满足数量时才上传)
@@ -118,9 +131,35 @@
 				}
 			}
 		},
-		onLoad() {},
+		onLoad() {
+			var that = this;
+			var _imgType = that.imgType;
+			_imgType.forEach((obj, k) => {
+				var imgKey = obj;
+				var _data = {
+					inter: "getMaterialList",
+					parm: `&st=${imgKey}`,
+					fun: function(res) {
+						if (res.success) {
+							let result = res.data;
+							if (result.list) {
+								let _list = result.list;
+								var cList = [];
+								if (that.imgList[imgKey]) {
+									cList = that.imgList[imgKey];
+								}
+								that.imgList[imgKey] = [...cList, ..._list];
+							}
+							// console.log('------imgList-------');
+							console.log(that.imgList);
+						}
+					}
+				};
+				that.$store.dispatch("getData", _data)
+			})
+		},
 		onShow() {
-			//this.getBase64Image();
+			this.getBase64Image();
 		},
 		components: {
 			sunuiUpimgTencent,
@@ -167,28 +206,8 @@
 			},
 			setDec(type, url) {
 				var that = this;
-				var _url = url;
-				console.log(type, _url)
-				//var url = "http://img95.699pic.com/element/40121/1517.png_300.png";
-				//var _base64Url = await getBase64Image(url);
-				setTimeout(() => {
-					switch (type) {
-						case "dec":
-							var mk = {
-								"url": _url,
-								"rotate": 0,
-								"scale": 1
-							}
-							that.maskImg.push(mk);
-							break;
-						case "frame":
-							that.frame = _url;
-							break;
-						default:
-							break;
-					}
-				}, 500)
-				console.log(that.maskImg)
+				that.getBase64Image(type, url); //网络图片需先转base64
+				//that.setImgToCanvas(type, url)
 			},
 			resetImg() {
 				var that = this;
@@ -225,16 +244,17 @@
 						"upload_percent": 0
 					}];
 					console.log("portrait:", that.$store.state.portrait)
-					that.uImageTap();
+					////that.uImageTap();///上传到COS
 					that.newImg = dataURL;
 				});
 			},
 			resetEditType() {
 				this.$refs.imageWrapper.editType = "";
 			},
-			getBase64Image(dataURL) {
+			getBase64Image(type, dataURL) {
 				var that = this;
 				var img = new Image();
+				img.crossOrigin = 'Anonymous'; // 重点！设置image对象可跨域请求
 				img.src = dataURL;
 				img.onload = function() {
 					var canvas = document.createElement("canvas");
@@ -243,11 +263,33 @@
 					var ctx = canvas.getContext("2d");
 					ctx.drawImage(img, 0, 0, img.width, img.height);
 					var ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
+					console.log("ext：", ext);
 					var dataURL = canvas.toDataURL("image/" + ext);
 					that.base64Img = dataURL;
-					console.log(dataURL);
+					that.setImgToCanvas(type, dataURL) //转译为base64后放入容器
 					return dataURL;
 				}
+
+			},
+			setImgToCanvas(type, _url) {
+				var that = this;
+				setTimeout(() => {
+					switch (type) {
+						case "dec":
+							var mk = {
+								"url": _url,
+								"rotate": 0,
+								"scale": 1
+							}
+							that.maskImg.push(mk);
+							break;
+						case "frame":
+							that.frame = _url;
+							break;
+						default:
+							break;
+					}
+				}, 500)
 			},
 			togglePopup(type) {
 				var that = this;

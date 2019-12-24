@@ -7,7 +7,7 @@
 		},
 		onShow: function() {
 			console.log('App Show')
-			this.$store.dispatch('getWXCode');
+			//this.$store.dispatch('getWXCode');
 		},
 		onHide: function() {
 			console.log('App Hide')

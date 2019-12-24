@@ -40,7 +40,7 @@ export default {
 			"getCos": "/v6/ApiBase-getCos.htm", //获取腾讯云cos临时密钥
 			"getWeChatInfo": "/v6/ApiWeChat-getWeChatInfo.htm", //用户授权后获取用户信息 ?code=xxx
 			"getWeChatOpenId": "/v6/ApiWeChat-getWeChatOpenId.htm", //静默授权后获取用户信息 ?code=xxx
-			"getMaterialList": "/v6/ApiMaterial-getMaterialList.htm?st=logo&eCode=aleinqi", //获取头像所需素材接口
+			"getMaterialList": "/v6/ApiMaterial-getMaterialList.htm?eCode=aleinqi", //获取头像所需素材接口&st=logo(logo:logo,img:图标，box：相框)
 			"slideShow": "/v6/ApiBase-slideShow.htm?eCode=aleinqi", //广告位列表
 			"slideShow2": "/v6/ApiBase-slideShow.htm?id=1", //记录广告位点击 [POST]
 			"headImage": "/v6/ApiCustomer-headImage.htm?eCode=aleinqi" //上传头像接口 [POST] &openid=123

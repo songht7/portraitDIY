@@ -17,9 +17,11 @@ const store = new Vuex.Store({
 		systemInfo: {},
 		imgTemp: "",
 		wxInfo: common.Interface.wxInfo,
+		wxCode: "",
 		isWeixin: false,
 		portrait: "",
-		cosConfig: common.Interface.cosConfig
+		cosConfig: common.Interface.cosConfig,
+		userInfo: {}
 	},
 	mutations: {
 		update_data(state, data) {
@@ -58,7 +60,6 @@ const store = new Vuex.Store({
 					}
 				},
 				complete() {
-					ctx.commit("switch_loading", "0")
 					if (parm.fun) {
 						new parm.fun(result)
 					}
@@ -67,6 +68,7 @@ const store = new Vuex.Store({
 		},
 		isWeixin(ctx) {
 			let _isWeixin = !!/micromessenger/i.test(navigator.userAgent.toLowerCase());
+			console.log("==isWeixin==", _isWeixin)
 			ctx.state.isWeixin = _isWeixin;
 		},
 		isIOS(ctx) {
@@ -75,35 +77,60 @@ const store = new Vuex.Store({
 			return isIphone || isIpad;
 		},
 		getWXCode(ctx) {
-			var appid = ctx.state.interface.wxInfo.AppID;
+			console.log("---getWXCode---")
 			if (!ctx.state.isWeixin) {
+				console.log("fffffffffffff")
 				return
 			}
+			console.log("tttttttttttt")
 			var _uWXInfo = "";
 			uni.getStorage({
 				key: 'uWXInfo',
 				success: function(res) {
+					console.log("success")
 					_uWXInfo = res.data;
 				},
 				complete: function() {
-					// console.log("=====getStorage-_uWXInfo======")
-					// console.log(_uWXInfo)
+					console.log("=====getStorage-_uWXInfo======")
+					console.log(_uWXInfo)
 					if (_uWXInfo && _uWXInfo.openid) {
+						console.log("=====1======")
+						ctx.state.userInfo = _uWXInfo;
 						var __openid = _uWXInfo.openid;
 					} else {
-						let redirect_uri = ctx.state.interface.domain;
-						let REDIRECT_URI = encodeURIComponent(redirect_uri), //授权后重定向的回调链接地址， 请使用 urlEncode 对链接进行处理
-							scope = "snsapi_userinfo", //snsapi_base，snsapi_userinfo （弹出授权页面，获取更多信息）
-							state = "STATE"; //重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值，最多128字节
-						var _url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' +
-							REDIRECT_URI +
-							'&response_type=code&scope=' + scope + '&state=' + state + '#wechat_redirect';
-						let code = ctx.dispatch("queryString", 'code');
-						//console.log(_url)
+						console.log("=====2======")
+						var code = "";
+						let reg = new RegExp('(^|&)code=([^&]*)(&|$)', 'i')
+						let r = window && window.location.search.substr(1).match(reg)
+						if (r != null) {
+							code = unescape(r[2])
+						}
+						console.log("code：", code)
 						if (code) {
-							//console.log(code)
-							ctx.dispatch("userLogin", code);
+							let _pram = {
+								"inter": "getWeChatInfo",
+								"parm": `?code=${code}`
+							};
+							_pram["fun"] = function(res) {
+								console.log("getWeChatInfo：", res)
+								let _data = res.data.data;
+								uni.setStorage({
+									key: 'uWXInfo',
+									data: _data,
+									success: function() {}
+								})
+							}
+							ctx.dispatch("getData", _pram);
 						} else {
+							var appid = ctx.state.interface.wxInfo.AppID;
+							let redirect_uri = ctx.state.interface.domain;
+							let REDIRECT_URI = encodeURIComponent(redirect_uri), //授权后重定向的回调链接地址， 请使用 urlEncode 对链接进行处理
+								scope = "snsapi_userinfo", //snsapi_base，snsapi_userinfo （弹出授权页面，获取更多信息）
+								state = "STATE"; //重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值，最多128字节
+							var _url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' +
+								REDIRECT_URI +
+								'&response_type=code&scope=' + scope + '&state=' + state + '#wechat_redirect';
+							console.log("_url:", _url)
 							window.location.href = _url;
 						}
 					}
@@ -152,31 +179,20 @@ const store = new Vuex.Store({
 			if (ctx.dispatch("isIOS")) {
 				getTicketUrl = location.origin + "/";
 			}
-			let url_ticket = Interface.apiurl + Interface.addr.getJsApiTicket + "?url=" + getTicketUrl;
-			let _head = {};
-			let channel_code = that.queryString("channel_code");
-			if (channel_code) {
-				_head = {
-					"channel_code": channel_code
-				};
+			var data = {
+				"inter": "getJsApiTicket",
+				"parm": `?url=${getTicketUrl}`,
+				"fun": funTicket
 			}
-			let wx_ticket = that.getData(url_ticket, funTicket, "GET", "", _head)
-
-			var storFun = function(res) {
-				if (res == "") {}
-			}
-			//that.getMyStorage("wx_ticket", "", storFun);
-
+			let wx_ticket = ctx.dispatch("getData", _pram);
 
 			let _href = location.origin + "/" + location.hash;
 			// 		console.log("======share_url=====")
 			// 		console.log(_href)
-			_href = "http://main.meetji.com:3001?wxr=" + encodeURIComponent(_href)
-			var share_url = share_url ? share_url : _href;
-			imgUrl = imgUrl ? imgUrl : Interface.domain + "/static/share.jpg";
+			imgUrl = imgUrl ? imgUrl : Interface.domain + "/static/share.png";
 			var wxSet = {
-				title: title || "英语免费试听",
-				desc: dec || "英语免费试听课，在这里找到你想要的",
+				title: title || "看，我的专属头像",
+				desc: dec || "定制我的趣味头像吧！",
 				link: share_url,
 				imgUrl: imgUrl,
 				success: function() {
@@ -188,27 +204,12 @@ const store = new Vuex.Store({
 						};
 						console.log("-----share succ----")
 						console.log(_head)
-						let funSave = function(res) {
-							if (res.point) {
-								uni.getStorage({
-									key: 'uWXInfo',
-									success: function(ress) {
-										let _uWXInfo = ress.data;
-										_uWXInfo["point"] = res.point;
-										uni.setStorage({
-											key: 'uWXInfo',
-											data: _uWXInfo,
-											success: function() {}
-										})
-									},
-								})
-							}
-						}
-						let url_savePoint = Interface.apiurl + Interface.addr.savePoint;
-						/*分享获得积分*/
-						let _savePoint = that.getData(url_savePoint, funSave, "POST", "", _head);
 					}
-					that.getMyStorage("uWXInfo", "", fun)
+					ctx.dispatch("getMyStorage", {
+						key: "uWXInfo",
+						val: "",
+						fun: fun
+					})
 				}
 			};
 			wx.ready(function() {
@@ -221,6 +222,38 @@ const store = new Vuex.Store({
 				wx.onMenuShareTimeline(wxSet);
 				// 2.3 监听“分享到QQ”按钮点击、自定义分享内容及分享结果接口
 				wx.onMenuShareQQ(wxSet);
+			});
+		},
+		queryString(ctx, value) {
+			const reg = new RegExp(`(^|&)${value}=([^&]*)(&|$)`, 'i')
+			const r = window && window.location.search.substr(1).match(reg)
+			var data = "";
+			if (r != null) {
+				data = unescape(r[2])
+			}
+			if (value == 'code') {
+				ctx.state.wxCode = data;
+			}
+		},
+		getMyStorage(ctx, pram) {
+			var key = pram.key,
+				val = pram.val,
+				fun = pram.fun;
+			var _storage = "";
+			uni.getStorage({
+				key: key,
+				success: function(res) {
+					if (val) {
+						_storage = res.data.val;
+					} else {
+						_storage = res.data;
+					}
+				},
+				complete(c) {
+					if (fun) {
+						new fun(_storage)
+					}
+				}
 			});
 		},
 		getSystemInfo(ctx) {
