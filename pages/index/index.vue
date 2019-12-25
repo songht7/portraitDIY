@@ -99,11 +99,11 @@
 						"myKey": "logo"
 					}
 				],
-				imgType: ['logo', 'img', 'box'],
+				imgType: ['img', 'box', 'logo'],
 				imgList: {
-					'logo': [],
 					'img': [],
-					'box': []
+					'box': [],
+					'logo': []
 				},
 				upImgCos: {
 					cosConfig: this.$store.state.cosConfig,
@@ -371,7 +371,7 @@
 
 	#Generated {
 		display: flex;
-		justify-content:flex-start;
+		justify-content: flex-start;
 		flex-direction: column;
 		align-content: center;
 		align-items: center;
