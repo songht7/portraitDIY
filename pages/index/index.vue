@@ -66,7 +66,7 @@
 				cropFixed: true, //true false,
 				cropWidth: 250,
 				cropHeight: 250,
-				imgBg: "/static/c/default.jpg",
+				imgBg: "/static/default.jpg",
 				maskImg: [],
 				newImg: "",
 				frame: "",
