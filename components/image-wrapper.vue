@@ -1,18 +1,18 @@
 <template>
 	<div id="ImageWrapper" class="imageWrapper">
-		<movable-area out-of-bounds>
+		<movable-area :out-of-bounds="outOfBounds">
 			<!-- 头像 -->
-			<movable-view class="imgbg" scale v-if="imgBg" direction="all" out-of-bounds>
+			<movable-view class="imgbg" scale v-if="imgBg" direction="all" :out-of-bounds="outOfBounds">
 				<img class="real_pic" :src="imgBg" />
 			</movable-view>
 			<!-- 相框 -->
-			<movable-view class="imgbg frame" v-if="frame" direction="all" out-of-bounds>
+			<movable-view class="imgbg frame" v-if="frame" direction="all" :out-of-bounds="outOfBounds">
 				<img class="real_pic" :src="frame" />
 			</movable-view>
 			<!-- 饰品 -->
 			<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
-				<movable-view :id="['Mask'+k]" class="maskImg" direction="all" @touchstart="touch(k)" out-of-bounds scale scale-min="0.5"
-				 scale-max="4" :scale-value="img.scale" @scale="onScale">
+				<movable-view :id="['Mask'+k]" class="maskImg" direction="all" @touchstart="touch(k)" :out-of-bounds="outOfBounds"
+				 scale scale-min="0.5" scale-max="4" :scale-value="img.scale" @scale="onScale">
 					<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">×</view>
 					<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" :style="{'transform':'rotate('+img.rotate+'deg)'}"
 					 alt="">
@@ -23,7 +23,7 @@
 			</block>
 			<!-- slot -->
 			<block v-if="slots">
-				<movable-view direction="all" out-of-bounds>
+				<movable-view direction="all" :out-of-bounds="outOfBounds">
 					<slot></slot>
 				</movable-view>
 			</block>
@@ -39,6 +39,10 @@
 			imgBg: {
 				type: String,
 				default: ''
+			},
+			outOfBounds: {
+				type: Boolean,
+				default: true
 			},
 			frame: {
 				type: String,
@@ -144,8 +148,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 150upx;
-		width: 150upx;
+		min-width: 150upx;
+		min-height: 150upx;
 		background-color: none;
 		color: #fff;
 		position: relative;
