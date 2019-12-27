@@ -28,9 +28,9 @@
 				<button type="primary" @tap="uImageTap">手动上传图片</button> -->
 				<view class="imgSelect">
 					<view class="webQRCode">
-						<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas" />
+						<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas" :style="{width:QRSize+'px',height:QRSize+'px'}" />
 					</view>
-					<!-- <img class="imgs" v-if="watermark" :src="watermark" alt=""> -->
+					<!-- <img v-if="watermark" :src="watermark" alt=""> -->
 					<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight" @confirm="confirm"
 					 @cancel="cancel"></image-cropper>
 					<view class="selPor" @tap="upload()">更改头像</view>
@@ -68,6 +68,8 @@
 				company: "", //公司
 				theme: "", //主题色
 				watermark: "", //站点水印二维码、logo
+				waterState: false, //是否有水印
+				QRSize: 80,
 				eCode: "aleinqi", //后台对应企业code
 				base64Img: "",
 				tempFilePath: "",
@@ -137,9 +139,11 @@
 		onLoad(option) {
 			var that = this;
 			var _imgType = that.imgType;
+			var ws = option.ws ? true : false;
 			var eCode = option.eCode ? option.eCode : that.eCode;
 			var _theme = option.tm ? option.tm : "";
 			var _company = option.company ? option.company : "";
+			that.waterState = ws;
 			that.eCode = eCode;
 			that.company = _company;
 			that.theme = "theme-" + _theme;
@@ -172,7 +176,10 @@
 			this.getBase64Image();
 		},
 		onReady() {
-			this.setWebQRcode(); //生成站点二维码
+			var that = this;
+			if (that.waterState) {
+				that.setWebQRcode(); //生成站点二维码
+			}
 		},
 		components: {
 			sunuiUpimgTencent,
@@ -225,7 +232,9 @@
 					context: that, // 上下文环境
 					canvasId: "tki-qrcode-canvas", // canvas-id
 					text: webUrl, // 生成内容
-					size: 200, // 二维码大小
+					background: "rgba(255, 255, 255, .2)", //背景色
+					foreground: "rgba(0, 0, 0, .2)", //前景色
+					size: that.QRSize, // 二维码大小
 					cbResult: function(res) { // 生成二维码的回调
 						that.watermark = res;
 					},
@@ -233,8 +242,8 @@
 			},
 			setDec(type, url) {
 				var that = this;
-				that.getBase64Image(type, url); //网络图片需先转base64
-				//that.setImgToCanvas(type, url)
+				//that.getBase64Image(type, url); //网络图片需先转base64
+				that.setImgToCanvas(type, url)
 			},
 			resetImg() {
 				var that = this;
@@ -255,7 +264,8 @@
 					title: "正在生成..."
 				})
 				html2canvas(obj, {
-					backgroundColor: null,
+					backgroundColor: "transparent",
+					useCORS: true,
 					allowTaint: true,
 					tainttest: true,
 					width: width,

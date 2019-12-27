@@ -23,8 +23,8 @@
 			</block>
 			<!-- 站点二维码 -->
 			<block v-if="watermark">
-				<movable-view class="watermark" x="0" y="200">
-					<img class="watermarkImg" :src="watermark" />
+				<movable-view class="watermark" x="0" y="500" scale scale-value="0.5">
+					<img class="watermarkImg" :src="watermark" /><!-- style="opacity:0.5" -->
 				</movable-view>
 			</block>
 			<!-- slot -->
@@ -262,10 +262,14 @@
 
 
 	movable-view.watermark {
-		width: 80upx;
+		width: 96%;
+		padding: 2%;
 		height: 80upx;
-		z-index: 1000;
-		opacity: 0.5;
+		z-index: 101;
+		justify-content: flex-start;
+		position: absolute;
+		bottom: 0;
+		left: 0;
 	}
 
 	img.watermarkImg {
