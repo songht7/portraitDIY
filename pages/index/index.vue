@@ -137,7 +137,7 @@
 			that.eCode = eCode;
 			that.company = _company;
 			that.theme = "theme-" + _theme;
-			that.imgBg = _company == '信达' ? "/static/default-xd.jpg" : "/static/default.jpg";
+			that.imgBg = eCode == 'xinda' ? "/static/default-xd.jpg" : "/static/default.jpg";
 			_imgType.forEach((obj, k) => {
 				var imgKey = obj;
 				var _data = {
@@ -495,7 +495,8 @@
 	}
 
 	.ctgImgBlock {
-		width: 16.66%;
+		width: 20%;
+		height: 100upx;
 		display: flex;
 		justify-content: center;
 		align-content: center;
@@ -504,7 +505,8 @@
 	}
 
 	.ctgImg {
-		width: 70%;
+		max-width: 70%;
+		max-height: 100%;
 	}
 
 	.editBtn,
