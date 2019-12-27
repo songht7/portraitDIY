@@ -2,7 +2,7 @@
 	<view :class="['content',theme]">
 		<view class="uni-padding-wrap uni-common-mt">
 			<view class="portrait-box" v-show="!selectImg">
-				<imageWrapper ref="imageWrapper" :imgBg="imgBg" :watermark="watermark" :maskImg="maskImg" :frame="frame">
+				<imageWrapper ref="imageWrapper" :imgBg="imgBg" :watermark="watermark" :wmSize="wmSize" :maskImg="maskImg" :frame="frame">
 					<view class="text" v-if="slots">
 						头像
 					</view>
@@ -31,6 +31,19 @@
 						<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas" :style="{width:QRSize+'px',height:QRSize+'px'}" />
 					</view>
 					<!-- <img v-if="watermark" :src="watermark" alt=""> -->
+					<block v-if="qrtst">
+						<view class="" style="width: 100%;padding-bottom: 50upx;">
+							<view class="">
+								透明度(0.1-1)
+								<input type="text" style="background: #DDDDDD;" v-model="QROpacity">
+							</view>
+							<view class="">
+								大小(0.1-10)
+								<input type="text" style="background: #DDDDDD;" v-model="wmSize">
+							</view>
+							<view @click="setWebQRcode">生成二维码(button)</view>
+						</view>
+					</block>
 					<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight" @confirm="confirm"
 					 @cancel="cancel"></image-cropper>
 					<view class="selPor" @tap="upload()">更改头像</view>
@@ -57,7 +70,8 @@
 
 <script>
 	var html2canvas = require("@/common/html2canvas.min.js");
-	import QRCode from "@/common/qrcode.js"
+	import QRCode from "@/common/qrcode.js";
+	var cQRcode;
 	import sunuiUpimgTencent from '@/components/sunui-upimg/sunui-upimg-tencent.vue';
 	import imageWrapper from '@/components/image-wrapper.vue';
 	import uniPopup from '@/components/uni-popup.vue';
@@ -69,7 +83,10 @@
 				theme: "", //主题色
 				watermark: "", //站点水印二维码、logo
 				waterState: false, //是否有水印
-				QRSize: 80,
+				QROpacity: 0.6, //水印透明度
+				QRSize: 80, //水印大小
+				wmSize: "0.5", //水印缩放大小
+				qrtst: false, //水印测试
 				eCode: "aleinqi", //后台对应企业code
 				base64Img: "",
 				tempFilePath: "",
@@ -140,10 +157,12 @@
 			var that = this;
 			var _imgType = that.imgType;
 			var ws = option.ws ? true : false;
+			var _qrtst = option.qrtst ? option.qrtst : false;
 			var eCode = option.eCode ? option.eCode : that.eCode;
 			var _theme = option.tm ? option.tm : "";
 			var _company = option.company ? option.company : "";
 			that.waterState = ws;
+			that.qrtst = _qrtst; //qr测试
 			that.eCode = eCode;
 			that.company = _company;
 			that.theme = "theme-" + _theme;
@@ -228,12 +247,15 @@
 				var that = this;
 				var webUrl = that.$store.state.interface.domain + '#/?eCode=' + that.eCode + '&company=' + that.company + '&tm=' +
 					that.theme;
-				var setWebQRcode = new QRCode({
+				if (cQRcode) {
+					cQRcode.clear()
+				}
+				cQRcode = new QRCode({
 					context: that, // 上下文环境
 					canvasId: "tki-qrcode-canvas", // canvas-id
 					text: webUrl, // 生成内容
-					background: "rgba(255, 255, 255, .2)", //背景色
-					foreground: "rgba(0, 0, 0, .2)", //前景色
+					background: `rgba(255, 255, 255, ${that.QROpacity})`, //背景色
+					foreground: `rgba(0, 0, 0, ${that.QROpacity})`, //前景色
 					size: that.QRSize, // 二维码大小
 					cbResult: function(res) { // 生成二维码的回调
 						that.watermark = res;

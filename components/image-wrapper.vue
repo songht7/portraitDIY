@@ -23,7 +23,7 @@
 			</block>
 			<!-- 站点二维码 -->
 			<block v-if="watermark">
-				<movable-view class="watermark" x="0" y="500" scale scale-value="0.5">
+				<movable-view class="watermark" x="0" y="500" scale :scale-value="wmSize" scale-min="0.1">
 					<img class="watermarkImg" :src="watermark" /><!-- style="opacity:0.5" -->
 				</movable-view>
 			</block>
@@ -49,6 +49,10 @@
 			watermark: {
 				type: String,
 				default: ''
+			},
+			wmSize: {
+				type: String,
+				default: "0.5"
 			},
 			outOfBounds: {
 				type: Boolean,
