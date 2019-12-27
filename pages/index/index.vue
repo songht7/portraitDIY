@@ -27,12 +27,12 @@
 				<!-- <button type="primary" @tap="getUpImgInfoCos">获取上传Cos图片信息</button>
 				<button type="primary" @tap="uImageTap">手动上传图片</button> -->
 				<view class="imgSelect">
-					<view class="webQRCode">
+					<view class="webQRCode" v-if="waterState">
 						<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas" :style="{width:QRSize+'px',height:QRSize+'px'}" />
 					</view>
 					<!-- <img v-if="watermark" :src="watermark" alt=""> -->
 					<block v-if="qrtst">
-						<view class="" style="width: 100%;padding-bottom: 50upx;">
+						<view class="" style="width: 100%;padding-bottom: 50upx;background: #FFFFFF;position: relative;z-index: 102;">
 							<view class="">
 								透明度(0.1-1)
 								<input type="text" style="background: #DDDDDD;" v-model="QROpacity">
@@ -40,6 +40,10 @@
 							<view class="">
 								大小(0.1-10)
 								<input type="text" style="background: #DDDDDD;" v-model="wmSize">
+							</view>
+							<view class="">
+								颜色(0-150)
+								<input type="text" style="background: #DDDDDD;" v-model="QRColor">
 							</view>
 							<view @click="setWebQRcode">生成二维码(button)</view>
 						</view>
@@ -86,6 +90,7 @@
 				QROpacity: 0.6, //水印透明度
 				QRSize: 80, //水印大小
 				wmSize: "0.5", //水印缩放大小
+				QRColor: "100", //水印前景色
 				qrtst: false, //水印测试
 				eCode: "aleinqi", //后台对应企业code
 				base64Img: "",
@@ -255,7 +260,7 @@
 					canvasId: "tki-qrcode-canvas", // canvas-id
 					text: webUrl, // 生成内容
 					background: `rgba(255, 255, 255, ${that.QROpacity})`, //背景色
-					foreground: `rgba(0, 0, 0, ${that.QROpacity})`, //前景色
+					foreground: `rgba(${that.QRColor}, ${that.QRColor}, ${that.QRColor}, ${that.QROpacity})`, //前景色
 					size: that.QRSize, // 二维码大小
 					cbResult: function(res) { // 生成二维码的回调
 						that.watermark = res;
