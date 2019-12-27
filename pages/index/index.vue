@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view :class="['content',theme]">
 		<view class="uni-padding-wrap uni-common-mt">
 			<view class="portrait-box" v-show="!selectImg">
 				<imageWrapper ref="imageWrapper" :imgBg="imgBg" :maskImg="maskImg" :frame="frame">
@@ -10,8 +10,8 @@
 			</view>
 			<view class="portrait-main">
 				<view class="ctgs">
-					<block v-for="(obj,k) in swithCthType" :key="k">
-						<view :class="['selBtn',ctgis==obj.key?'selBtnOn':'']" @click="swithCth(obj.key)">{{obj.name}}</view>
+					<block v-for="(obj,k) in swithCthType" v-if="imgList[obj.key].length" :key="k">
+						<view :class="['selBtn',ctgis==obj.key?'selBtnOn':'']" @click="swithCth(obj.key)">{{obj.key=='logo'?company:''}}{{obj.name}}</view>
 					</block>
 				</view>
 				<view class="ctgBox">
@@ -60,7 +60,9 @@
 	export default {
 		data() {
 			return {
-				eCode: "aleinqi",
+				company: "", //公司
+				theme: "", //主题色
+				eCode: "aleinqi", //后台对应企业code
 				base64Img: "",
 				tempFilePath: "",
 				cropFixed: true, //true false,
@@ -80,7 +82,7 @@
 				cosFlag: true,
 				cosArr: [],
 				swithCthType: [{
-						"name": "圣诞专题",
+						"name": "定制挂件",
 						"key": "img",
 						"myKey": "special"
 					},
@@ -94,7 +96,7 @@
 						"key": "box",
 						"myKey": "frame"
 					}, {
-						"name": "企业LOGO",
+						"name": "LOGO",
 						"key": "logo",
 						"myKey": "logo"
 					}
@@ -130,7 +132,12 @@
 			var that = this;
 			var _imgType = that.imgType;
 			var eCode = option.eCode ? option.eCode : that.eCode;
+			var _theme = option.tm ? option.tm : "";
+			var _company = option.company ? option.company : "";
 			that.eCode = eCode;
+			that.company = _company;
+			that.theme = "theme-" + _theme;
+			that.imgBg = _company == '信达' ? "/static/default-xd.jpg" : "/static/default.jpg";
 			_imgType.forEach((obj, k) => {
 				var imgKey = obj;
 				var _data = {
@@ -357,7 +364,7 @@
 		flex-direction: row;
 		align-content: center;
 		align-items: center;
-		background-image: linear-gradient(#FFFFFF, #EEEEEE);
+		background-image: linear-gradient(#FFFFFF, #FFFFFF);
 	}
 
 	.portrait-main {
@@ -524,5 +531,24 @@
 
 	.reSet {
 		background: #E5A590;
+	}
+
+	.theme-1 .selBtnOn {
+		background: #d4ecff;
+		color: #092f87;
+	}
+
+	.theme-1 .portrait-main {
+		background-image: linear-gradient(#d4ecff, #d4ecff);
+	}
+
+	.theme-1 .ctgs {
+		background: #FFFFFF;
+	}
+
+	.theme-1 .selBtn::after {
+		content: "";
+		width: 0;
+		background: none;
 	}
 </style>
