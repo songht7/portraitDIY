@@ -21,6 +21,12 @@
 					<view class="edit-btn edit-pinch edit-set-big" v-show="editType===k" @click.stop.prevent="editImg('setBig',k)">✚</view>
 				</movable-view>
 			</block>
+			<!-- 站点二维码 -->
+			<block v-if="watermark">
+				<movable-view class="watermark" x="0" y="200">
+					<img class="watermarkImg" :src="watermark" />
+				</movable-view>
+			</block>
 			<!-- slot -->
 			<block v-if="slots">
 				<movable-view direction="all" :out-of-bounds="outOfBounds">
@@ -37,6 +43,10 @@
 		name: 'imageWrapper',
 		props: {
 			imgBg: {
+				type: String,
+				default: ''
+			},
+			watermark: {
 				type: String,
 				default: ''
 			},
@@ -248,5 +258,19 @@
 	.real_pic {
 		width: 100%;
 		height: 100%;
+	}
+
+
+	movable-view.watermark {
+		width: 80upx;
+		height: 80upx;
+		z-index: 1000;
+		opacity: 0.5;
+	}
+
+	img.watermarkImg {
+		height: 100%;
+		width: auto;
+		max-width: none;
 	}
 </style>

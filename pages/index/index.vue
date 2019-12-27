@@ -2,7 +2,7 @@
 	<view :class="['content',theme]">
 		<view class="uni-padding-wrap uni-common-mt">
 			<view class="portrait-box" v-show="!selectImg">
-				<imageWrapper ref="imageWrapper" :imgBg="imgBg" :maskImg="maskImg" :frame="frame">
+				<imageWrapper ref="imageWrapper" :imgBg="imgBg" :watermark="watermark" :maskImg="maskImg" :frame="frame">
 					<view class="text" v-if="slots">
 						头像
 					</view>
@@ -27,6 +27,10 @@
 				<!-- <button type="primary" @tap="getUpImgInfoCos">获取上传Cos图片信息</button>
 				<button type="primary" @tap="uImageTap">手动上传图片</button> -->
 				<view class="imgSelect">
+					<view class="webQRCode">
+						<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas" />
+					</view>
+					<!-- <img class="imgs" v-if="watermark" :src="watermark" alt=""> -->
 					<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight" @confirm="confirm"
 					 @cancel="cancel"></image-cropper>
 					<view class="selPor" @tap="upload()">更改头像</view>
@@ -53,15 +57,17 @@
 
 <script>
 	var html2canvas = require("@/common/html2canvas.min.js");
-	import sunuiUpimgTencent from '@/components/sunui-upimg/sunui-upimg-tencent.vue'
+	import QRCode from "@/common/qrcode.js"
+	import sunuiUpimgTencent from '@/components/sunui-upimg/sunui-upimg-tencent.vue';
 	import imageWrapper from '@/components/image-wrapper.vue';
-	import uniPopup from '@/components/uni-popup.vue'
+	import uniPopup from '@/components/uni-popup.vue';
 	import ImageCropper from "@/components/invinbg-image-cropper/invinbg-image-cropper.vue";
 	export default {
 		data() {
 			return {
 				company: "", //公司
 				theme: "", //主题色
+				watermark: "", //站点水印二维码、logo
 				eCode: "aleinqi", //后台对应企业code
 				base64Img: "",
 				tempFilePath: "",
@@ -165,6 +171,9 @@
 		onShow() {
 			this.getBase64Image();
 		},
+		onReady() {
+			this.setWebQRcode(); //生成站点二维码
+		},
 		components: {
 			sunuiUpimgTencent,
 			imageWrapper,
@@ -207,6 +216,20 @@
 			},
 			swithCth(ctgis) {
 				this.ctgis = ctgis;
+			},
+			setWebQRcode() {
+				var that = this;
+				var webUrl = that.$store.state.interface.domain + '#/?eCode=' + that.eCode + '&company=' + that.company + '&tm=' +
+					that.theme;
+				var setWebQRcode = new QRCode({
+					context: that, // 上下文环境
+					canvasId: "tki-qrcode-canvas", // canvas-id
+					text: webUrl, // 生成内容
+					size: 200, // 二维码大小
+					cbResult: function(res) { // 生成二维码的回调
+						that.watermark = res;
+					},
+				});
 			},
 			setDec(type, url) {
 				var that = this;
@@ -346,6 +369,14 @@
 <style scoped>
 	page {
 		height: 100%;
+	}
+
+	.webQRCode {
+		position: absolute;
+		width: 100upx;
+		height: 100upx;
+		opacity: 0;
+		left: -10000px;
 	}
 
 	.content {
