@@ -43,7 +43,8 @@ export default {
 			"getMaterialList": "/v6/ApiMaterial-getMaterialList.htm", //获取头像所需素材接口?eCode=aleinqi&st=logo(logo:logo,img:图标，box：相框)
 			"slideShow": "/v6/ApiBase-slideShow.htm", //广告位列表 ?eCode=aleinqi
 			"slideShow2": "/v6/ApiBase-slideShow.htm", //记录广告位点击 [POST] ?id=1
-			"headImage": "/v6/ApiCustomer-headImage.htm" //上传头像接口 [POST] ?eCode=aleinqi&openid=123
+			"headImage": "/v6/ApiCustomer-headImage.htm", //上传头像接口 [POST] ?eCode=aleinqi&openid=123
+			"qrcodeStatus": "/v6/ApiBase-qrcodeStatus.htm" //QR是否显示 ?eCode=aleinqi
 		}
 	}
 }

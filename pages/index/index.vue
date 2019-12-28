@@ -160,50 +160,25 @@
 		},
 		onLoad(option) {
 			var that = this;
-			var _imgType = that.imgType;
 			var ws = option.ws ? true : false;
 			var _qrtst = option.qrtst ? option.qrtst : false;
 			var eCode = option.eCode ? option.eCode : that.eCode;
 			var _theme = option.tm ? option.tm : "";
 			var _company = option.company ? option.company : "";
-			that.waterState = ws;
+			//that.waterState = ws;//url判断是否显示QR 现接接口
 			that.qrtst = _qrtst; //qr测试
 			that.eCode = eCode;
 			that.company = _company;
 			that.theme = "theme-" + _theme;
 			that.imgBg = eCode == 'xinda' ? "/static/default-xd.jpg" : "/static/default.jpg";
-			_imgType.forEach((obj, k) => {
-				var imgKey = obj;
-				var _data = {
-					inter: "getMaterialList",
-					parm: `?eCode=${eCode}&st=${imgKey}`,
-					fun: function(res) {
-						if (res.success) {
-							let result = res.data;
-							if (result.list) {
-								let _list = result.list;
-								var cList = [];
-								if (that.imgList[imgKey]) {
-									cList = that.imgList[imgKey];
-								}
-								that.imgList[imgKey] = [...cList, ..._list];
-							}
-							// console.log('------imgList-------');
-							console.log(that.imgList);
-						}
-					}
-				};
-				that.$store.dispatch("getData", _data)
-			})
+			that.getImgList();
+			that.checkQR();
 		},
 		onShow() {
 			this.getBase64Image();
 		},
 		onReady() {
 			var that = this;
-			if (that.waterState) {
-				that.setWebQRcode(); //生成站点二维码
-			}
 		},
 		components: {
 			sunuiUpimgTencent,
@@ -212,7 +187,53 @@
 			uniPopup
 		},
 		methods: {
-			upload(type) {
+			getImgList() { //获取图片列表
+				var that = this;
+				var _imgType = that.imgType;
+				_imgType.forEach((obj, k) => {
+					var imgKey = obj;
+					var _data = {
+						inter: "getMaterialList",
+						parm: `?eCode=${that.eCode}&st=${imgKey}`,
+						fun: function(res) {
+							if (res.success) {
+								let result = res.data;
+								if (result.list) {
+									let _list = result.list;
+									var cList = [];
+									if (that.imgList[imgKey]) {
+										cList = that.imgList[imgKey];
+									}
+									that.imgList[imgKey] = [...cList, ..._list];
+								}
+								// console.log('------imgList-------');
+								console.log(that.imgList);
+							}
+						}
+					};
+					that.$store.dispatch("getData", _data)
+				})
+			},
+			checkQR() { //检测是否显示QR
+				var that = this;
+				var _data = {
+					inter: "qrcodeStatus",
+					parm: `?eCode=${that.eCode}`,
+					fun: function(res) {
+						that.waterState = false;
+						if (res.success) {
+							let result = res.data;
+							console.log(result.info)
+							if (result.info == "1") {
+								that.waterState = true;
+								that.setWebQRcode(); //生成站点二维码
+							}
+						}
+					}
+				};
+				that.$store.dispatch("getData", _data)
+			},
+			upload(type) { //自定义上传图片
 				var that = this;
 				that.decType = type || '';
 				uni.chooseImage({
@@ -248,7 +269,7 @@
 			swithCth(ctgis) {
 				this.ctgis = ctgis;
 			},
-			setWebQRcode() {
+			setWebQRcode() { //生成QR
 				var that = this;
 				var webUrl = that.$store.state.interface.domain + '#/?eCode=' + that.eCode + '&company=' + that.company + '&tm=' +
 					that.theme;
@@ -270,7 +291,7 @@
 			setDec(type, url) {
 				var that = this;
 				//that.getBase64Image(type, url); //网络图片需先转base64
-				that.setImgToCanvas(type, url)
+				that.setImgToCanvas(type, url); //点击图片放入容器
 			},
 			resetImg() {
 				var that = this;
@@ -292,7 +313,7 @@
 				})
 				html2canvas(obj, {
 					backgroundColor: "transparent",
-					useCORS: true,
+					useCORS: true, //网络图片
 					allowTaint: true,
 					tainttest: true,
 					width: width,
