@@ -290,8 +290,8 @@
 			},
 			setDec(type, url) {
 				var that = this;
-				//that.getBase64Image(type, url); //网络图片需先转base64
-				that.setImgToCanvas(type, url); //点击图片放入容器
+				that.getBase64Image(type, url); //网络图片需先转base64
+				//that.setImgToCanvas(type, url); //点击图片放入容器
 			},
 			resetImg() {
 				var that = this;
