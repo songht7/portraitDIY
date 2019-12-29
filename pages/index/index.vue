@@ -345,7 +345,8 @@
 				});
 				var img = new Image();
 				img.crossOrigin = 'Anonymous'; // 重点！设置image对象可跨域请求
-				img.src = dataURL;
+				img.setAttribute('crossorigin', ' *');
+				img.src = dataURL + "?t=" + new Date().getTime();
 				img.onload = function() {
 					var canvas = document.createElement("canvas");
 					canvas.width = img.width;
