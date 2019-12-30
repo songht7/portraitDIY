@@ -1,40 +1,42 @@
 <template>
-	<div id="ImageWrapper" class="imageWrapper">
-		<movable-area :out-of-bounds="outOfBounds">
-			<!-- 头像 -->
-			<movable-view class="imgbg" scale v-if="imgBg" direction="all" :out-of-bounds="outOfBounds">
-				<img class="real_pic" :src="imgBg" />
-			</movable-view>
-			<!-- 相框 -->
-			<movable-view class="imgbg frame" v-if="frame" direction="all" :out-of-bounds="outOfBounds">
-				<img class="real_pic" :src="frame" />
-			</movable-view>
-			<!-- 饰品 -->
-			<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
-				<movable-view :id="['Mask'+k]" class="maskImg" direction="all" @touchstart="touch(k)" :out-of-bounds="outOfBounds"
-				 scale scale-min="0.5" scale-max="4" :scale-value="img.scale" @scale="onScale">
-					<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">×</view>
-					<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" :style="{'transform':'rotate('+img.rotate+'deg)'}"
-					 alt="">
-					<view class="edit-btn edit-pinch edit-set-rotate" v-show="editType===k" @click.stop.prevent="editImg('rotate',k)">↻</view><!-- ↺ -->
-					<view class="edit-btn edit-pinch edit-set-small" v-show="editType===k" @click.stop.prevent="editImg('setSmall',k)">━</view>
-					<view class="edit-btn edit-pinch edit-set-big" v-show="editType===k" @click.stop.prevent="editImg('setBig',k)">✚</view>
+	<view id="CanvaBox">
+		<view id="ImageWrapper" class="imageWrapper">
+			<movable-area :out-of-bounds="outOfBounds">
+				<!-- 头像 -->
+				<movable-view class="imgbg" scale v-if="imgBg" direction="all" :out-of-bounds="outOfBounds">
+					<img class="real_pic" :src="imgBg" />
 				</movable-view>
-			</block>
-			<!-- 站点二维码 -->
-			<block v-if="waterState">
-				<movable-view class="watermark" x="0" y="600" scale :scale-value="wmSize" scale-min="0.1">
-					<img class="watermarkImg" :src="watermark" /><!-- style="opacity:0.5" -->
+				<!-- 相框 -->
+				<movable-view class="imgbg frame" v-if="frame" direction="all" :out-of-bounds="outOfBounds">
+					<img class="real_pic" :src="frame" />
 				</movable-view>
-			</block>
-			<!-- slot -->
-			<block v-if="slots">
-				<movable-view direction="all" :out-of-bounds="outOfBounds">
-					<slot></slot>
-				</movable-view>
-			</block>
-		</movable-area>
-	</div>
+				<!-- 饰品 -->
+				<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
+					<movable-view :id="['Mask'+k]" class="maskImg" direction="all" @touchstart="touch(k)" :out-of-bounds="outOfBounds"
+					 scale scale-min="0.5" scale-max="4" :scale-value="img.scale" @scale="onScale">
+						<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">×</view>
+						<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" :style="{'transform':'rotate('+img.rotate+'deg)'}"
+						 alt="">
+						<view class="edit-btn edit-pinch edit-set-rotate" v-show="editType===k" @click.stop.prevent="editImg('rotate',k)">↻</view><!-- ↺ -->
+						<view class="edit-btn edit-pinch edit-set-small" v-show="editType===k" @click.stop.prevent="editImg('setSmall',k)">━</view>
+						<view class="edit-btn edit-pinch edit-set-big" v-show="editType===k" @click.stop.prevent="editImg('setBig',k)">✚</view>
+					</movable-view>
+				</block>
+				<!-- 站点二维码 -->
+				<block v-if="waterState">
+					<movable-view class="watermark" x="0" y="600" scale :scale-value="wmSize" scale-min="0.1">
+						<img class="watermarkImg" :src="watermark" /><!-- style="opacity:0.5" -->
+					</movable-view>
+				</block>
+				<!-- slot -->
+				<block v-if="slots">
+					<movable-view direction="all" :out-of-bounds="outOfBounds">
+						<slot></slot>
+					</movable-view>
+				</block>
+			</movable-area>
+		</view>
+	</view>
 </template>
 
 <script>
@@ -157,9 +159,15 @@
 
 
 <style>
-	#ImageWrapper {
+	#CanvaBox {
 		height: 600upx;
 		width: 600upx;
+		border: 1px solid #eee;
+	}
+
+	#ImageWrapper {
+		height: 100%;
+		width: 100%;
 	}
 
 	movable-view {
