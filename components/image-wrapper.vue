@@ -17,7 +17,8 @@
 						<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">×</view>
 						<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" :style="{'transform':'rotate('+img.rotate+'deg)'}"
 						 alt="">
-						<view class="edit-btn edit-pinch edit-set-rotate" v-show="editType===k" @click.stop.prevent="editImg('rotate',k)">↻</view><!-- ↺ -->
+						<view class="edit-btn edit-pinch edit-set-rotate-right" v-show="editType===k" @click.stop.prevent="editImg('rotateRight',k)">↺</view>
+						<view class="edit-btn edit-pinch edit-set-rotate" v-show="editType===k" @click.stop.prevent="editImg('rotate',k)">↻</view><!-- ↻↺ -->
 						<view class="edit-btn edit-pinch edit-set-small" v-show="editType===k" @click.stop.prevent="editImg('setSmall',k)">━</view>
 						<view class="edit-btn edit-pinch edit-set-big" v-show="editType===k" @click.stop.prevent="editImg('setBig',k)">✚</view>
 					</movable-view>
@@ -146,6 +147,13 @@
 							}
 						})
 						break;
+					case 'rotateRight':
+						that.maskImg.map((item, key) => {
+							if (key === k) {
+								item.rotate = item.rotate - 15
+							}
+						})
+						break;
 					default:
 						break;
 				}
@@ -191,7 +199,7 @@
 
 	.edit-del,
 	.edit-pinch {
-		background: #FF4400;
+		background: rgba(243, 58, 0, 0.6);
 		color: #FFFFFF;
 		border-radius: 50%;
 		overflow: hidden;
@@ -213,14 +221,26 @@
 	}
 
 	.edit-set-small {
-		top: auto;
-		left: -20upx;
-		right: auto;
 		bottom: -20upx;
+		left: auto;
+		right: -20upx;
+	}
+
+	.edit-set-big {
+		top: 85upx;
+		left: auto;
+		right: -20upx;
 	}
 
 	.edit-set-rotate {
 		top: -20upx;
+		left: auto;
+		right: -20upx;
+	}
+
+	.edit-set-rotate-right {
+		top: 25upx;
+		left: auto;
 		right: -20upx;
 	}
 
