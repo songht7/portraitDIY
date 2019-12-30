@@ -281,7 +281,7 @@
 		width: 50%;
 		padding: 4%;
 		height: 80upx;
-		z-index: 101;
+		z-index: 98;
 		justify-content: flex-start;
 		position: absolute;
 		bottom: 0;
