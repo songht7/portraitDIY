@@ -365,6 +365,9 @@
 					canvas.width = img.width;
 					canvas.height = img.height;
 					var ctx = canvas.getContext("2d");
+					// ctx.setFillStyle('transparent');
+					// ctx.fillRect(0, 0, img.width, img.height);
+					// ctx.save()
 					ctx.drawImage(img, 0, 0, img.width, img.height);
 					var ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
 					var dataURL = canvas.toDataURL("image/" + ext);

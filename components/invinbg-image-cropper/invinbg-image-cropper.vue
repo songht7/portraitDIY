@@ -228,7 +228,7 @@
                 let dx = _this.cropOffsertX - _this.x - (_this.imageWidth - imgW) / 2;
                 let dy = _this.cropOffsertY - _this.y - (_this.imageHeight - imgH) / 2;
 
-                ctx.setFillStyle('white')
+                ctx.setFillStyle('transparent')
                 ctx.fillRect(0, 0, imgW, imgH)
                 ctx.save()
 
