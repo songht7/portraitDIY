@@ -22,7 +22,7 @@
 				</movable-view>
 			</block>
 			<!-- 站点二维码 -->
-			<block v-if="watermark">
+			<block v-if="waterState">
 				<movable-view class="watermark" x="0" y="600" scale :scale-value="wmSize" scale-min="0.1">
 					<img class="watermarkImg" :src="watermark" /><!-- style="opacity:0.5" -->
 				</movable-view>
@@ -49,6 +49,10 @@
 			watermark: {
 				type: String,
 				default: ''
+			},
+			waterState: {
+				type: Boolean,
+				default: false
 			},
 			wmSize: {
 				type: String,
@@ -267,7 +271,7 @@
 
 	movable-view.watermark {
 		width: 50%;
-		padding: 2%;
+		padding: 4%;
 		height: 80upx;
 		z-index: 101;
 		justify-content: flex-start;

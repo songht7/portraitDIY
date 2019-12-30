@@ -2,7 +2,8 @@
 	<view :class="['content',theme]">
 		<view class="uni-padding-wrap uni-common-mt">
 			<view class="portrait-box" v-show="!selectImg">
-				<imageWrapper ref="imageWrapper" :imgBg="imgBg" :watermark="watermark" :wmSize="wmSize" :maskImg="maskImg" :frame="frame">
+				<imageWrapper ref="imageWrapper" :imgBg="imgBg" :waterState="waterState" :watermark="watermark" :wmSize="wmSize"
+				 :maskImg="maskImg" :frame="frame">
 					<view class="text" v-if="slots">
 						头像
 					</view>
@@ -16,6 +17,10 @@
 				</view>
 				<view class="ctgBox">
 					<view class="ctgCont">
+						<view v-if="ctgis=='logo'&&apiWaterState" :class="['ctgImgBlock','watermark',waterState?'waterOn':'waterOff']"
+						 @click="setDec('watermark')">
+							<img :src="watermark" class="ctgImg" alt="">
+						</view>
 						<block v-for="(obj,k) in imgList[ctgis]" :key="k">
 							<view class="ctgImgBlock" @click="setDec(obj.st,`${obj.original_src}`)">
 								<img :src="`${obj.original_src}`" class="ctgImg" alt="">
@@ -27,7 +32,7 @@
 				<!-- <button type="primary" @tap="getUpImgInfoCos">获取上传Cos图片信息</button>
 				<button type="primary" @tap="uImageTap">手动上传图片</button> -->
 				<view class="imgSelect">
-					<view class="webQRCode" v-if="waterState">
+					<view class="webQRCode" v-if="apiWaterState">
 						<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas" :style="{width:QRSize+'px',height:QRSize+'px'}" />
 					</view>
 					<!-- <img v-if="watermark" :src="watermark" alt=""> -->
@@ -87,8 +92,9 @@
 				theme: "", //主题色
 				watermark: "", //站点水印二维码、logo
 				waterState: false, //是否有水印
-				QROpacity: 0.6, //水印透明度
-				QRSize: 80, //水印大小
+				apiWaterState: false, //后台是否允许开始水印
+				QROpacity: 1, //水印透明度
+				QRSize: 70, //水印大小
 				wmSize: "0.5", //水印缩放大小
 				QRColor: 0, //水印前景色
 				qrtst: false, //水印测试
@@ -220,11 +226,13 @@
 					inter: "qrcodeStatus",
 					parm: `?eCode=${that.eCode}`,
 					fun: function(res) {
+						that.apiWaterState = false;
 						that.waterState = false;
 						if (res.success) {
 							let result = res.data;
-							console.log(result.info)
+							//console.log(result.info)
 							if (result.info == "1") {
+								that.apiWaterState = true;
 								that.waterState = true;
 								that.setWebQRcode(); //生成站点二维码
 							}
@@ -291,8 +299,12 @@
 			},
 			setDec(type, url) {
 				var that = this;
-				that.getBase64Image(type, url); //网络图片需先转base64
-				//that.setImgToCanvas(type, url); //点击图片放入容器
+				if (type == 'watermark') {
+					that.waterState = !that.waterState;
+				} else {
+					that.getBase64Image(type, url); //网络图片需先转base64
+					//that.setImgToCanvas(type, url); //点击图片放入容器
+				}
 			},
 			resetImg() {
 				var that = this;
@@ -593,6 +605,31 @@
 		align-content: center;
 		align-items: center;
 		padding-bottom: 10upx;
+		position: relative;
+	}
+
+	.watermark:before {
+		content: "✔";
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background: rgba(0, 0, 0, .3);
+		display: flex;
+		align-content: center;
+		justify-content: center;
+		align-items: center;
+		color: #FFFFFF;
+		font-size: 60upx;
+	}
+
+	.waterOn:before {
+		content: "✘";
+	}
+
+	.waterOff:before {
+		content: "✔";
 	}
 
 	.ctgImg {
