@@ -90,7 +90,7 @@
 				QROpacity: 0.6, //水印透明度
 				QRSize: 80, //水印大小
 				wmSize: "0.5", //水印缩放大小
-				QRColor: "100", //水印前景色
+				QRColor: 0, //水印前景色
 				qrtst: false, //水印测试
 				eCode: "aleinqi", //后台对应企业code
 				base64Img: "",
@@ -280,6 +280,7 @@
 					context: that, // 上下文环境
 					canvasId: "tki-qrcode-canvas", // canvas-id
 					text: webUrl, // 生成内容
+					correctLevel: 0, // 容错级别0、1、2、3，数字越大说明所需纠错级别越大
 					background: `rgba(255, 255, 255, ${that.QROpacity})`, //背景色
 					foreground: `rgba(${that.QRColor}, ${that.QRColor}, ${that.QRColor}, ${that.QROpacity})`, //前景色
 					size: that.QRSize, // 二维码大小
@@ -448,7 +449,7 @@
 	}
 
 	.portrait-box {
-		padding: 40upx 0 0;
+		padding: 60upx 0 40upx;
 		display: flex;
 		justify-content: center;
 		flex-direction: row;

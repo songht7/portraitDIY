@@ -23,7 +23,7 @@
 			</block>
 			<!-- 站点二维码 -->
 			<block v-if="watermark">
-				<movable-view class="watermark" x="0" y="500" scale :scale-value="wmSize" scale-min="0.1">
+				<movable-view class="watermark" x="0" y="260" scale :scale-value="wmSize" scale-min="0.1">
 					<img class="watermarkImg" :src="watermark" /><!-- style="opacity:0.5" -->
 				</movable-view>
 			</block>
@@ -154,7 +154,7 @@
 
 <style>
 	#ImageWrapper {
-		height: 650upx;
+		height: 600upx;
 		width: 600upx;
 	}
 
@@ -266,7 +266,7 @@
 
 
 	movable-view.watermark {
-		width: 96%;
+		width: 50%;
 		padding: 2%;
 		height: 80upx;
 		z-index: 101;
