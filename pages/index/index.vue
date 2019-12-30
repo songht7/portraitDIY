@@ -612,13 +612,14 @@
 	}
 
 	.watermark:before {
-		content: "✔";
+		content: "";/* ✔ */
 		position: absolute;
 		width: 100%;
 		height: 100%;
 		top: 0;
 		left: 0;
-		background: rgba(0, 0, 0, .3);
+		background: url('../../static/icon-on-2.png') no-repeat 50% 50% rgba(0, 0, 0, .3);
+		background-size: 50% auto;
 		display: flex;
 		align-content: center;
 		justify-content: center;
@@ -628,11 +629,13 @@
 	}
 
 	.waterOn:before {
-		content: "✘";
+		content: "";/* ✘ */
+		background-image: url('../../static/icon-off-2.png');
 	}
 
 	.waterOff:before {
-		content: "✔";
+		content: "";/* ✔ */
+		background-image: url('../../static/icon-on-2.png');
 	}
 
 	.ctgImg {
