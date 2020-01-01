@@ -184,15 +184,27 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-width: 200upx;
+		min-width: 100upx;
 		/* min-height: 150upx; */
 		background-color: none;
 		color: #fff;
 	}
 
+	movable-view.watermark {
+		min-width: 150upx;
+		min-height: 150upx;
+	}
+
 	.maskImgBlock {
 		position: relative;
 		width: 100%;
+	}
+
+	img.maskImgs {
+		max-width:none;
+		position: relative;
+		left: -50%;
+		width: 200%;
 	}
 
 	.edit-btn {

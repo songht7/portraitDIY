@@ -272,6 +272,7 @@
 			},
 			cancel() {
 				this.selectImg = false;
+				this.tempFilePath = '';
 				console.log('canceled')
 			},
 			swithCth(ctgis) {
