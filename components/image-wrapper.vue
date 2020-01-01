@@ -13,14 +13,16 @@
 				<!-- 饰品 -->
 				<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
 					<movable-view :id="['Mask'+k]" class="maskImg" direction="all" @touchstart="touch(k)" :out-of-bounds="outOfBounds"
-					 scale scale-min="0.5" scale-max="4" :scale-value="img.scale" @scale="onScale">
-						<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">×</view>
-						<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" :style="{'transform':'rotate('+img.rotate+'deg)'}"
-						 alt="">
-						<view class="edit-btn edit-pinch edit-set-rotate-right" v-show="editType===k" @click.stop.prevent="editImg('rotateRight',k)">↺</view>
-						<view class="edit-btn edit-pinch edit-set-rotate" v-show="editType===k" @click.stop.prevent="editImg('rotate',k)">↻</view><!-- ↻↺ -->
-						<view class="edit-btn edit-pinch edit-set-small" v-show="editType===k" @click.stop.prevent="editImg('setSmall',k)">━</view>
-						<view class="edit-btn edit-pinch edit-set-big" v-show="editType===k" @click.stop.prevent="editImg('setBig',k)">✚</view>
+					 scale scale-min="0.5" scale-max="4" x="100" y="100" :scale-value="img.scale" @scale="onScale">
+						<view class="maskImgBlock">
+							<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">✘</view>
+							<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" :style="{'transform':'rotate('+img.rotate+'deg)'}"
+							 alt="">
+							<view class="edit-btn edit-pinch edit-set-rotate-right" v-show="editType===k" @click.stop.prevent="editImg('rotateRight',k)">↺</view>
+							<view class="edit-btn edit-pinch edit-set-rotate" v-show="editType===k" @click.stop.prevent="editImg('rotate',k)">↻</view><!-- ↻↺ -->
+							<view class="edit-btn edit-pinch edit-set-small" v-show="editType===k" @click.stop.prevent="editImg('setSmall',k)">━</view>
+							<view class="edit-btn edit-pinch edit-set-big" v-show="editType===k" @click.stop.prevent="editImg('setBig',k)">✚</view>
+						</view>
 					</movable-view>
 				</block>
 				<!-- 站点二维码 -->
@@ -182,17 +184,21 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-width: 150upx;
-		min-height: 150upx;
+		min-width: 200upx;
+		/* min-height: 150upx; */
 		background-color: none;
 		color: #fff;
+	}
+
+	.maskImgBlock {
 		position: relative;
+		width: 100%;
 	}
 
 	.edit-btn {
 		position: absolute;
-		top: -20upx;
-		left: -20upx;
+		top: -30upx;
+		left: -30upx;
 		color: #f40;
 		z-index: 2;
 	}
@@ -223,25 +229,26 @@
 	.edit-set-small {
 		bottom: -20upx;
 		left: auto;
-		right: -20upx;
+		right: -30upx;
 	}
 
 	.edit-set-big {
-		top: 85upx;
+		bottom: -20upx;
+		top: auto;
 		left: auto;
-		right: -20upx;
+		right: 20upx;
 	}
 
 	.edit-set-rotate {
-		top: -20upx;
+		top: -30upx;
 		left: auto;
-		right: -20upx;
+		right: -30upx;
 	}
 
 	.edit-set-rotate-right {
-		top: 25upx;
+		top: -30upx;
 		left: auto;
-		right: -20upx;
+		right: 20upx;
 	}
 
 	.imgBorder {
