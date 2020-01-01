@@ -178,6 +178,7 @@
 	#ImageWrapper {
 		height: 100%;
 		width: 100%;
+		background: #FFFFFF;
 	}
 
 	movable-view {
