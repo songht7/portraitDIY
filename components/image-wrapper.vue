@@ -12,12 +12,12 @@
 				</movable-view>
 				<!-- 饰品 -->
 				<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
-					<movable-view v-if="img.delt===0" :id="['Mask'+k]" class="maskImg" direction="all" @touchstart="touch(k)"
+					<movable-view v-if="img.delt===0" :id="['Mask'+k]" class="maskImg" direction="all"
 					 :out-of-bounds="outOfBounds" scale scale-min="0.5" scale-max="4" x="100" y="100" :scale-value="img.scale" @scale="onScale">
 						<view class="maskImgBlock">
 							<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">✘</view>
 							<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" :style="{'transform':'rotate('+img.rotate+'deg)'}"
-							 alt="">
+							 alt=""  @touchstart="touch(k)">
 							<view class="edit-btn edit-pinch edit-set-rotate-right" v-show="editType===k" @click.stop.prevent="editImg('rotateRight',k)">↺</view>
 							<view class="edit-btn edit-pinch edit-set-rotate" v-show="editType===k" @click.stop.prevent="editImg('rotate',k)">↻</view><!-- ↻↺ -->
 							<view class="edit-btn edit-pinch edit-set-small" v-show="editType===k" @click.stop.prevent="editImg('setSmall',k)">━</view>
