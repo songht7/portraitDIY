@@ -31,7 +31,11 @@
 				minNum: 1, //最小值
 				isLucked: {}, //已抽取的号
 				numb: [], //抽奖号
-				StorageLucked: [] //历史抽奖值、避免重复
+				StorageLucked: [], //历史抽奖值、避免重复
+				luckyV1: [], //暗箱抽奖号
+				luckyV2: [],
+				luckyV3: [],
+				hasBlockBox: false
 			}
 		},
 		onLoad(option) {},
@@ -39,6 +43,7 @@
 			var that = this;
 			that.getAction();
 			that.getLucked();
+			that.getmyLuck();
 		},
 		onReady() {
 			var that = this;
@@ -82,6 +87,27 @@
 					}
 				});
 			},
+			getmyLuck() {
+				const that = this;
+				uni.getStorage({
+					key: 'myLuck',
+					success: function(res) {
+						that.luckyV1 = res.data.v1 ? res.data.v1 : [];
+						that.luckyV2 = res.data.v2 ? res.data.v2 : [];
+						that.luckyV3 = res.data.v3 ? res.data.v3 : [];
+						if (that.luckyV1.length || that.luckyV2.length || that.luckyV3.length) {
+							console.log("myLuck::", that.luckyV1, that.luckyV2, that.luckyV3)
+							that.hasBlockBox = true;
+						}
+					},
+					fail() {
+						that.luckyV1 = [];
+						that.luckyV2 = [];
+						that.luckyV3 = [];
+						that.hasBlockBox = false;
+					}
+				});
+			},
 			getData(k) {
 				const that = this;
 				let v = "v" + that.lucky;
@@ -99,30 +125,53 @@
 					switch (that.lucky.toString()) {
 						case "1":
 							let vv1 = that.isLucked['v1'] ? that.isLucked['v1'] : [];
+							if (that.hasBlockBox && that.luckyV1.length) {
+								that.numb = that.luckyV1;
+							}
 							LN = {
 								v1: [...vv1, ...that.numb]
 							}
 							break;
 						case "2":
 							let vv2 = that.isLucked['v2'] ? that.isLucked['v2'] : [];
+							if (that.hasBlockBox) {
+								let k = that.isLucked[v] && that.isLucked[v].length ? that.luckyCount - that.isLucked[v].length : 0;
+								if (that.luckyV2[k]) {
+									that.numb = [that.luckyV2[k]];
+								}
+							}
 							LN = {
 								v2: [...vv2, ...that.numb]
 							}
 							break;
 						case "3":
 							let vv3 = that.isLucked['v3'] ? that.isLucked['v3'] : [];
+							if (that.hasBlockBox) {
+								let k = that.isLucked[v] && that.isLucked[v].length ? that.luckyCount - that.isLucked[v].length : 0;
+								if (that.luckyV3[k]) {
+									that.numb = [that.luckyV3[k]];
+								}
+							}
 							LN = {
 								v3: [...vv3, ...that.numb]
 							}
 							break;
 						case "4":
 							let vv4 = that.isLucked['v4'] ? that.isLucked['v4'] : [];
+							if (that.hasBlockBox) {
+								let k = that.isLucked[v] && that.isLucked[v].length ? that.luckyCount - that.isLucked[v].length : 0;
+								that.numb = [that.luckyV4[k]];
+							}
 							LN = {
 								v4: [...vv4, ...that.numb]
 							}
 							break;
 						case "5":
 							let vv5 = that.isLucked['v5'] ? that.isLucked['v5'] : [];
+							if (that.hasBlockBox) {
+								let k = that.isLucked[v] && that.isLucked[v].length ? that.luckyCount - that.isLucked[v].length : 0;
+								that.numb = [that.luckyV5[k]];
+							}
 							LN = {
 								v5: [...vv5, ...that.numb]
 							}

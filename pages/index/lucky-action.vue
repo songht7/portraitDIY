@@ -31,6 +31,24 @@
 		</view>
 		<view class="submit" @click="submit">确认</view>
 		<view class="submit reset" @click="reset">清空抽奖</view>
+		<block>
+			<view class="black-box">
+				<view class="lb-row row-title">
+					暗箱
+				</view>
+				<view class="lb-row">
+					一等奖号<input class="ipt" type="text" name="" id="" v-model="luckyV1">
+				</view>
+				<view class="lb-row">
+					二等奖号<input class="ipt" type="text" name="" id="" v-model="luckyV2">
+				</view>
+				<view class="lb-row">
+					三等奖号<input class="ipt" type="text" name="" id="" v-model="luckyV3">
+				</view>
+			</view>
+			<view class="submit" @click="confirm">确认</view>
+			<view class="submit reset" @click="remore">清空暗箱</view>
+		</block>
 	</view>
 </template>
 
@@ -45,6 +63,9 @@
 				pCount: 200, //共多少人参与
 				isLucked: {}, //已抽取的号
 				numb: [], //抽奖号
+				luckyV1: "", //暗箱抽奖号
+				luckyV2: "",
+				luckyV3: ""
 			}
 		},
 		onLoad(option) {},
@@ -52,6 +73,7 @@
 			var that = this;
 			that.getAction();
 			that.getLucked();
+			that.getmyLuck();
 		},
 		onReady() {
 			var that = this;
@@ -118,6 +140,79 @@
 						that.getLucked();
 					}
 				});
+			},
+			getmyLuck() {
+				const that = this;
+				uni.getStorage({
+					key: 'myLuck',
+					success: function(res) {
+						that.luckyV1 = res.data.v1?res.data.v1.join(','):"";
+						that.luckyV2 = res.data.v2?res.data.v2.join(','):"";
+						that.luckyV3 = res.data.v3?res.data.v3.join(','):"";
+					},
+					fail() {
+						that.luckyV1 = "";
+						that.luckyV2 = "";
+						that.luckyV3 = "";
+					}
+				});
+			},
+			confirm() {
+				const that = this;
+				let v1 = that.luckyV1.split(',');
+				let v2 = that.luckyV2.split(',');
+				let v3 = that.luckyV3.split(',');
+				let vv1 = [];
+				let vv2 = [];
+				let vv3 = [];
+				let myLuck = {}
+				v1.map((obj) => {
+					console.log(obj)
+					if (obj) {
+						vv1.push(parseInt(obj));
+					}
+				});
+				v2.map((obj) => {
+					console.log(obj)
+					if (obj) {
+						vv2.push(parseInt(obj));
+					}
+				});
+				v3.map((obj) => {
+					console.log(obj)
+					if (obj) {
+						vv3.push(parseInt(obj));
+					}
+				});
+				myLuck = {
+					v1: vv1,
+					v2: vv2,
+					v3: vv3
+				}
+				uni.setStorage({
+					key: 'myLuck',
+					data: myLuck,
+					success: function() {
+						uni.showToast({
+							title: "GOOD JOB!"
+						})
+					}
+				});
+
+			},
+			remore() {
+				const that = this;
+				uni.removeStorage({
+					key: 'myLuck',
+					success: function() {
+						that.luckyV1 = "";
+						that.luckyV2 = "";
+						that.luckyV3 = "";
+						uni.showToast({
+							title: "已清空!"
+						})
+					}
+				});
 			}
 		}
 	}
@@ -171,5 +266,13 @@
 
 	.reset {
 		background: #999;
+	}
+
+	.black-box {
+		padding: 30upx 0;
+	}
+
+	.row-title {
+		font-size: 36upx;
 	}
 </style>
