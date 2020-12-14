@@ -31,8 +31,12 @@
 		</view>
 		<view class="submit" @click="submit">确认</view>
 		<view class="submit reset" @click="reset">清空抽奖</view>
-		<block>
-			<view class="black-box">
+		<view class="black-box">
+			<view class="lucky-act">
+				<view class="lb-row"><input class="ipt" type="text" name="" id="" v-model="blockBoxNum" @blur="ckBlockBox">
+				</view>
+			</view>
+			<block v-if="hasBlockBox">
 				<view class="lb-row row-title">
 					暗箱
 				</view>
@@ -45,10 +49,10 @@
 				<view class="lb-row">
 					三等奖号<input class="ipt" type="text" name="" id="" v-model="luckyV3">
 				</view>
-			</view>
-			<view class="submit" @click="confirm">确认</view>
-			<view class="submit reset" @click="remore">清空暗箱</view>
-		</block>
+				<view class="submit" @click="confirm">确认</view>
+				<view class="submit reset" @click="remore">清空暗箱</view>
+			</block>
+		</view>
 	</view>
 </template>
 
@@ -65,7 +69,10 @@
 				numb: [], //抽奖号
 				luckyV1: "", //暗箱抽奖号
 				luckyV2: "",
-				luckyV3: ""
+				luckyV3: "",
+				hasBlockBox: false,
+				blockBoxNum: "",
+				blockBoxPW: "s12321"
 			}
 		},
 		onLoad(option) {},
@@ -80,6 +87,13 @@
 		},
 		components: {},
 		methods: {
+			ckBlockBox() {
+				if (this.blockBoxNum == this.blockBoxPW) {
+					this.hasBlockBox = true;
+				} else {
+					this.hasBlockBox = false;
+				}
+			},
 			getAction() {
 				const that = this;
 				uni.getStorage({
@@ -146,9 +160,9 @@
 				uni.getStorage({
 					key: 'myLuck',
 					success: function(res) {
-						that.luckyV1 = res.data.v1?res.data.v1.join(','):"";
-						that.luckyV2 = res.data.v2?res.data.v2.join(','):"";
-						that.luckyV3 = res.data.v3?res.data.v3.join(','):"";
+						that.luckyV1 = res.data.v1 ? res.data.v1.join(',') : "";
+						that.luckyV2 = res.data.v2 ? res.data.v2.join(',') : "";
+						that.luckyV3 = res.data.v3 ? res.data.v3.join(',') : "";
 					},
 					fail() {
 						that.luckyV1 = "";
