@@ -13,7 +13,7 @@
 			</view>
 			<view class="lb-row"> 幸运号码
 				<block v-for="(obj,key) in isLucked['v'+lucky]" :key="key">
-					<text class="lk-val">‘{{obj}}’</text>
+					<text class="lk-val" @longpress="delt" @dblclick="delt" :data-key="key" :data-val="obj">‘{{obj}}’</text>
 				</block>。
 			</view>
 		</view>
@@ -75,7 +75,7 @@
 						let sl = [...v1, ...v2, ...v3, ...v4, ...v5]
 						that.StorageLucked = sl;
 						let v = "v" + that.lucky;
-						if (res.data[v] && res.data[v].length > 0) {
+						if (res.data[v]) { //&& res.data[v].length > 0
 							that.isLucked[v] = res.data[v];
 						}
 						console.log("StorageLucked::", sl)
@@ -215,6 +215,52 @@
 						that.random(r0);
 					}
 				}
+			},
+			delt(e) {
+				const that = this;
+				let key = e.currentTarget.dataset.key;
+				let val = e.currentTarget.dataset.val;
+				let v = "v" + that.lucky;
+				console.log(key, val, v)
+				uni.getStorage({
+					key: 'rbdLucked',
+					success: function(res) {
+						let _data = res.data;
+						let _dataVal = _data[v][key];
+						console.log(_data);
+						uni.showModal({
+							title: "作废？",
+							content: "幸运号：" + val,
+							success: function(res) {
+								if (res.confirm) {
+									console.log('用户点击确定');
+									_data[v] = _data[v].filter((obj, k) => {
+										if (k != key) {
+											return obj
+										}
+									});
+									uni.setStorage({
+										key: 'rbdLucked',
+										data: _data,
+										success: function() {
+											that.getLucked();
+										}
+									});
+								} else if (res.cancel) {
+									// console.log('用户点击取消');
+								}
+							}
+						})
+						// uni.setStorage({
+						// 	key: 'rbdLucked',
+						// 	data: { ..._data},
+						// 	success: function() {
+						// 		that.getLucked();
+						// 	}
+						// });
+					},
+					fail() {}
+				});
 			},
 			random(k) {
 				const that = this;
