@@ -36,6 +36,7 @@
 				<view class="lb-row"><input class="ipt" type="text" name="" id="" v-model="blockBoxNum" @blur="ckBlockBox">
 				</view>
 			</view>
+			<view class="longpress" @longpress="longpress" @dblclick="longpress"></view>
 			<block v-if="hasBlockBox">
 				<view class="lb-row row-title">
 					暗箱
@@ -88,6 +89,9 @@
 		},
 		components: {},
 		methods: {
+			longpress() {
+				this.isblack = !this.isblack;
+			},
 			ckBlockBox() {
 				if (this.blockBoxNum == this.blockBoxPW) {
 					this.hasBlockBox = true;
@@ -290,5 +294,14 @@
 	.row-title {
 		/* font-size: 36upx; */
 		font-size: 16px;
+	}
+
+	.longpress {
+		width: 100px;
+		height: 100px;
+		background: #fffcfc;
+		position: fixed;
+		bottom: 0;
+		right: 0;
 	}
 </style>
