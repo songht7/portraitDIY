@@ -29,7 +29,8 @@
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": {
-						"type": "transparent"
+						// "type": "transparent",
+						"autoBackButton": false
 					}
 				}
 			}
@@ -40,7 +41,8 @@
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": {
-						"type": "transparent"
+						// "type": "transparent",
+						"autoBackButton": false
 					}
 				}
 			}

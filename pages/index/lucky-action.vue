@@ -32,7 +32,7 @@
 		<view class="submit" @click="submit">确认</view>
 		<view class="submit reset" @click="reset">清空抽奖</view>
 		<view class="black-box">
-			<view class="lucky-act">
+			<view v-if="isblack" class="lucky-act">
 				<view class="lb-row"><input class="ipt" type="text" name="" id="" v-model="blockBoxNum" @blur="ckBlockBox">
 				</view>
 			</view>
@@ -70,6 +70,7 @@
 				luckyV1: "", //暗箱抽奖号
 				luckyV2: "",
 				luckyV3: "",
+				isblack: false,
 				hasBlockBox: false,
 				blockBoxNum: "",
 				blockBoxPW: "s12321"
@@ -234,12 +235,12 @@
 
 <style scoped>
 	page {
-		font-size: 32upx;
-		padding: 100upx 30upx 20upx;
+		font-size: 16px;
+		padding: 20px;
 	}
 
 	.ipt {
-		font-size: 32upx;
+		/* font-size: 32upx; */
 		border-bottom: 1px solid #ddd;
 		width: 100px;
 		text-align: center;
@@ -253,11 +254,11 @@
 		justify-content: flex-start;
 		align-items: flex-start;
 		align-content: flex-start;
-		padding-bottom: 20upx;
+		padding-bottom: 20px;
 	}
 
 	.lk-val {
-		padding: 0 5upx;
+		padding: 0 5px;
 	}
 
 	.lb-row {
@@ -266,7 +267,7 @@
 		justify-content: flex-start;
 		align-items: flex-start;
 		align-content: flex-start;
-		padding: 10upx 0;
+		padding: 10px 0;
 	}
 
 	.submit {
@@ -275,7 +276,7 @@
 		color: #FFFFFF;
 		line-height: 3;
 		text-align: center;
-		margin-bottom: 10upx;
+		margin-bottom: 10px;
 	}
 
 	.reset {
@@ -283,10 +284,11 @@
 	}
 
 	.black-box {
-		padding: 30upx 0;
+		padding: 30px 0;
 	}
 
 	.row-title {
-		font-size: 36upx;
+		/* font-size: 36upx; */
+		font-size: 16px;
 	}
 </style>
