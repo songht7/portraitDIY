@@ -33,7 +33,7 @@
 		<view class="submit reset" @click="reset">清空抽奖</view>
 		<view class="black-box">
 			<view v-if="isblack" class="lucky-act">
-				<view class="lb-row"><input class="ipt" type="text" name="" id="" v-model="blockBoxNum" @blur="ckBlockBox">
+				<view class="lb-row"><input class="ipt" type="text" name="" id="" v-model="blockBoxNum" @input="ckBlockBox">
 				</view>
 			</view>
 			<view class="longpress" @longpress="longpress" @dblclick="longpress"></view>
