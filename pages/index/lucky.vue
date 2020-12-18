@@ -1,20 +1,25 @@
 <template>
-	<view class="lucky-box">
-		<view class="lucky-numb">
-			<block v-for="(obj,k) in numb" :key="k">
-				<view class="numb" @click="getData(k)">
-					{{obj}}
-				</view>
-			</block>
+	<view class="lucky-main">
+		<view class="lucky-block lucky-info">
+			123
 		</view>
-		<view class="lucky-value">
-			<view class="lb-row">
-				{{lucky}}等奖{{luckyCount}}名
+		<view class="lucky-block lucky-box">
+			<view class="lucky-numb">
+				<block v-for="(obj,k) in numb" :key="k">
+					<view class="numb" @click="getData(k)">
+						{{obj}}
+					</view>
+				</block>
 			</view>
-			<view class="lb-row"> 幸运号码
-				<block v-for="(obj,key) in isLucked['v'+lucky]" :key="key">
-					<text class="lk-val" @longpress="delt" @dblclick="delt" :data-key="key" :data-val="obj">‘{{obj}}’</text>
-				</block>。
+			<view class="lucky-value">
+				<view class="lb-row">
+					{{lucky}}等奖{{luckyCount}}名
+				</view>
+				<view class="lb-row"> 幸运号码
+					<block v-for="(obj,key) in isLucked['v'+lucky]" :key="key">
+						<text class="lk-val" @longpress="delt" @dblclick="delt" :data-key="key" :data-val="obj">‘{{obj}}’</text>
+					</block>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -299,7 +304,7 @@
 <style scoped>
 	page {
 		font-size: 12upx;
-		padding: 20upx;
+		height: 100%;
 	}
 
 	.ipt {
@@ -308,10 +313,27 @@
 		width: 100px;
 		text-align: center;
 	}
+	
+	.lucky-main,
+	.lucky-block {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		align-content: center;
+		height: 100%;
+	}
+	.lucky-main{
+		background: url(../../static/cj.png) no-repeat 50% 50%;
+		background-size: cover;
+	}
+
+	.lucky-block {
+		width: 50%;
+	}
 
 	.lucky-box {
-		width: 100%;
-		padding-top: 30upx;
+		flex-direction: column;
 	}
 
 	.lucky-numb {
@@ -328,10 +350,11 @@
 		justify-content: center;
 		align-items: center;
 		align-content: center;
-		width: 150upx;
-		height: 150upx;
+		width: 130upx;
+		height: 130upx;
 		font-size: 60upx;
-		border: 5upx solid #DDDDDD;
+		border: 5upx solid #35a6df;
+		color: #3c74ba;
 		border-radius: 50%;
 		margin: 0 10upx;
 	}
@@ -343,8 +366,9 @@
 		justify-content: center;
 		align-items: center;
 		align-content: center;
-		padding: 50upx 0;
-		font-size: 30upx;
+		padding: 10upx 0;
+		font-size: 26upx;
+		color: #3c74ba;
 	}
 
 	.lucky-value {
