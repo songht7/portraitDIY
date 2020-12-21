@@ -1,7 +1,9 @@
 <template>
 	<view class="lucky-main">
 		<view class="lucky-block lucky-info">
-			123
+			<view class="">
+
+			</view>
 		</view>
 		<view class="lucky-block lucky-box">
 			<view class="lucky-numb">
@@ -15,7 +17,8 @@
 				<view class="lb-row">
 					{{lucky}}等奖{{luckyCount}}名
 				</view>
-				<view class="lb-row"> 幸运号码
+				<view class="lb-row">
+					<text class="lk-val">幸运号码</text>
 					<block v-for="(obj,key) in isLucked['v'+lucky]" :key="key">
 						<text class="lk-val" @longpress="delt" @dblclick="delt" :data-key="key" :data-val="obj">‘{{obj}}’</text>
 					</block>
@@ -40,6 +43,9 @@
 				luckyV1: [], //暗箱抽奖号
 				luckyV2: [],
 				luckyV3: [],
+				luckyV4: [],
+				luckyV5: [],
+				luckyV6: [],
 				hasBlockBox: false
 			}
 		},
@@ -77,7 +83,8 @@
 						let v3 = res.data.v3 ? res.data.v3 : [];
 						let v4 = res.data.v4 ? res.data.v4 : [];
 						let v5 = res.data.v5 ? res.data.v5 : [];
-						let sl = [...v1, ...v2, ...v3, ...v4, ...v5]
+						let v6 = res.data.v6 ? res.data.v6 : [];
+						let sl = [...v1, ...v2, ...v3, ...v4, ...v5, ...v6]
 						that.StorageLucked = sl;
 						let v = "v" + that.lucky;
 						if (res.data[v]) { //&& res.data[v].length > 0
@@ -100,7 +107,11 @@
 						that.luckyV1 = res.data.v1 ? res.data.v1 : [];
 						that.luckyV2 = res.data.v2 ? res.data.v2 : [];
 						that.luckyV3 = res.data.v3 ? res.data.v3 : [];
-						if (that.luckyV1.length || that.luckyV2.length || that.luckyV3.length) {
+						that.luckyV4 = res.data.v4 ? res.data.v4 : [];
+						that.luckyV5 = res.data.v5 ? res.data.v5 : [];
+						that.luckyV6 = res.data.v6 ? res.data.v6 : [];
+						if (that.luckyV1.length || that.luckyV2.length || that.luckyV3.length || that.luckyV4.length || that.luckyV5.length ||
+							that.luckyV6.length) {
 							console.log("myLuck::", that.luckyV1, that.luckyV2, that.luckyV3)
 							that.hasBlockBox = true;
 						}
@@ -109,6 +120,9 @@
 						that.luckyV1 = [];
 						that.luckyV2 = [];
 						that.luckyV3 = [];
+						that.luckyV4 = [];
+						that.luckyV5 = [];
+						that.luckyV6 = [];
 						that.hasBlockBox = false;
 					}
 				});
@@ -181,6 +195,16 @@
 								v5: [...vv5, ...that.numb]
 							}
 							break;
+						case "6":
+							let vv6 = that.isLucked['v6'] ? that.isLucked['v6'] : [];
+							if (that.hasBlockBox) {
+								let k = that.isLucked[v] && that.isLucked[v].length ? that.luckyCount - that.isLucked[v].length : 0;
+								that.numb = [that.luckyV6[k]];
+							}
+							LN = {
+								v6: [...vv6, ...that.numb]
+							}
+							break;
 						default:
 							break;
 					}
@@ -234,7 +258,7 @@
 						let _dataVal = _data[v][key];
 						console.log(_data);
 						uni.showModal({
-							title: "作废？",
+							title: "放弃？",
 							content: "幸运号：" + val,
 							success: function(res) {
 								if (res.confirm) {
@@ -313,7 +337,7 @@
 		width: 100px;
 		text-align: center;
 	}
-	
+
 	.lucky-main,
 	.lucky-block {
 		display: flex;
@@ -323,7 +347,8 @@
 		align-content: center;
 		height: 100%;
 	}
-	.lucky-main{
+
+	.lucky-main {
 		background: url(../../static/cj.png) no-repeat 50% 50%;
 		background-size: cover;
 	}
@@ -377,14 +402,15 @@
 	}
 
 	.lk-val {
-		padding: 0 2upx;
+		padding: 0 1upx;
 	}
 
 	.lb-row {
 		display: flex;
 		flex-direction: row;
-		justify-content: flex-end;
+		justify-content: center;
 		align-items: center;
 		align-content: center;
+		flex-wrap: wrap;
 	}
 </style>

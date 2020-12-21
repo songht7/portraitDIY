@@ -19,6 +19,24 @@
 					<text class="lk-val">{{obj}},</text>
 				</block>
 			</view>
+			<view class="lb-row" v-if="lucky==4||isLucked['v4']">
+				四等奖, 幸运号码：
+				<block v-if="isLucked['v4']" v-for="(obj,key) in isLucked['v4']" :key="key">
+					<text class="lk-val">{{obj}},</text>
+				</block>
+			</view>
+			<view class="lb-row" v-if="lucky==5||isLucked['v5']">
+				五等奖, 幸运号码：
+				<block v-if="isLucked['v5']" v-for="(obj,key) in isLucked['v5']" :key="key">
+					<text class="lk-val">{{obj}},</text>
+				</block>
+			</view>
+			<view class="lb-row" v-if="lucky==6||isLucked['v6']">
+				六等奖, 幸运号码：
+				<block v-if="isLucked['v6']" v-for="(obj,key) in isLucked['v6']" :key="key">
+					<text class="lk-val">{{obj}},</text>
+				</block>
+			</view>
 		</view>
 		<view class="lucky-act">
 			<view class="lb-row">
@@ -71,6 +89,9 @@
 				luckyV1: "", //暗箱抽奖号
 				luckyV2: "",
 				luckyV3: "",
+				luckyV4: "",
+				luckyV5: "",
+				luckyV6: "",
 				isblack: false,
 				hasBlockBox: false,
 				blockBoxNum: "",
@@ -168,11 +189,17 @@
 						that.luckyV1 = res.data.v1 ? res.data.v1.join(',') : "";
 						that.luckyV2 = res.data.v2 ? res.data.v2.join(',') : "";
 						that.luckyV3 = res.data.v3 ? res.data.v3.join(',') : "";
+						that.luckyV4 = res.data.v4 ? res.data.v4.join(',') : "";
+						that.luckyV5 = res.data.v5 ? res.data.v5.join(',') : "";
+						that.luckyV6 = res.data.v6 ? res.data.v6.join(',') : "";
 					},
 					fail() {
 						that.luckyV1 = "";
 						that.luckyV2 = "";
 						that.luckyV3 = "";
+						that.luckyV4 = "";
+						that.luckyV5 = "";
+						that.luckyV6 = "";
 					}
 				});
 			},
@@ -181,9 +208,15 @@
 				let v1 = that.luckyV1.split(',');
 				let v2 = that.luckyV2.split(',');
 				let v3 = that.luckyV3.split(',');
+				let v4 = that.luckyV4.split(',');
+				let v5 = that.luckyV5.split(',');
+				let v6 = that.luckyV6.split(',');
 				let vv1 = [];
 				let vv2 = [];
 				let vv3 = [];
+				let vv4 = [];
+				let vv5 = [];
+				let vv6 = [];
 				let myLuck = {}
 				v1.map((obj) => {
 					console.log(obj)
@@ -203,10 +236,31 @@
 						vv3.push(parseInt(obj));
 					}
 				});
+				v4.map((obj) => {
+					console.log(obj)
+					if (obj) {
+						vv4.push(parseInt(obj));
+					}
+				});
+				v5.map((obj) => {
+					console.log(obj)
+					if (obj) {
+						vv5.push(parseInt(obj));
+					}
+				});
+				v6.map((obj) => {
+					console.log(obj)
+					if (obj) {
+						vv6.push(parseInt(obj));
+					}
+				});
 				myLuck = {
 					v1: vv1,
 					v2: vv2,
-					v3: vv3
+					v3: vv3,
+					v4: vv4,
+					v5: vv5,
+					v6: vv6
 				}
 				uni.setStorage({
 					key: 'myLuck',
@@ -227,6 +281,9 @@
 						that.luckyV1 = "";
 						that.luckyV2 = "";
 						that.luckyV3 = "";
+						that.luckyV4 = "";
+						that.luckyV5 = "";
+						that.luckyV6 = "";
 						uni.showToast({
 							title: "已清空!"
 						})
