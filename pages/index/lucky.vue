@@ -1,10 +1,10 @@
 <template>
 	<view class="lucky-main">
-		<view class="lucky-block lucky-info">
+		<!-- <view class="lucky-block lucky-info">
 			<view class="">
 
 			</view>
-		</view>
+		</view> -->
 		<view class="lucky-block lucky-box">
 			<view class="lucky-numb">
 				<block v-for="(obj,k) in numb" :key="k">
@@ -14,7 +14,7 @@
 				</block>
 			</view>
 			<view class="lucky-value">
-				<view class="lb-row">
+				<view class="lb-row lucky-no">
 					{{lucky}}等奖{{luckyCount}}名
 				</view>
 				<view class="lb-row">
@@ -342,7 +342,7 @@
 	.lucky-block {
 		display: flex;
 		flex-direction: row;
-		justify-content: center;
+		justify-content: flex-end;
 		align-items: center;
 		align-content: center;
 		height: 100%;
@@ -354,11 +354,11 @@
 	}
 
 	.lucky-block {
-		width: 50%;
+		width: 60%;
 	}
 
 	.lucky-box {
-		flex-direction: column;
+		flex-direction: row;
 	}
 
 	.lucky-numb {
@@ -375,8 +375,8 @@
 		justify-content: center;
 		align-items: center;
 		align-content: center;
-		width: 130upx;
-		height: 130upx;
+		width: 150upx;
+		height: 150upx;
 		font-size: 60upx;
 		border: 5upx solid #35a6df;
 		color: #3c74ba;
@@ -412,5 +412,8 @@
 		align-items: center;
 		align-content: center;
 		flex-wrap: wrap;
+	}
+	.lucky-no{
+		font-size: 28upx;
 	}
 </style>
