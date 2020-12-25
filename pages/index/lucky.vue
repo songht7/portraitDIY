@@ -354,7 +354,7 @@
 	}
 
 	.lucky-block {
-		width: 60%;
+		width: 65%;
 	}
 
 	.lucky-box {
@@ -375,8 +375,8 @@
 		justify-content: center;
 		align-items: center;
 		align-content: center;
-		width: 150upx;
-		height: 150upx;
+		width: 180upx;
+		height: 180upx;
 		font-size: 60upx;
 		border: 5upx solid #35a6df;
 		color: #3c74ba;
