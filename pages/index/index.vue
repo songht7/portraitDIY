@@ -89,7 +89,7 @@
 		data() {
 			return {
 				company: "", //公司
-				theme: "", //主题色
+				theme: "", //主题色："","1"
 				watermark: "", //站点水印二维码、logo
 				waterState: false, //是否有水印
 				apiWaterState: false, //后台是否允许开始水印
@@ -98,7 +98,7 @@
 				wmSize: "0.5", //水印缩放大小
 				QRColor: 0, //水印前景色
 				qrtst: false, //水印测试
-				eCode: "aleinqi", //后台对应企业code
+				eCode: "aleinqi", //后台对应企业code: aleinqi, xinda
 				base64Img: "",
 				tempFilePath: "",
 				cropFixed: true, //true false,
