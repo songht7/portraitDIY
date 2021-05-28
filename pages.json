@@ -11,7 +11,7 @@
 					}
 				}
 			}
-		},{
+		}, {
 			"path": "pages/index/star",
 			"style": {
 				"navigationBarTitleText": "star",
@@ -22,7 +22,31 @@
 					}
 				}
 			}
-		},{
+		}, {
+			"path": "pages/index/lucky",
+			"style": {
+				"navigationBarTitleText": "瑞彼得2021年会抽奖活动",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						// "type": "transparent",
+						"autoBackButton": false
+					}
+				}
+			}
+		}, {
+			"path": "pages/index/lucky-action",
+			"style": {
+				"navigationBarTitleText": "控制按钮-瑞彼得2021年会抽奖活动",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						// "type": "transparent",
+						"autoBackButton": false
+					}
+				}
+			}
+		}, {
 			"path": "pages/index/es",
 			"style": {
 				"navigationBarTitleText": "ECMAScript 6.0 - TEST"
