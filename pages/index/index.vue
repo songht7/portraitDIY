@@ -1,24 +1,29 @@
 <template>
 	<view :class="['content',theme]">
 		<view class="uni-padding-wrap uni-common-mt">
-			<view class="portrait-box" v-show="!selectImg">
-				<imageWrapper ref="imageWrapper" :imgBg="imgBg" :waterState="waterState" :watermark="watermark" :wmSize="wmSize"
-				 :maskImg="maskImg" :frame="frame">
-					<view class="text" v-if="slots">
-						头像
-					</view>
-				</imageWrapper>
+			<view class="p-boxxx">
+				<view class="portrait-box" v-show="!selectImg">
+					<imageWrapper ref="imageWrapper" :imgBg="imgBg" :waterState="waterState" :watermark="watermark"
+						:wmSize="wmSize" :maskImg="maskImg" :frame="frame">
+						<view class="text" v-if="slots">
+							头像
+						</view>
+					</imageWrapper>
+				</view>
 			</view>
 			<view class="portrait-main">
 				<view class="ctgs">
 					<block v-for="(obj,k) in swithCthType" v-if="imgList[obj.key].length" :key="k">
-						<view :class="['selBtn',ctgis==obj.key?'selBtnOn':'']" @click="swithCth(obj.key)">{{obj.key=='logo'?company:''}}{{obj.name}}</view>
+						<view :class="['selBtn',ctgis==obj.key?'selBtnOn':'']" @click="swithCth(obj.key)">
+							{{obj.key=='logo'?company:''}}{{obj.name}}
+						</view>
 					</block>
 				</view>
 				<view class="ctgBox">
 					<view class="ctgCont">
-						<view v-if="ctgis=='logo'&&apiWaterState" :class="['ctgImgBlock','watermark',waterState?'waterOn':'waterOff']"
-						 @click="setDec('watermark')">
+						<view v-if="ctgis=='logo'&&apiWaterState"
+							:class="['ctgImgBlock','watermark',waterState?'waterOn':'waterOff']"
+							@click="setDec('watermark')">
 							<img :src="watermark" class="ctgImg" alt="">
 						</view>
 						<block v-for="(obj,k) in imgList[ctgis]" :key="k">
@@ -28,16 +33,19 @@
 						</block>
 					</view>
 				</view>
-				<sunui-upimg-tencent v-show="false" :upImgConfig="upImgCos" @onUpImg="upCosData" @onImgDel="delImgInfo" ref="uImage"></sunui-upimg-tencent>
+				<sunui-upimg-tencent v-show="false" :upImgConfig="upImgCos" @onUpImg="upCosData" @onImgDel="delImgInfo"
+					ref="uImage"></sunui-upimg-tencent>
 				<!-- <button type="primary" @tap="getUpImgInfoCos">获取上传Cos图片信息</button>
 				<button type="primary" @tap="uImageTap">手动上传图片</button> -->
 				<view class="imgSelect">
 					<view class="webQRCode" v-if="apiWaterState">
-						<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas" :style="{width:QRSize+'px',height:QRSize+'px'}" />
+						<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas"
+							:style="{width:QRSize+'px',height:QRSize+'px'}" />
 					</view>
 					<!-- <img v-if="watermark" :src="watermark" alt=""> -->
 					<block v-if="qrtst">
-						<view class="" style="width: 100%;padding-bottom: 50upx;background: #FFFFFF;position: relative;z-index: 102;">
+						<view class=""
+							style="width: 100%;padding-bottom: 50upx;background: #FFFFFF;position: relative;z-index: 102;">
 							<view class="">
 								透明度(0.1-1)
 								<input type="text" style="background: #DDDDDD;" v-model="QROpacity">
@@ -53,8 +61,8 @@
 							<view @click="setWebQRcode">生成二维码(button)</view>
 						</view>
 					</block>
-					<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight" @confirm="confirm"
-					 @cancel="cancel"></image-cropper>
+					<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth"
+						:cropHeight="cropHeight" @confirm="confirm" @cancel="cancel"></image-cropper>
 					<view class="selPor" @tap="upload()">更改头像</view>
 					<view class="selPor" @tap="upload('dec')">自定义挂件</view>
 					<view class="editBtns">
@@ -64,7 +72,8 @@
 				</view>
 			</view>
 			<!-- <img src="" alt="" class="imgSmall"> -->
-			<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100' @hidePopup="togglePopup('')">
+			<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100'
+				@hidePopup="togglePopup('')">
 				<view id="Generated">
 					<img class="imgs" v-if="newImg" :src="newImg" alt="">
 					<view>长按保存图片</view>
@@ -102,9 +111,9 @@
 				base64Img: "",
 				tempFilePath: "",
 				cropFixed: true, //true false,
-				cropWidth: 250,
-				cropHeight: 250,
-				imgBg: "/static/default.jpg",
+				cropWidth: 250, //裁切比 宽
+				cropHeight: 250, //裁切比 高
+				imgBg: "/static/default2.jpg",
 				maskImg: [],
 				newImg: "",
 				frame: "",
@@ -176,7 +185,7 @@
 			that.eCode = eCode;
 			that.company = _company;
 			that.theme = "theme-" + _theme;
-			that.imgBg = eCode == 'xinda' ? "/static/default-xd.jpg" : "/static/default.jpg";
+			that.imgBg = eCode == 'xinda' ? "/static/default-xd.jpg" : "/static/default2.jpg";
 			that.getImgList();
 			that.checkQR();
 		},
@@ -247,7 +256,7 @@
 				uni.chooseImage({
 					count: 1, //默认9
 					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-					sourceType: ['album'], //从相册选择
+					sourceType: ['album', 'camera'], //从相册选择
 					success: (res) => {
 						if (type == 'dec') {
 							var mk = {
@@ -281,7 +290,8 @@
 			},
 			setWebQRcode() { //生成QR
 				var that = this;
-				var webUrl = that.$store.state.interface.domain + '#/?eCode=' + that.eCode + '&company=' + that.company + '&tm=' +
+				var webUrl = that.$store.state.interface.domain + '#/?eCode=' + that.eCode + '&company=' + that.company +
+					'&tm=' +
 					that.theme;
 				if (cQRcode) {
 					cQRcode.clear()
@@ -466,8 +476,31 @@
 		height: 100%;
 	}
 
+/* 头像比例 1：1
+* p-boxxx：：width:100%
+* p-boxxx:before：：padding-top:100%
+* portrait-box：：height: 95%; width: 95%;
+*/
+	.p-boxxx {
+		width: 100%;
+		position: relative;
+	}
+
+	.p-boxxx:before {
+		content: '';
+		padding-top: 100%;
+		box-sizing: border-box;
+		display: block;
+		width: 0;
+	}
+
 	.portrait-box {
-		padding: 60upx 0 40upx;
+		position: absolute;
+		height: 95%;
+		width: 95%;
+		left: 2.5%;
+		top: 2.5%;
+		/* padding: 60upx 0 40upx; */
 		display: flex;
 		justify-content: center;
 		flex-direction: row;
@@ -692,5 +725,33 @@
 		content: "";
 		width: 0;
 		background: none;
+	}
+
+	.theme-2 .selBtnOn {
+		background: #F17F5A;
+		color: #fff;
+	}
+
+	.theme-2 .portrait-box {
+		height: 70%;
+	}
+
+	.theme-2 #CanvaBox {
+		width: 95%;
+		height: 95%;
+	}
+
+	.theme-2 .portrait-main {
+		background-image: linear-gradient(#F17F5A, #F17F5A);
+		min-height: auto;
+		height: 20%;
+	}
+
+	.theme-2 .selPor {
+		color: #fff;
+	}
+
+	.theme-2 .editBtn {
+		background-color: #f40;
 	}
 </style>

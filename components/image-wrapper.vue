@@ -3,8 +3,11 @@
 		<view id="ImageWrapper" class="imageWrapper">
 			<movable-area :out-of-bounds="outOfBounds">
 				<!-- 头像 -->
-				<movable-view class="imgbg" scale v-if="imgBg" direction="all" :out-of-bounds="outOfBounds">
+			<!-- 	<movable-view class="imgbg" scale v-if="imgBg" direction="all" :out-of-bounds="outOfBounds">
 					<img class="real_pic" :src="imgBg" />
+				</movable-view> -->
+				<movable-view class="imgbg" scale v-if="imgBg" direction="all" :out-of-bounds="outOfBounds">
+					<image :src="imgBg" mode="aspectFill" class="real_pic"></image>
 				</movable-view>
 				<!-- 相框 -->
 				<movable-view class="imgbg frame" v-if="frame" direction="all" :out-of-bounds="outOfBounds">
@@ -175,8 +178,8 @@
 
 <style>
 	#CanvaBox {
-		height: 600upx;
-		width: 600upx;
+		height: 100%;
+		width: 100%;
 		border: 1px solid #eee;
 	}
 
@@ -286,8 +289,8 @@
 	}
 
 	movable-area {
-		height: 600upx;
-		width: 600upx;
+		height: 100%;
+		width: 100%;
 		background-color: transparent;
 		background-size: cover;
 		overflow: hidden;

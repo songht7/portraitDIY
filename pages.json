@@ -3,7 +3,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "新年新像",
+				"navigationBarTitleText": "趣味头像",
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": {
