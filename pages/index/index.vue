@@ -496,10 +496,10 @@
 
 	.portrait-box {
 		position: absolute;
-		height: 95%;
-		width: 95%;
-		left: 2.5%;
-		top: 2.5%;
+		height: 90%;
+		width: 90%;
+		left: 5%;
+		top: 5%;
 		/* padding: 60upx 0 40upx; */
 		display: flex;
 		justify-content: center;
