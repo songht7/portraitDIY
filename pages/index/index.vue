@@ -11,6 +11,37 @@
 					</imageWrapper>
 				</view>
 			</view>
+			<view class="imgSelect">
+				<view class="webQRCode" v-if="apiWaterState">
+					<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas"
+						:style="{width:QRSize+'px',height:QRSize+'px'}" />
+				</view>
+				<!-- <img v-if="watermark" :src="watermark" alt=""> -->
+				<block v-if="qrtst">
+					<view class=""
+						style="width: 100%;padding-bottom: 50upx;background: #FFFFFF;position: relative;z-index: 102;">
+						<view class="">
+							透明度(0.1-1)
+							<input type="text" style="background: #DDDDDD;" v-model="QROpacity">
+						</view>
+						<view class="">
+							大小(0.1-10)
+							<input type="text" style="background: #DDDDDD;" v-model="wmSize">
+						</view>
+						<view class="">
+							颜色(0-150)
+							<input type="text" style="background: #DDDDDD;" v-model="QRColor">
+						</view>
+						<view @click="setWebQRcode">生成二维码(button)</view>
+					</view>
+				</block>
+				<view class="selPor" @tap="upload()">更改头像</view>
+				<view class="selPor" @tap="upload('dec')">自定义挂件</view>
+				<view class="editBtns">
+					<view class="editBtn reSet" @click="resetImg">重置</view>
+					<view class="editBtn" @click="toImage">完成</view>
+				</view>
+			</view>
 			<view class="portrait-main">
 				<view class="ctgs">
 					<block v-for="(obj,k) in swithCthType" v-if="imgList[obj.key].length" :key="k">
@@ -37,40 +68,9 @@
 					ref="uImage"></sunui-upimg-tencent>
 				<!-- <button type="primary" @tap="getUpImgInfoCos">获取上传Cos图片信息</button>
 				<button type="primary" @tap="uImageTap">手动上传图片</button> -->
-				<view class="imgSelect">
-					<view class="webQRCode" v-if="apiWaterState">
-						<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas"
-							:style="{width:QRSize+'px',height:QRSize+'px'}" />
-					</view>
-					<!-- <img v-if="watermark" :src="watermark" alt=""> -->
-					<block v-if="qrtst">
-						<view class=""
-							style="width: 100%;padding-bottom: 50upx;background: #FFFFFF;position: relative;z-index: 102;">
-							<view class="">
-								透明度(0.1-1)
-								<input type="text" style="background: #DDDDDD;" v-model="QROpacity">
-							</view>
-							<view class="">
-								大小(0.1-10)
-								<input type="text" style="background: #DDDDDD;" v-model="wmSize">
-							</view>
-							<view class="">
-								颜色(0-150)
-								<input type="text" style="background: #DDDDDD;" v-model="QRColor">
-							</view>
-							<view @click="setWebQRcode">生成二维码(button)</view>
-						</view>
-					</block>
-					<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth"
-						:cropHeight="cropHeight" @confirm="confirm" @cancel="cancel"></image-cropper>
-					<view class="selPor" @tap="upload()">更改头像</view>
-					<view class="selPor" @tap="upload('dec')">自定义挂件</view>
-					<view class="editBtns">
-						<view class="editBtn reSet" @click="resetImg">重置</view>
-						<view class="editBtn" @click="toImage">完成</view>
-					</view>
-				</view>
 			</view>
+			<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight"
+				@confirm="confirm" @cancel="cancel"></image-cropper>
 			<!-- <img src="" alt="" class="imgSmall"> -->
 			<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100'
 				@hidePopup="togglePopup('')">
@@ -186,6 +186,10 @@
 			that.company = _company;
 			that.theme = "theme-" + _theme;
 			that.imgBg = eCode == 'xinda' ? "/static/default-xd.jpg" : "/static/default2.jpg";
+			if (_theme == '2') {
+				that.cropWidth = 200; //裁切比 宽
+				that.cropHeight = 400; //裁切比 高
+			}
 			that.getImgList();
 			that.checkQR();
 		},
@@ -288,11 +292,10 @@
 			swithCth(ctgis) {
 				this.ctgis = ctgis;
 			},
-			setWebQRcode() { //生成QR
+			setWebQRcode() { //生成QR 站点URL
 				var that = this;
 				var webUrl = that.$store.state.interface.domain + '#/?eCode=' + that.eCode + '&company=' + that.company +
-					'&tm=' +
-					that.theme;
+					'&tm=' + that.theme;
 				if (cQRcode) {
 					cQRcode.clear()
 				}
@@ -476,7 +479,7 @@
 		height: 100%;
 	}
 
-/* 头像比例 1：1
+	/* 头像比例 1：1
 * p-boxxx：：width:100%
 * p-boxxx:before：：padding-top:100%
 * portrait-box：：height: 95%; width: 95%;
@@ -727,31 +730,44 @@
 		background: none;
 	}
 
-	.theme-2 .selBtnOn {
-		background: #F17F5A;
-		color: #fff;
+	/*theme2 2:3*/
+	.theme-2 .p-boxxx {
+		width: 70%;
+		left: 15%;
+	}
+
+	.theme-2 .p-boxxx:before {
+		content: '';
+		padding-top: 150%;
+		box-sizing: border-box;
+		display: block;
+		width: 0;
 	}
 
 	.theme-2 .portrait-box {
-		height: 70%;
+		height: 95%;
+		width: 95%;
+		left: 2.5%;
+		top: 2.5%;
 	}
 
+	/* .theme-2 .portrait-main {
+		min-height: auto;
+	}
+
+	.theme-2 .imgSelect {
+		position: relative;
+		top: -15upx;
+	} 
+
+	.theme-2 .ctgBox {
+		height: auto;
+	}*/
+
+
+	/* 
 	.theme-2 #CanvaBox {
 		width: 95%;
 		height: 95%;
-	}
-
-	.theme-2 .portrait-main {
-		background-image: linear-gradient(#F17F5A, #F17F5A);
-		min-height: auto;
-		height: 20%;
-	}
-
-	.theme-2 .selPor {
-		color: #fff;
-	}
-
-	.theme-2 .editBtn {
-		background-color: #f40;
-	}
+	} */
 </style>
