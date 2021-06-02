@@ -120,17 +120,13 @@
 				"slots": false,
 				loading: false,
 				poptype: "",
-				ctgis: "img",
+				ctgis: "box", //当前选中tab类型
 				selectImg: false,
 				decType: '',
 				picture_list: [],
 				cosFlag: true,
 				cosArr: [],
-				swithCthType: [{
-						"name": "定制挂件",
-						"key": "img",
-						"myKey": "special"
-					},
+				swithCthType: [
 					// {
 					// 	"name": "挂件",
 					// 	"key": "dec",
@@ -144,6 +140,10 @@
 						"name": "LOGO",
 						"key": "logo",
 						"myKey": "logo"
+					}, {
+						"name": "挂件",
+						"key": "img",
+						"myKey": "special"
 					}
 				],
 				imgType: ['img', 'box', 'logo'],
