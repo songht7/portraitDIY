@@ -51,7 +51,7 @@
 					</block>
 				</view>
 				<view class="ctgBox">
-					<view class="ctgCont">
+					<scroll-view class="ctgCont contList" scroll-x scroll-left="0">
 						<view v-if="ctgis=='logo'&&apiWaterState"
 							:class="['ctgImgBlock','watermark',waterState?'waterOn':'waterOff']"
 							@click="setDec('watermark')">
@@ -62,7 +62,7 @@
 								<img :src="`${obj.original_src}`" class="ctgImg" alt="">
 							</view>
 						</block>
-					</view>
+					</scroll-view>
 				</view>
 				<sunui-upimg-tencent v-show="false" :upImgConfig="upImgCos" @onUpImg="upCosData" @onImgDel="delImgInfo"
 					ref="uImage"></sunui-upimg-tencent>
@@ -637,17 +637,17 @@
 		align-content: center;
 		align-items: center;
 		padding-bottom: 10upx;
+		height: 100%;
 	}
 
 	.ctgImgBlock {
-		width: 20%;
+		width: 100upx;
 		height: 100upx;
-		display: flex;
-		justify-content: center;
-		align-content: center;
-		align-items: center;
-		padding-bottom: 10upx;
+		display: inline-block;
+		padding: 0 10upx 10upx 0;
 		position: relative;
+		line-height: 1;
+		text-align: center;
 	}
 
 	.watermark:before {
@@ -732,8 +732,8 @@
 
 	/*theme2 2:3*/
 	.theme-2 .p-boxxx {
-		width: 70%;
-		left: 15%;
+		width: 90%;
+		left: 5%;
 	}
 
 	.theme-2 .p-boxxx:before {
@@ -751,18 +751,29 @@
 		top: 2.5%;
 	}
 
-	/* .theme-2 .portrait-main {
-		min-height: auto;
-	}
 
 	.theme-2 .imgSelect {
 		position: relative;
 		top: -15upx;
-	} 
+	}
+
+	.theme-2 .portrait-main {
+		min-height: calc(28%);
+	}
 
 	.theme-2 .ctgBox {
+		padding: 10upx;
 		height: auto;
-	}*/
+		overflow-x: auto;
+	}
+
+	.theme-2 .ctgCont {
+		padding-bottom: 10upx;
+		width: 100%;
+		white-space: nowrap;
+		line-height: 100upx;
+		height: 120upx;
+	}
 
 
 	/* 
