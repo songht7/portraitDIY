@@ -5,6 +5,11 @@
 				<view class="selPor" style="padding: 300upx;" @tap="upload()">更改头像</view>
 			</block>
 			<block v-else>
+					<block v-if="eCode=='hs'">
+						<view class="editBtns">
+							<view class="editBtn reSet" @click="resetImg">返回</view>
+						</view>
+					</block>
 				<view class="p-boxxx">
 					<view class="portrait-box" v-show="!selectImg">
 						<imageWrapper ref="imageWrapper" :imgBg="imgBg" :imgBgEdit="imgBgEdit" :waterState="waterState"
@@ -41,7 +46,6 @@
 					</block>
 					<block v-if="eCode=='hs'">
 						<view class="editBtns">
-							<view class="editBtn reSet" @click="resetImg">重置</view>
 							<view class="editBtn" @click="toImage">完成</view>
 						</view>
 					</block>
