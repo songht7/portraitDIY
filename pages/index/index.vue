@@ -1,74 +1,87 @@
 <template>
-	<view :class="['content',theme]">
+	<view :class="['content',theme,customStyle]">
 		<view class="uni-padding-wrap uni-common-mt">
-			<view class="p-boxxx">
-				<view class="portrait-box" v-show="!selectImg">
-					<imageWrapper ref="imageWrapper" :imgBg="imgBg" :waterState="waterState" :watermark="watermark"
-						:wmSize="wmSize" :maskImg="maskImg" :frame="frame">
-						<view class="text" v-if="slots">
-							头像
-						</view>
-					</imageWrapper>
-				</view>
-			</view>
-			<view class="imgSelect">
-				<view class="webQRCode" v-if="apiWaterState">
-					<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas"
-						:style="{width:QRSize+'px',height:QRSize+'px'}" />
-				</view>
-				<!-- <img v-if="watermark" :src="watermark" alt=""> -->
-				<block v-if="qrtst">
-					<view class=""
-						style="width: 100%;padding-bottom: 50upx;background: #FFFFFF;position: relative;z-index: 102;">
-						<view class="">
-							透明度(0.1-1)
-							<input type="text" style="background: #DDDDDD;" v-model="QROpacity">
-						</view>
-						<view class="">
-							大小(0.1-10)
-							<input type="text" style="background: #DDDDDD;" v-model="wmSize">
-						</view>
-						<view class="">
-							颜色(0-150)
-							<input type="text" style="background: #DDDDDD;" v-model="QRColor">
-						</view>
-						<view @click="setWebQRcode">生成二维码(button)</view>
+			<block v-if="homePage">
+				<view class="selPor" style="padding: 300upx;" @tap="upload()">更改头像</view>
+			</block>
+			<block v-else>
+				<view class="p-boxxx">
+					<view class="portrait-box" v-show="!selectImg">
+						<imageWrapper ref="imageWrapper" :imgBg="imgBg" :imgBgEdit="imgBgEdit" :waterState="waterState"
+							:watermark="watermark" :wmSize="wmSize" :maskImg="maskImg" :frame="frame">
+							<view class="text" v-if="slots">
+								头像
+							</view>
+						</imageWrapper>
 					</view>
-				</block>
-				<view class="selPor" @tap="upload()">更改头像</view>
-				<view class="selPor" @tap="upload('dec')">自定义挂件</view>
-				<view class="editBtns">
-					<view class="editBtn reSet" @click="resetImg">重置</view>
-					<view class="editBtn" @click="toImage">完成</view>
 				</view>
-			</view>
-			<view class="portrait-main">
-				<view class="ctgs">
-					<block v-for="(obj,k) in swithCthType" v-if="imgList[obj.key].length" :key="k">
-						<view :class="['selBtn',ctgis==obj.key?'selBtnOn':'']" @click="swithCth(obj.key)">
-							{{obj.key=='logo'?company:''}}{{obj.name}}
+				<view class="imgSelect">
+					<view class="webQRCode" v-if="apiWaterState">
+						<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas"
+							:style="{width:QRSize+'px',height:QRSize+'px'}" />
+					</view>
+					<!-- <img v-if="watermark" :src="watermark" alt=""> -->
+					<block v-if="qrtst">
+						<view class=""
+							style="width: 100%;padding-bottom: 50upx;background: #FFFFFF;position: relative;z-index: 102;">
+							<view class="">
+								透明度(0.1-1)
+								<input type="text" style="background: #DDDDDD;" v-model="QROpacity">
+							</view>
+							<view class="">
+								大小(0.1-10)
+								<input type="text" style="background: #DDDDDD;" v-model="wmSize">
+							</view>
+							<view class="">
+								颜色(0-150)
+								<input type="text" style="background: #DDDDDD;" v-model="QRColor">
+							</view>
+							<view @click="setWebQRcode">生成二维码(button)</view>
+						</view>
+					</block>
+					<block v-if="eCode=='hs'">
+						<view class="editBtns">
+							<view class="editBtn reSet" @click="resetImg">重置</view>
+							<view class="editBtn" @click="toImage">完成</view>
+						</view>
+					</block>
+					<block v-else>
+						<view class="selPor" @tap="upload()">更改头像</view>
+						<view class="selPor" @tap="upload('dec')">自定义挂件</view>
+						<view class="editBtns">
+							<view class="editBtn reSet" @click="resetImg">重置</view>
+							<view class="editBtn" @click="toImage">完成</view>
 						</view>
 					</block>
 				</view>
-				<view class="ctgBox">
-					<scroll-view class="ctgCont contList" scroll-x scroll-left="0">
-						<view v-if="ctgis=='logo'&&apiWaterState"
-							:class="['ctgImgBlock','watermark',waterState?'waterOn':'waterOff']"
-							@click="setDec('watermark')">
-							<img :src="watermark" class="ctgImg" alt="">
-						</view>
-						<block v-for="(obj,k) in imgList[ctgis]" :key="k">
-							<view class="ctgImgBlock" @click="setDec(obj.st,`${obj.original_src}`)">
-								<img :src="`${obj.original_src}`" class="ctgImg" alt="">
+				<view class="portrait-main">
+					<view class="ctgs">
+						<block v-for="(obj,k) in swithCthType" v-if="imgList[obj.key].length" :key="k">
+							<view :class="['selBtn',ctgis==obj.key?'selBtnOn':'']" @click="swithCth(obj.key)">
+								{{obj.key=='logo'?company:''}}{{obj.name}}
 							</view>
 						</block>
-					</scroll-view>
+					</view>
+					<view class="ctgBox">
+						<scroll-view class="ctgCont contList" scroll-x scroll-left="0">
+							<view v-if="ctgis=='logo'&&apiWaterState"
+								:class="['ctgImgBlock','watermark',waterState?'waterOn':'waterOff']"
+								@click="setDec('watermark')">
+								<img :src="watermark" class="ctgImg" alt="">
+							</view>
+							<block v-for="(obj,k) in imgList[ctgis]" :key="k">
+								<view class="ctgImgBlock" @click="setDec(obj.st,`${obj.original_src}`)">
+									<img :src="`${obj.original_src}`" class="ctgImg" alt="">
+								</view>
+							</block>
+						</scroll-view>
+					</view>
 				</view>
-				<sunui-upimg-tencent v-show="false" :upImgConfig="upImgCos" @onUpImg="upCosData" @onImgDel="delImgInfo"
-					ref="uImage"></sunui-upimg-tencent>
-				<!-- <button type="primary" @tap="getUpImgInfoCos">获取上传Cos图片信息</button>
+			</block>
+			<sunui-upimg-tencent v-show="false" :upImgConfig="upImgCos" @onUpImg="upCosData" @onImgDel="delImgInfo"
+				ref="uImage"></sunui-upimg-tencent>
+			<!-- <button type="primary" @tap="getUpImgInfoCos">获取上传Cos图片信息</button>
 				<button type="primary" @tap="uImageTap">手动上传图片</button> -->
-			</view>
 			<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight"
 				@confirm="confirm" @cancel="cancel"></image-cropper>
 			<!-- <img src="" alt="" class="imgSmall"> -->
@@ -87,6 +100,13 @@
 </template>
 
 <script>
+	/*
+	 * url 参数说明 ?eCode=hs&tm=2&ib=1&homePage=1
+	 * eCode:企业码
+	 * tm:主题 =1(1:1) =2(2:3)
+	 * ib:编辑照片是否可编辑（放大缩小旋转），默认false
+	 * homePage:是否有首页（添加图片），默认false
+	 * */
 	var html2canvas = require("@/common/html2canvas.min.js");
 	import QRCode from "@/common/qrcode.js";
 	var cQRcode;
@@ -98,7 +118,10 @@
 		data() {
 			return {
 				company: "", //公司
+				homePage: false, //定义是否有首页
+				hasHome: false, //是否有首页
 				theme: "", //主题色："","1"
+				customStyle: "", //定制主题
 				watermark: "", //站点水印二维码、logo
 				waterState: false, //是否有水印
 				apiWaterState: false, //后台是否允许开始水印
@@ -113,7 +136,13 @@
 				cropFixed: true, //true false,
 				cropWidth: 250, //裁切比 宽
 				cropHeight: 250, //裁切比 高
-				imgBg: "/static/default2.jpg",
+				imgBg: {
+					"src": "/static/default2.jpg",
+					"rotate": 0,
+					"scale": 2.5,
+					"delt": 0
+				},
+				imgBgEdit: false, //背景图是否可编辑
 				maskImg: [],
 				newImg: "",
 				frame: "",
@@ -180,12 +209,35 @@
 			var eCode = option.eCode ? option.eCode : that.eCode;
 			var _theme = option.tm ? option.tm : "";
 			var _company = option.company ? option.company : "";
+			that.imgBgEdit = option.ib == 1 ? true : false;
+			that.homePage = option.hp == 1 ? true : false;
+			that.hasHome = that.homePage;
 			//that.waterState = ws;//url判断是否显示QR 现接接口
 			that.qrtst = _qrtst; //qr测试
 			that.eCode = eCode;
 			that.company = _company;
 			that.theme = "theme-" + _theme;
-			that.imgBg = eCode == 'xinda' ? "/static/default-xd.jpg" : "/static/default2.jpg";
+			if (eCode == 'xinda') {
+				that.imgBg['src'] = "/static/default-xd.jpg";
+			} else {
+				that.imgBg['src'] = "/static/default2.jpg";
+			}
+			if (eCode == 'hs') {
+				that.swithCthType = [{
+					"name": "相框",
+					"key": "box",
+					"myKey": "frame"
+				}, {
+					"name": "LOGO",
+					"key": "logo",
+					"myKey": "logo"
+				}, {
+					"name": "感言",
+					"key": "img",
+					"myKey": "special"
+				}];
+				that.customStyle = "hongsheng";
+			}
 			if (_theme == '2') {
 				that.cropWidth = 200; //裁切比 宽
 				that.cropHeight = 400; //裁切比 高
@@ -282,7 +334,8 @@
 				var that = this;
 				that.selectImg = false;
 				that.tempFilePath = ''
-				that.imgBg = e.detail.tempFilePath;
+				that.imgBg['src'] = e.detail.tempFilePath;
+				that.homePage = false;
 			},
 			cancel() {
 				this.selectImg = false;
@@ -295,7 +348,7 @@
 			setWebQRcode() { //生成QR 站点URL
 				var that = this;
 				var webUrl = that.$store.state.interface.domain + '#/?eCode=' + that.eCode + '&company=' + that.company +
-					'&tm=' + that.theme;
+					'&tm=' + that.theme + '&ib' + that.imgBgEdit + '&hp' + that.homePage;
 				if (cQRcode) {
 					cQRcode.clear()
 				}
@@ -325,6 +378,9 @@
 				var that = this;
 				that.maskImg = [];
 				that.frame = "";
+				if (that.hasHome) {
+					that.homePage = true;
+				}
 			},
 			async toImage() {
 				var that = this;

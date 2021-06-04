@@ -3,12 +3,30 @@
 		<view id="ImageWrapper" class="imageWrapper">
 			<movable-area :out-of-bounds="outOfBounds">
 				<!-- 头像 -->
-			<!-- 	<movable-view class="imgbg" scale v-if="imgBg" direction="all" :out-of-bounds="outOfBounds">
-					<img class="real_pic" :src="imgBg" />
-				</movable-view> -->
-				<movable-view class="imgbg" scale v-if="imgBg" direction="all" :out-of-bounds="outOfBounds">
-					<image :src="imgBg" mode="aspectFill" class="real_pic"></image>
-				</movable-view>
+				<block v-if="imgBgEdit">
+					<movable-view class="maskImg" id="Maskpor" v-if="imgBg.src" direction="all"
+						:out-of-bounds="outOfBounds" scale scale-min="0.5" scale-max="10" x="100" y="100"
+						:scale-value="imgBg.scale" @scale="onScale">
+						<view class="maskImgBlock">
+							<img :class="['real_pic','maskImgs','maskImgs-por',editType==='por'?'imgBorder':'']"
+								:style="{'transform':'rotate('+imgBg.rotate+'deg)'}" :src="imgBg.src"
+								@touchstart="touch('por')" />
+							<view class="edit-btn edit-pinch edit-set-rotate-right" v-show="editType==='por'"
+								@click.stop.prevent="editImg('rotateRight','por')">↺</view>
+							<view class="edit-btn edit-pinch edit-set-rotate" v-show="editType==='por'"
+								@click.stop.prevent="editImg('rotate','por')">↻</view><!-- ↻↺ -->
+							<view class="edit-btn edit-pinch edit-set-small" v-show="editType==='por'"
+								@click.stop.prevent="editImg('setSmall','por')">━</view>
+							<view class="edit-btn edit-pinch edit-set-big" v-show="editType==='por'"
+								@click.stop.prevent="editImg('setBig','por')">✚</view>
+						</view>
+					</movable-view>
+				</block>
+				<block v-else>
+					<movable-view class="imgbg" scale v-if="imgBg.src" direction="all" :out-of-bounds="outOfBounds">
+						<image :src="imgBg.src" mode="aspectFill" class="real_pic"></image>
+					</movable-view>
+				</block>
 				<!-- 相框 -->
 				<movable-view class="imgbg frame" v-if="frame" direction="all" :out-of-bounds="outOfBounds">
 					<img class="real_pic" :src="frame" />
@@ -16,15 +34,21 @@
 				<!-- 饰品 -->
 				<block v-if="maskImg.length" v-for="(img,k) in maskImg" :key="k">
 					<movable-view v-if="img.delt===0" :id="['Mask'+k]" class="maskImg" direction="all"
-					 :out-of-bounds="outOfBounds" scale scale-min="0.5" scale-max="4" x="100" y="100" :scale-value="img.scale" @scale="onScale">
+						:out-of-bounds="outOfBounds" scale scale-min="0.5" scale-max="4" x="100" y="100"
+						:scale-value="img.scale" @scale="onScale">
 						<view class="maskImgBlock">
-							<view class="edit-btn edit-del" v-show="editType===k" @click.stop.prevent="editImg('delt',k)">✘</view>
-							<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']" :style="{'transform':'rotate('+img.rotate+'deg)'}"
-							 alt=""  @touchstart="touch(k)">
-							<view class="edit-btn edit-pinch edit-set-rotate-right" v-show="editType===k" @click.stop.prevent="editImg('rotateRight',k)">↺</view>
-							<view class="edit-btn edit-pinch edit-set-rotate" v-show="editType===k" @click.stop.prevent="editImg('rotate',k)">↻</view><!-- ↻↺ -->
-							<view class="edit-btn edit-pinch edit-set-small" v-show="editType===k" @click.stop.prevent="editImg('setSmall',k)">━</view>
-							<view class="edit-btn edit-pinch edit-set-big" v-show="editType===k" @click.stop.prevent="editImg('setBig',k)">✚</view>
+							<view class="edit-btn edit-del" v-show="editType===k"
+								@click.stop.prevent="editImg('delt',k)">✘</view>
+							<img :src="img.url" :class="['maskImgs','maskImgs-'+k,editType===k?'imgBorder':'']"
+								:style="{'transform':'rotate('+img.rotate+'deg)'}" alt="" @touchstart="touch(k)">
+							<view class="edit-btn edit-pinch edit-set-rotate-right" v-show="editType===k"
+								@click.stop.prevent="editImg('rotateRight',k)">↺</view>
+							<view class="edit-btn edit-pinch edit-set-rotate" v-show="editType===k"
+								@click.stop.prevent="editImg('rotate',k)">↻</view><!-- ↻↺ -->
+							<view class="edit-btn edit-pinch edit-set-small" v-show="editType===k"
+								@click.stop.prevent="editImg('setSmall',k)">━</view>
+							<view class="edit-btn edit-pinch edit-set-big" v-show="editType===k"
+								@click.stop.prevent="editImg('setBig',k)">✚</view>
 						</view>
 					</movable-view>
 				</block>
@@ -51,8 +75,14 @@
 		name: 'imageWrapper',
 		props: {
 			imgBg: {
-				type: String,
-				default: ''
+				type: Object,
+				default () {
+					return {};
+				}
+			},
+			imgBgEdit: {
+				type: Boolean,
+				default: false
 			},
 			watermark: {
 				type: String,
@@ -137,32 +167,48 @@
 						//that.maskImg.splice(that.maskImg.findIndex((item, key) => key === k), 1)
 						break;
 					case 'setSmall':
-						that.maskImg.map((item, key) => {
-							if (key === k) {
-								item.scale = item.scale - 0.1
-							}
-						})
+						if (that.editType == 'por') {
+							that.imgBg.scale = that.imgBg.scale - 0.1
+						} else {
+							that.maskImg.map((item, key) => {
+								if (key === k) {
+									item.scale = item.scale - 0.1
+								}
+							})
+						}
 						break;
 					case 'setBig':
-						that.maskImg.map((item, key) => {
-							if (key === k) {
-								item.scale = item.scale + 0.1
-							}
-						})
+						if (that.editType == 'por') {
+							that.imgBg.scale = that.imgBg.scale + 0.1
+						} else {
+							that.maskImg.map((item, key) => {
+								if (key === k) {
+									item.scale = item.scale + 0.1
+								}
+							})
+						}
 						break;
 					case 'rotate':
-						that.maskImg.map((item, key) => {
-							if (key === k) {
-								item.rotate = item.rotate + 15
-							}
-						})
+						if (that.editType == 'por') {
+							that.imgBg.rotate = that.imgBg.rotate + 15
+						} else {
+							that.maskImg.map((item, key) => {
+								if (key === k) {
+									item.rotate = item.rotate + 15
+								}
+							})
+						}
 						break;
 					case 'rotateRight':
-						that.maskImg.map((item, key) => {
-							if (key === k) {
-								item.rotate = item.rotate - 15
-							}
-						})
+						if (that.editType == 'por') {
+							that.imgBg.rotate = that.imgBg.rotate - 15
+						} else {
+							that.maskImg.map((item, key) => {
+								if (key === k) {
+									item.rotate = item.rotate - 15
+								}
+							})
+						}
 						break;
 					default:
 						break;
