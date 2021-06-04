@@ -125,7 +125,7 @@
 				old: {
 					scale: 1
 				},
-				stackLow: 99
+				stackLow: 0
 			};
 		},
 		onShow() {},

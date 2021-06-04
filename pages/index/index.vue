@@ -2,7 +2,7 @@
 	<view :class="['content',theme,customStyle]">
 		<view class="uni-padding-wrap uni-common-mt">
 			<block v-if="homePage">
-				<view class="selPor" style="padding: 300upx;" @tap="upload()">更改头像</view>
+				<view class="" style="padding: 300upx;" @tap="upload()">更改头像</view>
 			</block>
 			<block v-else>
 				<block v-if="eCode=='xinda2021'">
@@ -44,19 +44,23 @@
 							<view @click="setWebQRcode">生成二维码(button)</view>
 						</view>
 					</block>
-					<block v-if="eCode=='xinda2021'">
-						<view class="editBtns">
-							<view class="editBtn" @click="toImage">完成</view>
-						</view>
-					</block>
-					<block v-else>
-						<view class="selPor" @tap="upload()">更改头像</view>
-						<view class="selPor" @tap="upload('dec')">自定义挂件</view>
-						<view class="editBtns">
-							<view class="editBtn reSet" @click="resetImg">重置</view>
-							<view class="editBtn" @click="toImage">完成</view>
-						</view>
-					</block>
+					<view class="editBtnBox">
+						<block v-if="eCode=='xinda2021'">
+							<view class="editBtns">
+								<view class="editBtn" @click="toImage">完成</view>
+							</view>
+						</block>
+						<block v-else>
+							<view class="editBtns">
+								<view class="selPor" @tap="upload()">更换头像</view>
+								<view class="selPor" @tap="upload('dec')">自定义挂件</view>
+							</view>
+							<view class="editBtns">
+								<view class="editBtn reSet" @click="resetImg">重置</view>
+								<view class="editBtn" @click="toImage">完成</view>
+							</view>
+						</block>
+					</view>
 				</view>
 				<view class="portrait-main">
 					<view class="ctgs">
@@ -105,11 +109,11 @@
 
 <script>
 	/*
-	 * url 参数说明 ?eCode=abc&tm=2&ib=1&homePage=1
-	 * eCode:企业码
-	 * tm:主题 =1(1:1) =2(2:3)
-	 * ib:编辑照片是否可编辑（放大缩小旋转），默认false
-	 * homePage:是否有首页（添加图片），默认false
+	 * url 参数说明 ?eCode=abc&tm=2&ib=1&hp=1
+	 * eCode: 企业码
+	 * tm: theme主题 =1(1:1) =2(2:3)
+	 * ib: imgBgEdit编辑照片是否可编辑（放大缩小旋转），默认false
+	 * hp: homePage是否有首页（添加图片），默认false
 	 * */
 	var html2canvas = require("@/common/html2canvas.min.js");
 	import QRCode from "@/common/qrcode.js";
@@ -141,7 +145,7 @@
 				cropWidth: 250, //裁切比 宽
 				cropHeight: 250, //裁切比 高
 				imgBg: {
-					"src": "/static/default2.jpg",
+					"src": "/static/default.jpg",
 					"rotate": 0,
 					"scale": 2.5,
 					"delt": 0
@@ -223,6 +227,8 @@
 			that.theme = "theme-" + _theme;
 			if (eCode == 'xinda') {
 				that.imgBg['src'] = "/static/default-xd.jpg";
+			} else if (eCode == 'zhizhen') {
+				that.imgBg['src'] = "/static/default-zhizhen.jpg";
 			} else {
 				that.imgBg['src'] = "/static/default2.jpg";
 			}
@@ -647,8 +653,17 @@
 		align-items: center;
 	}
 
+	.editBtnBox {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-content: center;
+		align-items: center;
+	}
+
 	.editBtns {
-		width: 50%;
+		width: 49%;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
@@ -747,7 +762,7 @@
 
 	.editBtn,
 	.selPor {
-		font-size: 28upx;
+		font-size: 24upx;
 		display: flex;
 		justify-content: center;
 		flex-direction: row;
@@ -756,15 +771,23 @@
 		color: #f17f5a;
 		line-height: 1;
 		border-radius: 10upx;
-		padding: 15upx 0;
+		padding: 18upx 0;
 	}
 
 	.editBtn {
-		width: 48%;
+		width: 49%;
 		color: #FFFFFF;
 		border-radius: 20upx;
 		background-image: linear-gradient(to right, #E5A590, #f17f5a);
 		background: #f17f5a;
+	}
+
+	.selPor {
+		width: 49%;
+		color: #FFFFFF;
+		border-radius: 20upx;
+		background-image: linear-gradient(to right, #0ca7fc, #016dc6);
+		background: #016dc6;
 	}
 
 	.reSet {
