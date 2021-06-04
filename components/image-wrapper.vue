@@ -4,9 +4,9 @@
 			<movable-area :out-of-bounds="outOfBounds">
 				<!-- 头像 -->
 				<block v-if="imgBgEdit">
-					<movable-view class="maskImg" id="Maskpor" v-if="imgBg.src" direction="all"
-						:out-of-bounds="outOfBounds" scale scale-min="0.5" scale-max="10" x="100" y="100"
-						:scale-value="imgBg.scale" @scale="onScale">
+					<movable-view class="maskImg porMask" id="Maskpor" :style="{'z-index':stackLow}" v-if="imgBg.src"
+						direction="all" :out-of-bounds="outOfBounds" scale scale-min="0.5" scale-max="10" x="100"
+						y="100" :scale-value="imgBg.scale" @scale="onScale">
 						<view class="maskImgBlock">
 							<img :class="['real_pic','maskImgs','maskImgs-por',editType==='por'?'imgBorder':'']"
 								:style="{'transform':'rotate('+imgBg.rotate+'deg)'}" :src="imgBg.src"
@@ -28,7 +28,8 @@
 					</movable-view>
 				</block>
 				<!-- 相框 -->
-				<movable-view class="imgbg frame" v-if="frame" direction="all" :out-of-bounds="outOfBounds">
+				<movable-view class="imgbg frame" v-if="frame" direction="all" :out-of-bounds="outOfBounds"
+					@tap="imgStackLow('low')">
 					<img class="real_pic" :src="frame" />
 				</movable-view>
 				<!-- 饰品 -->
@@ -123,7 +124,8 @@
 				scale: 1,
 				old: {
 					scale: 1
-				}
+				},
+				stackLow: 99
 			};
 		},
 		onShow() {},
@@ -153,6 +155,10 @@
 					//myElement.textContent += ev.type + " ";
 				});
 				this.editType = k;
+			},
+			imgStackLow(v) {
+				//照片叠低
+				this.stackLow = this.stackLow >= 99 ? 0 : 99;
 			},
 			editImg(type, k) {
 				var that = this;
@@ -190,22 +196,22 @@
 						break;
 					case 'rotate':
 						if (that.editType == 'por') {
-							that.imgBg.rotate = that.imgBg.rotate + 15
+							that.imgBg.rotate = that.imgBg.rotate + 5
 						} else {
 							that.maskImg.map((item, key) => {
 								if (key === k) {
-									item.rotate = item.rotate + 15
+									item.rotate = item.rotate + 5
 								}
 							})
 						}
 						break;
 					case 'rotateRight':
 						if (that.editType == 'por') {
-							that.imgBg.rotate = that.imgBg.rotate - 15
+							that.imgBg.rotate = that.imgBg.rotate - 5
 						} else {
 							that.maskImg.map((item, key) => {
 								if (key === k) {
-									item.rotate = item.rotate - 15
+									item.rotate = item.rotate - 5
 								}
 							})
 						}
@@ -354,6 +360,10 @@
 		top: 0;
 		left: 0;
 		z-index: 1;
+	}
+
+	.porMask {
+		/* z-index: 1; */
 	}
 
 	.frame {

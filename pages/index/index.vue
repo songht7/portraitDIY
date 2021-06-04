@@ -5,11 +5,11 @@
 				<view class="selPor" style="padding: 300upx;" @tap="upload()">更改头像</view>
 			</block>
 			<block v-else>
-					<block v-if="eCode=='hs'">
-						<view class="editBtns">
-							<view class="editBtn reSet" @click="resetImg">返回</view>
-						</view>
-					</block>
+				<block v-if="eCode=='xinda2021'">
+					<view class="editBtns">
+						<view class="editBtn reSet" @click="resetImg">返回</view>
+					</view>
+				</block>
 				<view class="p-boxxx">
 					<view class="portrait-box" v-show="!selectImg">
 						<imageWrapper ref="imageWrapper" :imgBg="imgBg" :imgBgEdit="imgBgEdit" :waterState="waterState"
@@ -44,7 +44,7 @@
 							<view @click="setWebQRcode">生成二维码(button)</view>
 						</view>
 					</block>
-					<block v-if="eCode=='hs'">
+					<block v-if="eCode=='xinda2021'">
 						<view class="editBtns">
 							<view class="editBtn" @click="toImage">完成</view>
 						</view>
@@ -105,7 +105,7 @@
 
 <script>
 	/*
-	 * url 参数说明 ?eCode=hs&tm=2&ib=1&homePage=1
+	 * url 参数说明 ?eCode=abc&tm=2&ib=1&homePage=1
 	 * eCode:企业码
 	 * tm:主题 =1(1:1) =2(2:3)
 	 * ib:编辑照片是否可编辑（放大缩小旋转），默认false
@@ -226,7 +226,7 @@
 			} else {
 				that.imgBg['src'] = "/static/default2.jpg";
 			}
-			if (eCode == 'hs') {
+			if (eCode == 'xinda2021') {
 				that.swithCthType = [{
 					"name": "相框",
 					"key": "box",
@@ -240,7 +240,7 @@
 					"key": "img",
 					"myKey": "special"
 				}];
-				that.customStyle = "hongsheng";
+				that.customStyle = "xinda2021";
 			}
 			if (_theme == '2') {
 				that.cropWidth = 200; //裁切比 宽
@@ -835,10 +835,14 @@
 		height: 120upx;
 	}
 
-
 	/* 
 	.theme-2 #CanvaBox {
 		width: 95%;
 		height: 95%;
 	} */
+
+	/*xinda2021*/
+	.xinda2021 .content {
+		background: #90f2fa;
+	}
 </style>
