@@ -1,14 +1,17 @@
 <template>
-	<view :class="['content',theme,customStyle]">
+	<view :class="['content',theme,customStyle]" :style="{'height':homePage?'100%':'auto'}">
 		<view class="uni-padding-wrap uni-common-mt">
 			<block v-if="homePage">
-				<view class="" style="padding: 300upx;" @tap="upload()">更改头像</view>
+				<view class="home-box">
+					<view class="" style="height: inherit;width: 100%;" @tap="upload()"></view>
+				</view>
 			</block>
 			<block v-else>
 				<block v-if="eCode=='xinda2021'">
-					<view class="editBtns">
-						<view class="editBtn reSet" @click="resetImg">返回</view>
-					</view>
+					<view class="top-btns">
+						<view class="reSet" @click="resetImg">
+							< 返回 </view>
+						</view>
 				</block>
 				<view class="p-boxxx">
 					<view class="portrait-box" v-show="!selectImg">
@@ -47,7 +50,7 @@
 					<view class="editBtnBox">
 						<block v-if="eCode=='xinda2021'">
 							<view class="editBtns">
-								<view class="editBtn" @click="toImage">完成</view>
+								<view class="editBtn editBtn-confirm" @click="toImage">完成</view>
 							</view>
 						</block>
 						<block v-else>
@@ -64,6 +67,7 @@
 				</view>
 				<view class="portrait-main">
 					<view class="ctgs">
+						<view class="ctgs-line"></view>
 						<block v-for="(obj,k) in swithCthType" v-if="imgList[obj.key].length" :key="k">
 							<view :class="['selBtn',ctgis==obj.key?'selBtnOn':'']" @click="swithCth(obj.key)">
 								{{obj.key=='logo'?company:''}}{{obj.name}}
@@ -114,6 +118,10 @@
 	 * tm: theme主题 =1(1:1) =2(2:3)
 	 * ib: imgBgEdit编辑照片是否可编辑（放大缩小旋转），默认false
 	 * hp: homePage是否有首页（添加图片），默认false
+	 * ****
+	 * 信达2020 ?eCode=xinda&tm=1
+	 * 信达2021 ?eCode=xinda2021&tm=2&ib=1&hp=1
+	 * 质贞 ?eCode=zhizhen
 	 * */
 	var html2canvas = require("@/common/html2canvas.min.js");
 	import QRCode from "@/common/qrcode.js";
@@ -528,6 +536,14 @@
 		height: 100%;
 	}
 
+	.home-box {
+		min-height: 100%;
+	}
+
+	.top-btns {
+		padding: 0 5%;
+	}
+
 	.webQRCode {
 		position: absolute;
 		width: 100upx;
@@ -538,6 +554,7 @@
 
 	.content {
 		height: 100%;
+		min-height: 100%;
 		background: #b0ecd2;
 	}
 
@@ -865,7 +882,96 @@
 	} */
 
 	/*xinda2021*/
-	.xinda2021 .content {
-		background: #90f2fa;
+	.xinda2021 .home-box {
+		background: url(../../static/xinda/bg.jpg) 50% 50% no-repeat;
+		background-size: cover;
+		height: 100%;
 	}
+
+	.xinda2021 .imgSelect {
+		z-index: 1;
+	}
+
+	.xinda2021 .reSet {
+		color: #01569e;
+		background-color: transparent;
+		padding: 30upx 0 10upx;
+		line-height: 1;
+		font-size: 32upx;
+	}
+
+	.xinda2021 .editBtnBox,
+	.xinda2021 .editBtns {
+		justify-content: flex-end;
+	}
+
+	.xinda2021 .editBtn-confirm {
+		background: url(../../static/xinda/btn.png) 50% 50% no-repeat;
+		background-size: cover;
+		text-indent: -99999999px;
+	}
+
+	.xinda2021 .ctgs {
+		justify-content: flex-start;
+		background: none;
+		padding-left: 20upx;
+		position: relative;
+	}
+
+	.xinda2021 .ctgs-line {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		z-index: 1;
+		width: 100%;
+		height: 3upx;
+		background: #fff;
+	}
+
+	.xinda2021 .selBtn {
+		flex: none;
+		color: #007bc8;
+		border-radius: 10upx 10upx 0 0;
+		border: 3upx solid #fff;
+		border-bottom: 6upx solid #d5fbfc;
+		margin-right: 15upx;
+		position: relative;
+		top: 6upx;
+		z-index: 2;
+		padding: 10upx 15upx;
+	}
+
+	.xinda2021 .selBtn::after {
+		background: none
+	}
+
+	.xinda2021 .selBtn.selBtnOn {
+		background: none;
+		font-size: 38upx;
+		top: 3upx;
+		color: #006daa;
+	}
+
+	.xinda2021 .portrait-main {
+		background: none;
+		position: relative;
+		top: -60upx;
+	}
+
+	.xinda2021.content {
+		background: linear-gradient(#90f2fa, #dbfcfc);
+	}
+	.xinda2021 #Generated{
+		background: linear-gradient(#90f2fa, #FFF);
+	}
+	/* .xinda2021 .portrait-box,
+	.xinda2021 .real_pic {
+		overflow: hidden;
+		border-radius: 30upx;
+	}
+
+	.xinda2021 img.maskImgs.real_pic {
+		overflow: auto;
+		border-radius: 0;
+	} */
 </style>
