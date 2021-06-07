@@ -1,15 +1,17 @@
 <template>
 	<view>
-		<view class="uni-mask" v-show="show" :style="{ top: offsetTop + 'px' }" @click="hide" @touchmove.stop.prevent="moveHandle"></view>
-		<view class="uni-popup" :class="'uni-popup-' + position + ' ' + 'uni-popup-' + mode + ' ' + 'uni-popup-' + width"
-		 v-show="show" :style="width?'width:'+width+'%':''">
+		<view class="uni-mask bg-mask" v-show="show" :style="{ top: offsetTop + 'px' }" @click="hide"
+			@touchmove.stop.prevent="moveHandle"></view>
+		<view class="uni-popup"
+			:class="'uni-popup-' + position + ' ' + 'uni-popup-' + mode + ' ' + 'uni-popup-' + width" v-show="show"
+			:style="width?'width:'+width+'%':'',bgStye?'background:'+bgStye:''">
 			{{ msg }}
 			<slot></slot>
-			<view v-if="position === 'middle' && mode === 'insert'&&closeBtnShow" class=" uni-icon uni-icon-close" :class="{
+			<view v-if="position === 'middle' && mode === 'insert'&&closeBtnShow" class=" uni-icon uni-icon-close"
+				:class="{
 					'uni-close-bottom': buttonMode === 'bottom',
 					'uni-close-right': buttonMode === 'right'
-				}"
-			 @click="closeMask"></view>
+				}" @click="closeMask"></view>
 		</view>
 	</view>
 </template>
@@ -28,6 +30,14 @@
 			closeBtnShow: {
 				type: Boolean,
 				default: true
+			},
+			/**
+			 * 背景色
+			 */
+			bgStye: {
+				type: String,
+				//background:bgStye
+				default: 'none'
 			},
 			/**
 			 * 对齐方式

@@ -158,7 +158,7 @@
 			},
 			imgStackLow(v) {
 				//照片叠低
-				this.stackLow = this.stackLow >= 99 ? 0 : 99;
+				this.stackLow = this.stackLow >= 50 ? 0 : 50;
 			},
 			editImg(type, k) {
 				var that = this;

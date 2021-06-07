@@ -1,0 +1,454 @@
+page {
+	height: 100%;
+}
+
+.home-box {
+	min-height: 100%;
+}
+
+.home-main {
+	height: inherit;
+	width: 90%;
+	margin-left: 5%;
+}
+
+.top-btns {
+	padding: 0 5%;
+}
+
+.webQRCode {
+	position: absolute;
+	width: 100upx;
+	height: 100upx;
+	opacity: 0;
+	left: -10000px;
+}
+
+.content {
+	height: 100%;
+	min-height: 100%;
+	background: #b0ecd2;
+}
+
+.uni-padding-wrap {
+	height: 100%;
+}
+
+/* 头像比例 1：1
+* p-boxxx：：width:100%
+* p-boxxx:before：：padding-top:100%
+* portrait-box：：height: 95%; width: 95%;
+*/
+.p-boxxx {
+	width: 100%;
+	position: relative;
+}
+
+.p-boxxx:before {
+	content: '';
+	padding-top: 100%;
+	box-sizing: border-box;
+	display: block;
+	width: 0;
+}
+
+.portrait-box {
+	position: absolute;
+	height: 90%;
+	width: 90%;
+	left: 5%;
+	top: 5%;
+	/* padding: 60upx 0 40upx; */
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	align-content: center;
+	align-items: center;
+	background-image: linear-gradient(#FFFFFF, #FFFFFF);
+}
+
+.portrait-main {
+	min-height: calc(100% - 690upx);
+	background-image: linear-gradient(#151c26, #242b3b);
+}
+
+.imgs {
+	width: 100%;
+}
+
+#Generated {
+	display: flex;
+	justify-content: flex-start;
+	flex-direction: column;
+	align-content: center;
+	align-items: center;
+	position: relative;
+	height: 90%;
+	padding: 5% 0;
+}
+
+#Generated .imgs {
+	width: 90%;
+}
+
+.gen-btns {
+	position: absolute;
+	width: 90%;
+	left: 0;
+	bottom: 0;
+	padding: 40upx 5%;
+	display: flex;
+	flex-direction: row;
+	align-content: center;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.close-btn {
+	background: #DDDDDD;
+	color: #999999;
+	border-radius: 10upx;
+	font-size: 32upx;
+	padding: 10upx 50upx;
+}
+
+.imgSmall {
+	width: 100upx;
+	height: 100upx;
+}
+
+.ctgs {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-content: center;
+	text-align: center;
+	align-items: center;
+	background: #FAFAFA;
+	overflow: hidden;
+}
+
+.imgSelect {
+	position: fixed;
+	width: 90%;
+	padding: 10upx 5%;
+	left: 0;
+	bottom: 0;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	align-content: center;
+	align-items: center;
+}
+
+.editBtnBox {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-content: center;
+	align-items: center;
+}
+
+.editBtns {
+	width: 49%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-content: center;
+	align-items: center;
+}
+
+.selBtn {
+	font-size: 28upx;
+	padding: 20upx;
+	flex: 1;
+	position: relative;
+}
+
+.selBtn::after {
+	content: "";
+	height: 50%;
+	width: 1px;
+	background: #e7e7e7;
+	overflow: hidden;
+	position: absolute;
+	right: -1px;
+}
+
+.selBtnOn {
+	background: #151c26;
+	color: #f17f5a;
+}
+
+.selBtn:last-child()::after {
+	width: 0;
+	background: none;
+}
+
+.ctgBox {
+	padding: 10upx 10upx 100upx;
+	height: 400upx;
+	overflow-y: auto;
+}
+
+.ctgCont {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	align-content: center;
+	align-items: center;
+	padding-bottom: 10upx;
+	height: 100%;
+}
+
+.ctgImgBlock {
+	width: 100upx;
+	height: 100upx;
+	display: inline-block;
+	padding: 0 10upx 10upx 0;
+	position: relative;
+	line-height: 1;
+	text-align: center;
+}
+
+.watermark:before {
+	content: "";
+	/* ✔ */
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background: url('../../static/icon-on-2.png') no-repeat 50% 50% rgba(0, 0, 0, .3);
+	background-size: 50% auto;
+	display: flex;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
+	color: #FFFFFF;
+	font-size: 60upx;
+}
+
+.waterOn:before {
+	content: "";
+	/* ✘ */
+	background-image: url('../../static/icon-off-2.png');
+}
+
+.waterOff:before {
+	content: "";
+	/* ✔ */
+	background-image: url('../../static/icon-on-2.png');
+}
+
+.ctgImg {
+	max-width: 70%;
+	max-height: 100%;
+}
+
+.editBtn,
+.selPor {
+	font-size: 24upx;
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	align-content: center;
+	align-items: center;
+	color: #f17f5a;
+	line-height: 1;
+	border-radius: 10upx;
+	padding: 18upx 0;
+}
+
+.editBtn {
+	width: 49%;
+	color: #FFFFFF;
+	border-radius: 20upx;
+	background-image: linear-gradient(to right, #E5A590, #f17f5a);
+	background: #f17f5a;
+}
+
+.selPor {
+	width: 49%;
+	color: #FFFFFF;
+	border-radius: 20upx;
+	background-image: linear-gradient(to right, #0ca7fc, #016dc6);
+	background: #016dc6;
+}
+
+.reSet {
+	background: #E5A590;
+}
+
+.theme-1 .selBtnOn {
+	background: #d4ecff;
+	color: #092f87;
+}
+
+.theme-1 .portrait-main {
+	background-image: linear-gradient(#d4ecff, #d4ecff);
+}
+
+.theme-1 .ctgs {
+	background: #FFFFFF;
+}
+
+.theme-1 .selBtn::after {
+	content: "";
+	width: 0;
+	background: none;
+}
+
+/*theme2 2:3*/
+.theme-2 .p-boxxx {
+	width: 90%;
+	left: 5%;
+}
+
+.theme-2 .p-boxxx:before {
+	content: '';
+	padding-top: 150%;
+	box-sizing: border-box;
+	display: block;
+	width: 0;
+}
+
+.theme-2 .portrait-box {
+	height: 95%;
+	width: 95%;
+	left: 2.5%;
+	top: 2.5%;
+}
+
+
+.theme-2 .imgSelect {
+	position: relative;
+	top: -15upx;
+}
+
+.theme-2 .portrait-main {
+	min-height: calc(28%);
+}
+
+.theme-2 .ctgBox {
+	padding: 10upx;
+	height: auto;
+	overflow-x: auto;
+}
+
+.theme-2 .ctgCont {
+	padding-bottom: 10upx;
+	width: 100%;
+	white-space: nowrap;
+	line-height: 100upx;
+	height: 120upx;
+}
+
+/* 
+	.theme-2 #CanvaBox {
+		width: 95%;
+		height: 95%;
+	} */
+
+/*xinda2021*/
+.xinda2021 .home-box {
+	background: url(../../static/xinda/bg.jpg) 50% 50% no-repeat;
+	background-size: cover;
+	height: 100%;
+}
+
+.xinda2021 .home-main {
+	background: url(../../static/xinda/home-page.png) 50% 50% no-repeat;
+	background-size: contain;
+	height: 100%;
+}
+
+.xinda2021 .imgSelect {
+	z-index: 1;
+}
+
+.xinda2021 .reSet {
+	color: #01569e;
+	background-color: transparent;
+	padding: 30upx 0 10upx;
+	line-height: 1;
+	font-size: 32upx;
+}
+
+.xinda2021 .editBtnBox,
+.xinda2021 .editBtns {
+	justify-content: flex-end;
+}
+
+.xinda2021 .editBtn-confirm {
+	background: url(../../static/xinda/btn.png) 50% 50% no-repeat;
+	background-size: cover;
+	text-indent: -99999999px;
+}
+
+.xinda2021 .ctgs {
+	justify-content: flex-start;
+	background: none;
+	padding-left: 20upx;
+	position: relative;
+}
+
+.xinda2021 .ctgs-line {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+	width: 100%;
+	height: 3upx;
+	background: #fff;
+}
+
+.xinda2021 .selBtn {
+	flex: none;
+	color: #007bc8;
+	border-radius: 10upx 10upx 0 0;
+	border: 3upx solid #fff;
+	border-bottom: 6upx solid #d5fbfc;
+	margin-right: 15upx;
+	position: relative;
+	top: 6upx;
+	z-index: 2;
+	padding: 10upx 15upx;
+}
+
+.xinda2021 .selBtn::after {
+	background: none
+}
+
+.xinda2021 .selBtn.selBtnOn {
+	background: none;
+	font-size: 38upx;
+	top: 3upx;
+	color: #006daa;
+}
+
+.xinda2021 .portrait-main {
+	background: none;
+	position: relative;
+	top: -60upx;
+}
+
+.xinda2021.content {
+	background: linear-gradient(#90f2fa, #dbfcfc);
+}
+
+.xinda2021 #Generated {}
+
+/* .xinda2021 .portrait-box,
+	.xinda2021 .real_pic {
+		overflow: hidden;
+		border-radius: 30upx;
+	}
+
+	.xinda2021 img.maskImgs.real_pic {
+		overflow: auto;
+		border-radius: 0;
+	} */
