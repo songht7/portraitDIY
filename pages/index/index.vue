@@ -256,6 +256,7 @@
 					"myKey": "special"
 				}];
 				that.customStyle = "xinda2021";
+				that.frame="/static/xinda/logo-box2.png"
 				that.bgStye = "linear-gradient(#90f2fa, #c6f9fb)"
 			}
 			if (_theme == '2') {

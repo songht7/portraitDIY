@@ -6,7 +6,7 @@
 				<block v-if="imgBgEdit">
 					<movable-view class="maskImg porMask" id="Maskpor" :style="{'z-index':stackLow}" v-if="imgBg.src"
 						direction="all" :out-of-bounds="outOfBounds" scale scale-min="0.5" scale-max="10" x="100"
-						y="100" :scale-value="imgBg.scale" @scale="onScale">
+						y="300" :scale-value="imgBg.scale" @scale="onScale">
 						<view class="maskImgBlock">
 							<img :class="['real_pic','maskImgs','maskImgs-por',editType==='por'?'imgBorder':'']"
 								:style="{'transform':'rotate('+imgBg.rotate+'deg)'}" :src="imgBg.src"
