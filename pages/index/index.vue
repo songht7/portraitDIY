@@ -3,7 +3,7 @@
 		<view class="uni-padding-wrap uni-common-mt">
 			<block v-if="homePage">
 				<view class="home-box">
-					<view class="" style="height: inherit;width: 100%;" @tap="upload()"></view>
+					<view class="home-main" @tap="upload()"></view>
 				</view>
 			</block>
 			<block v-else>
@@ -540,6 +540,12 @@
 		min-height: 100%;
 	}
 
+	.home-main {
+		height: inherit;
+		width: 90%;
+		margin-left: 5%;
+	}
+
 	.top-btns {
 		padding: 0 5%;
 	}
@@ -887,7 +893,11 @@
 		background-size: cover;
 		height: 100%;
 	}
-
+	.xinda2021 .home-main{
+		background: url(../../static/xinda/home-page.png) 50% 50% no-repeat;
+		background-size: contain;
+		height: 100%;
+	}
 	.xinda2021 .imgSelect {
 		z-index: 1;
 	}
@@ -961,9 +971,11 @@
 	.xinda2021.content {
 		background: linear-gradient(#90f2fa, #dbfcfc);
 	}
-	.xinda2021 #Generated{
+
+	.xinda2021 #Generated {
 		background: linear-gradient(#90f2fa, #FFF);
 	}
+
 	/* .xinda2021 .portrait-box,
 	.xinda2021 .real_pic {
 		overflow: hidden;
