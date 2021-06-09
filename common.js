@@ -2,8 +2,8 @@
  * url 参数说明 ?eCode=abc&tm=2&ib=1&hp=1
  * eCode: 企业码
  * tm: theme主题 =1(1:1) =2(2:3)
- * ib: imgBgEdit编辑照片是否可编辑（放大缩小旋转），默认false
- * hp: homePage是否有首页（添加图片），默认false
+ * ib: imgBgEdit编辑照片是否可编辑（放大缩小旋转），默认false,1=true
+ * hp: homePage是否有首页（添加图片），默认false,1=true
  * ********************************************************
  * 信达2020 ?eCode=xinda&tm=1
  * 信达2021 ?eCode=xinda2021&tm=2&ib=1&hp=1
