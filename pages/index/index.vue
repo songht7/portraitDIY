@@ -245,8 +245,11 @@
 					"myKey": "special"
 				}];
 				that.customStyle = "xinda2021";
-				that.frame = "/static/xinda/logo-box2.png"
-				that.bgStye = "linear-gradient(#90f2fa, #c6f9fb)"
+				that.frame = "/static/xinda/logo-box2.png";
+				that.bgStye = "linear-gradient(#90f2fa, #c6f9fb)";
+				uni.setNavigationBarTitle({
+					title: '始于信 达于行'
+				});
 			}
 			if (_theme == '2') {
 				that.cropWidth = 200; //裁切比 宽
