@@ -48,12 +48,7 @@
 						</view>
 					</block>
 					<view class="editBtnBox">
-						<block v-if="eCode=='xinda2021'">
-							<view class="editBtns">
-								<view class="editBtn editBtn-confirm" @click="toImage">完成</view>
-							</view>
-						</block>
-						<block v-else>
+						<block v-if="eCode!='xinda2021'">
 							<view class="editBtns">
 								<view class="selPor" @tap="upload()">更换头像</view>
 								<view class="selPor" @tap="upload('dec')">自定义挂件</view>
@@ -71,6 +66,11 @@
 						<block v-for="(obj,k) in swithCthType" v-if="imgList[obj.key].length" :key="k">
 							<view :class="['selBtn',ctgis==obj.key?'selBtnOn':'']" @click="swithCth(obj.key)">
 								{{obj.key=='logo'?company:''}}{{obj.name}}
+							</view>
+						</block>
+						<block v-if="eCode=='xinda2021'">
+							<view class="editBtn-confirm-box">
+								<view class="editBtn-confirm" @click="toImage">完成</view>
 							</view>
 						</block>
 					</view>
@@ -100,7 +100,8 @@
 			<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100' :bgStye="bgStye"
 				@hidePopup="togglePopup('')">
 				<view id="Generated">
-					<img class="imgs" v-if="newImg" :src="newImg" alt="">
+					<image class="imgs uni-newimg" v-if="newImg" :src='newImg.replace(/[\r\n]/g, "")' mode="aspectFit" ></image>
+					<!-- <img class="imgs" v-if="newImg" :src='newImg.replace(/[\r\n]/g, "")' alt=""> -->
 					<view>长按保存图片</view>
 					<view class="gen-btns">
 						<view class="close-btn" @click="togglePopup('')">返回</view>
@@ -430,7 +431,9 @@
 						"upload_percent": 0
 					}];
 					console.log("portrait:", that.$store.state.portrait)
-					////that.uImageTap();///上传到COS
+					// that.uImageTap();///上传到COS
+
+					// that.newImg = "http://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/data/image_doc/1623056782061.png";
 					that.newImg = dataURL;
 				});
 			},

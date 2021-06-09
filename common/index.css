@@ -75,6 +75,9 @@ page {
 .imgs {
 	width: 100%;
 }
+.uni-newimg{
+	height: 80%;
+}
 
 #Generated {
 	display: flex;
@@ -125,7 +128,7 @@ page {
 	text-align: center;
 	align-items: center;
 	background: #FAFAFA;
-	overflow: hidden;
+	/* overflow: hidden; */
 }
 
 .imgSelect {
@@ -383,16 +386,29 @@ page {
 	justify-content: flex-end;
 }
 
+.xinda2021 .editBtn-confirm-box {
+	height: 100%;
+	position: relative;
+	z-index: 1;
+	/* top: -20upx; */
+	flex: 1;
+	display: flex;
+	justify-content: flex-end;
+}
+
 .xinda2021 .editBtn-confirm {
 	background: url(../../static/xinda/btn.png) 50% 50% no-repeat;
-	background-size: cover;
+	background-size: contain;
+	height: 100%;
+	width: 35%;
+	padding: 20upx 0;
 	text-indent: -99999999px;
 }
 
 .xinda2021 .ctgs {
 	justify-content: flex-start;
 	background: none;
-	padding-left: 20upx;
+	padding: 0 20upx;
 	position: relative;
 }
 
@@ -433,7 +449,6 @@ page {
 .xinda2021 .portrait-main {
 	background: none;
 	position: relative;
-	top: -60upx;
 }
 
 .xinda2021.content {
