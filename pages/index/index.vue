@@ -90,7 +90,8 @@
 					</view>
 				</view>
 			</block>
-			<sunui-upimg-tencent v-show="false" :upImgConfig="upImgCos" @onUpImg="upCosData" @onImgDel="delImgInfo" ref="uImage">
+			<sunui-upimg-tencent v-show="false" :upImgConfig="upImgCos" @onUpImg="upCosData" @onImgDel="delImgInfo"
+				ref="uImage">
 			</sunui-upimg-tencent>
 			<!-- <button type="primary" @tap="getUpImgInfoCos">获取上传Cos图片信息</button>
 				<button type="primary" @tap="uImageTap">手动上传图片</button> -->
@@ -122,6 +123,10 @@
 	import imageWrapper from '@/components/image-wrapper.vue';
 	import uniPopup from '@/components/uni-popup.vue';
 	import ImageCropper from "@/components/invinbg-image-cropper/invinbg-image-cropper.vue";
+	let COS = require('@/components/sunui-upimg/tencent-cos/cos-wx-sdk-v5.js');
+	import {
+		Base64
+	} from 'js-base64';
 	/***
 	 *image-tools:: 图像转换工具，可用于图像和base64的转换
 	 * https://ext.dcloud.net.cn/plugin?id=123#detail
@@ -448,22 +453,25 @@
 					let blob = new Blob([u8arr], {
 						type: mime
 					});
-					let file = new window.File([blob], Date.parse(new Date()) + '.jpg', {
-						type: 'image/jpeg'
+					let file = new window.File([blob], Date.parse(new Date()) + '.png', {
+						type: 'image/png'
 					});
 					let formData = new FormData();
 					formData.append("file", file);
-					console.log(file)
+					console.log(blob)
 					//end
 					that.poptype = "showNewImg";
 
-					// that.$store.state.portrait = [blob];
-					// console.log("portrait:", that.$store.state.portrait)
+					// that.$store.state.portrait = blob;
+					console.log("portrait:", that.$store.state.portrait)
 					// setTimeout(() => {
 					// 	that.uImageTap(); ///上传到COS
 					// }, 500);
+					let ff = that.convertBase64UrlToBlob(dataURL);
+					console.log("ff:", ff, formData)
+					that.putToCos(file);
 					// that.newImg = "http://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/data/image_doc/1623056782061.png";
-					
+
 					that.newImg = dataURL;
 					// base64ToPath(dataURL)
 					// 	.then(path => {
@@ -474,6 +482,81 @@
 					// 		console.error("base64ToPath：：", error)
 					// 		that.newImg = dataURL;
 					// 	})
+				});
+			},
+			convertBase64UrlToBlob(urlData) {
+				var bytes = window.atob(urlData.split(',')[1]); //去掉url的头，并转换为byte
+
+				//处理异常,将ascii码小于0的转换为大于0
+				var ab = new ArrayBuffer(bytes.length);
+				var ia = new Uint8Array(ab);
+				for (var i = 0; i < bytes.length; i++) {
+					ia[i] = bytes.charCodeAt(i);
+				}
+
+				return new Blob([ab], {
+					type: 'image/png'
+				});
+			},
+			putToCos(file) {
+				var that = this;
+				var configs = that.upImgCos;
+
+				let cosConfig = {
+					Bucket: configs.cosConfig.Bucket,
+					Region: configs.cosConfig.Region,
+					SecretId: configs.cosConfig.SecretId,
+					SecretKey: Base64.decode(configs.cosConfig.SKey)
+				}
+
+				let cos = new COS({
+					getAuthorization: (params, callback) => { //获取签名 必填参数
+						console.log("params:", params)
+						let authorization = COS.getAuthorization({
+							SecretId: cosConfig.SecretId,
+							SecretKey: cosConfig.SecretKey,
+							Method: params.Method,
+							Key: params.Key
+						});
+						callback(authorization);
+					}
+				});
+				let opt = {
+					Bucket: cosConfig.Bucket,
+					Region: cosConfig.Region,
+					Key: configs.path + configs.photoType + Date.parse(new Date()) / 1000 + ".png",
+					FilePath: file
+				};
+				// cos.postObject(opt, (err, data) => {
+				// 	// console.log("err:", err)
+				// 	// console.log("data:", data)
+				// 	if (err == null) {
+				// 		// console.log(`%c 腾讯云上传(成功返回地址):${data.headers.Location}`, 'color:#1AAD19');
+				// 		// upload_picture_list[j]['path_server'] = data.headers.Location;
+				// 		let path_server = `https://${opt.Bucket}.cos.${opt.Region}.myqcloud.com/${opt.Key}`;
+				// 		console.log("path_server:", path_server)
+				// 	} else {
+				// 		console.log(`%c 腾讯云上传失败:${JSON.stringify(err)}`, 'color:#f00');
+				// 		return;
+				// 	}
+				// });
+				// ----------
+				cos.putObject({
+					Bucket: configs.Bucket,
+					/* 必须 */
+					Region: configs.cosConfig.Region,
+					/* 存储桶所在地域，必须字段 */
+					Key: configs.path + configs.photoType + Date.parse(new Date()) / 1000 + ".png",
+					/* 必须 */
+					ContentType: "image/png",
+					Body: file, // 上传文件对象
+					ServerSideEncryption: 'AES-256',
+					taskId:"",
+					onProgress: function(progressData) {
+						//console.log(JSON.stringify(progressData));
+					}
+				}, function(err, data) {
+					console.log("putToCos:", err, data)
 				});
 			},
 			resetEditType() {
