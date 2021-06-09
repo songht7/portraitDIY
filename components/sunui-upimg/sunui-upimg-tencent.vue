@@ -4,23 +4,35 @@
 		<view class="sunsin_picture_list">
 			<view v-for="(item,index) in upload_picture_list" :key="index" class="sunsin_picture_item">
 				<image v-show="item.upload_percent < 100" :src="item.path" mode="aspectFill"></image>
-				<image v-show="item.upload_percent == 100" :src="item.path_server" mode="aspectFill" :data-idx="index" @click="previewImgs"></image>
-				<view class="sunsin_upload_progress" v-show="item.upload_percent < 100" :data-index="index" @click="previewImg">{{item.upload_percent}}%</view>
-				<text class='del' :class="upImgConfig.delBtnLocation=='left'?'left':upImgConfig.delBtnLocation=='right'?'right':upImgConfig.delBtnLocation=='bleft'?'bleft':upImgConfig.delBtnLocation=='bright'?'bright':'right'"
-				 @click='deleteImg' :data-url="item.path_server" :data-index="index" :style="'color:'+upImgConfig.delIconText+';background-color:'+upImgConfig.delIconColor"
-				 :hidden="upImgConfig.isDelIcon || false">×</text>
+				<image v-show="item.upload_percent == 100" :src="item.path_server" mode="aspectFill" :data-idx="index"
+					@click="previewImgs"></image>
+				<view class="sunsin_upload_progress" v-show="item.upload_percent < 100" :data-index="index"
+					@click="previewImg">{{item.upload_percent}}%</view>
+				<text class='del'
+					:class="upImgConfig.delBtnLocation=='left'?'left':upImgConfig.delBtnLocation=='right'?'right':upImgConfig.delBtnLocation=='bleft'?'bleft':upImgConfig.delBtnLocation=='bright'?'bright':'right'"
+					@click='deleteImg' :data-url="item.path_server" :data-index="index"
+					:style="'color:'+upImgConfig.delIconText+';background-color:'+upImgConfig.delIconColor"
+					:hidden="upImgConfig.isDelIcon || false">×</text>
 			</view>
 			<view>
-				<view class='sunsin_picture_item' v-show="upload_picture_list.length<upImgConfig.count || upImgConfig.notli" v-if="upImgConfig.iconReplace =='' || upImgConfig.iconReplace==undefined">
-					<view class="sunsin_add_image" @click='chooseImage(upImgConfig.count)' :style="'background-color:'+upImgConfig.upBgColor+''"
-					 v-show="!upImgConfig.isAddImage || false">
+				<view class='sunsin_picture_item'
+					v-show="upload_picture_list.length<upImgConfig.count || upImgConfig.notli"
+					v-if="upImgConfig.iconReplace =='' || upImgConfig.iconReplace==undefined">
+					<view class="sunsin_add_image" @click='chooseImage(upImgConfig.count)'
+						:style="'background-color:'+upImgConfig.upBgColor+''" v-show="!upImgConfig.isAddImage || false">
 						<!-- 这里可以改为字体图标/iconfont -->
-						<view class="icon-basic" :class="upImgConfig.upSvgIconName==undefined || upImgConfig.upSvgIconName==''?(site?'icon-addicon-'+site:'icon-addicon'):upImgConfig.upSvgIconName"></view>
-						<view class="icon-text" :style="'color:'+upImgConfig.upIconColor+';width:100%;'">{{upImgConfig.upTextDesc==undefined ||upImgConfig.upTextDesc==''?'上传照片':upImgConfig.upTextDesc}}</view>
+						<view class="icon-basic"
+							:class="upImgConfig.upSvgIconName==undefined || upImgConfig.upSvgIconName==''?(site?'icon-addicon-'+site:'icon-addicon'):upImgConfig.upSvgIconName">
+						</view>
+						<view class="icon-text" :style="'color:'+upImgConfig.upIconColor+';width:100%;'">
+							{{upImgConfig.upTextDesc==undefined ||upImgConfig.upTextDesc==''?'上传照片':upImgConfig.upTextDesc}}
+						</view>
 					</view>
 				</view>
-				<view class='sunsin_picture_item' v-show="upload_picture_list.length<upImgConfig.count || upImgConfig.notli" v-else>
-					<view class="sunsin_add_image" @click='chooseImage(upImgConfig.count)' style="'background-color:#fff;'" v-show="upImgConfig.isAddImage || true">
+				<view class='sunsin_picture_item'
+					v-show="upload_picture_list.length<upImgConfig.count || upImgConfig.notli" v-else>
+					<view class="sunsin_add_image" @click='chooseImage(upImgConfig.count)'
+						style="'background-color:#fff;'" v-show="upImgConfig.isAddImage || true">
 						<image :src="upImgConfig.iconReplace" class="icon_replace"></image>
 					</view>
 				</view>
@@ -31,6 +43,9 @@
 
 <script>
 	let COS = require('./tencent-cos/cos-wx-sdk-v5.js');
+	import {
+		Base64
+	} from 'js-base64';
 
 	export default {
 		data() {
@@ -87,55 +102,49 @@
 		let cosConfig = {
 			Bucket: configs.cosConfig.Bucket,
 			Region: configs.cosConfig.Region,
-			SecretId: configs.cosConfig.SecretId ? configs.cosConfig.SecretId : '',
-			SecretKey: configs.cosConfig.SecretKey ? configs.cosConfig.SecretKey : ''
+			SecretId: configs.cosConfig.SecretId,
+			SecretKey: configs.cosConfig.SecretKey
 		}
 
-		let cos = await new COS({
+		let cos = new COS({
 			getAuthorization: (params, callback) => { //获取签名 必填参数
 				console.log("params:", params)
 				// 推荐(服务器计算签名接口)
-				uni.request({
-					url: _this.$store.state.interface.apiurl + _this.$store.state.interface.addr.getCos,
-					data: {
-						Method: params.Method,
-						Key: params.Key
-					},
-					success: function(result) {
-						console.log(result.data)
-						var credentials = result.data.data.info.credentials;
-						// console.log(_data)
-						var _data = {
-							SecretId: credentials.tmpSecretId,
-							SecretKey: credentials.tmpSecretKey,
-							Method: params.Method,
-							Key: params.Key
-						}
-						let authorization = COS.getAuthorization(_data);
-						callback(authorization);
-						//callback(_data);
-					}
-				});
+				// 				 uni.request({
+				// 				    url: 'SIGN_SERVER_URL',
+				// 				    data: {
+				// 				        Method: params.Method,
+				// 				        Key: params.Key
+				// 				    },
+				// 				    dataType: 'text',
+				// 				    success: function (result) {
+				// 				        callback(result.data);
+				// 				    }
+				// 				});
 				// 方便前端调试
-				// let authorization = COS.getAuthorization({
-				// 	SecretId: cosConfig.SecretId,
-				// 	SecretKey: cosConfig.SecretKey,
-				// 	Method: params.Method,
-				// 	Key: params.Key
-				// });
-				// callback(authorization);
+				let authorization = COS.getAuthorization({
+					SecretId: cosConfig.SecretId,
+					SecretKey: cosConfig.SecretKey,
+					Method: params.Method,
+					Key: params.Key
+				});
+				callback(authorization);
 			}
 		});
 
 		let filePath = upload_picture_list[j]['path'];
-		var Key = "";
-		//console.log("imgType:", upload_picture_list[j]['imgType']);
-		if (upload_picture_list[j]['imgType'] && upload_picture_list[j]['imgType'] == 'base64Img') {
-			Key = Date.parse(new Date());
-		} else {
-			Key = filePath.substr(filePath.lastIndexOf('/') + 1); // 这里指定上传的文件名
-		}
-		console.log("Key:", Key);
+		//let Key = filePath.substr(filePath.lastIndexOf('/') + 1); // 这里指定上传的文件名
+		let Key = Date.parse(new Date()) / 1000; // 这里指定上传的文件名
+
+		// let filePath = upload_picture_list[j]['path'];
+		// var Key = "";
+		// console.log("imgType:", upload_picture_list[j]['imgType']);
+		// console.log("upload_picture_listupload_picture_list:", upload_picture_list)
+		// if (upload_picture_list[j]['imgType'] && upload_picture_list[j]['imgType'] == 'base64Img') {
+		// 	Key = Date.parse(new Date());
+		// } else {
+		// 	Key = filePath.substr(filePath.lastIndexOf('/') + 1); // 这里指定上传的文件名
+		// }
 
 		let opt = {
 			Bucket: cosConfig.Bucket,
@@ -143,18 +152,17 @@
 			Key: configs.path + configs.photoType + Key + ".jpg",
 			FilePath: filePath,
 		};
-		console.log("opt:", opt)
+		//console.log("opt:", opt)
 		cos.postObject(opt, (err, data) => {
-			console.log("err:", err)
-			console.log("data:", data)
+			// console.log("err:", err)
+			// console.log("data:", data)
 			if (err == null) {
 				// console.log(`%c 腾讯云上传(成功返回地址):${data.headers.Location}`, 'color:#1AAD19');
 				// upload_picture_list[j]['path_server'] = data.headers.Location;
-				let path_server = `http://${opt.Bucket}.cos.${opt.Region}.myqcloud.com/${opt.Key}`;
+				let path_server = `https://${opt.Bucket}.cos.${opt.Region}.myqcloud.com/${opt.Key}`;
 				upload_picture_list[j]['upload_percent'] = 100;
 				upload_picture_list[j]['path_server'] = path_server;
 				_this.$store.state.portrait = path_server;
-				console.log("path_server:", path_server);
 			} else {
 				console.log(`%c 腾讯云上传失败:${JSON.stringify(err)}`, 'color:#f00');
 				return;
@@ -167,20 +175,14 @@
 
 	// 上传图片(通用)
 	const uImage = async (_this, config) => {
-		console.log("uImage:")
-		var picture_list = [];
-		if (_this.upload_picture_list.length) {
-			picture_list = _this.upload_picture_list;
-		} else {
-			let _list = _this.$store.state.portrait ? _this.$store.state.portrait : [];
-			if (_list.length) {
-				picture_list = _list;
-			}
+		console.log("uImage:", config)
+		if (config['cosConfig'].SKey) {
+			config['cosConfig']['SecretKey'] = Base64.decode(config.cosConfig.SKey)
 		}
-		console.log(picture_list)
-		for (let j = 0, len = picture_list.length; j < len; j++) {
-			if (picture_list[j]['upload_percent'] == 0) {
-				await upload_file_server(_this, config, picture_list, j)
+		console.log(_this.upload_picture_list)
+		for (let j = 0, len = _this.upload_picture_list.length; j < len; j++) {
+			if (_this.upload_picture_list[j]['upload_percent'] == 0) {
+				await upload_file_server(_this, config, _this.upload_picture_list, j)
 			}
 		}
 	}
@@ -198,13 +200,13 @@
 
 	// 选择图片(通用)
 	const cImage = (_this, count, configs) => {
-		console.log("cImage:", configs);
+		//console.log("cImage:", configs);
 		let config = {
 			cosConfig: {
 				Bucket: configs.cosConfig.Bucket, //replace with yours
 				Region: configs.cosConfig.Region, //replace with yours
 				SecretId: configs.cosConfig.SecretId, //replace with yours
-				SecretKey: configs.cosConfig.SecretKey //replace with yours
+				SecretKey: Base64.decode(configs.cosConfig.SKey) //replace with yours
 			},
 			count,
 			notli: configs.notli,
@@ -215,24 +217,29 @@
 			photoType: configs.photoType,
 		}
 
-		console.log("config:", config);
+		//console.log("config:", config);
 
 		uni.chooseImage({
-			count: config.notli ? config.count = 9 : _this.upload_after_list.length == 0 ? config.count : config.count -
+			count: config.notli ? config.count = 9 : _this.upload_after_list.length == 0 ? config.count :
+				config.count -
 				_this.upload_after_list.length,
-			sizeType: config.sizeType == "" || config.sizeType == undefined || config.sizeType == true ? ['compressed'] : [
+			sizeType: config.sizeType == "" || config.sizeType == undefined || config.sizeType == true ? [
+				'compressed'
+			] : [
 				'original'
 			],
-			sourceType: config.sourceType == "" || config.sourceType == undefined ? ['album', 'camera'] : config.sourceType ==
+			sourceType: config.sourceType == "" || config.sourceType == undefined ? ['album', 'camera'] :
+				config.sourceType ==
 				'camera' ? ['camera'] : config.sourceType == 'album' ? ['album'] : ['album', 'camera'],
 			success: async (res) => {
 				console.log("chooseImage:", res);
 				for (let i = 0, len = res.tempFiles.length; i < len; i++) {
 					res.tempFiles[i]['upload_percent'] = 0;
 					_this.upload_picture_list.push(res.tempFiles[i]);
-					_this.upload_picture_list.length > config.count ? _this.upload_picture_list = _this.upload_picture_list.slice(
-						0,
-						config.count) : '';
+					_this.upload_picture_list.length > config.count ? _this.upload_picture_list = _this
+						.upload_picture_list.slice(
+							0,
+							config.count) : '';
 				}
 				// 过滤多出的预览图片
 				await fImage(_this, res, config);

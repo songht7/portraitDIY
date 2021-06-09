@@ -90,8 +90,8 @@
 					</view>
 				</view>
 			</block>
-			<sunui-upimg-tencent v-show="false" :upImgConfig="upImgCos" @onUpImg="upCosData" @onImgDel="delImgInfo"
-				ref="uImage"></sunui-upimg-tencent>
+			<sunui-upimg-tencent v-show="false" :upImgConfig="upImgCos" @onUpImg="upCosData" @onImgDel="delImgInfo" ref="uImage">
+			</sunui-upimg-tencent>
 			<!-- <button type="primary" @tap="getUpImgInfoCos">获取上传Cos图片信息</button>
 				<button type="primary" @tap="uImageTap">手动上传图片</button> -->
 			<image-cropper :src="tempFilePath" :cropFixed="cropFixed" :cropWidth="cropWidth" :cropHeight="cropHeight"
@@ -100,9 +100,11 @@
 			<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100' :bgStye="bgStye"
 				@hidePopup="togglePopup('')">
 				<view id="Generated">
-					<image class="imgs uni-newimg" v-if="newImg" :src='newImg.replace(/[\r\n]/g, "")' mode="aspectFit" ></image>
-					<!-- <img class="imgs" v-if="newImg" :src='newImg.replace(/[\r\n]/g, "")' alt=""> -->
+					<!-- <image class="imgs uni-newimg" v-if="newImg" :src='newImg.replace(/[\r\n]/g, "")' mode="aspectFit">
+					</image> -->
+					<img class="imgs" id="NewImg" v-if="newImg" :src='newImg' alt="">
 					<view>长按保存图片</view>
+					<!-- <view>{{newImg.replace(/[\r\n]/g, "")}}</view> -->
 					<view class="gen-btns">
 						<view class="close-btn" @click="togglePopup('')">返回</view>
 					</view>
@@ -120,6 +122,14 @@
 	import imageWrapper from '@/components/image-wrapper.vue';
 	import uniPopup from '@/components/uni-popup.vue';
 	import ImageCropper from "@/components/invinbg-image-cropper/invinbg-image-cropper.vue";
+	/***
+	 *image-tools:: 图像转换工具，可用于图像和base64的转换
+	 * https://ext.dcloud.net.cn/plugin?id=123#detail
+	 * **/
+	import {
+		pathToBase64,
+		base64ToPath
+	} from '@/components/image-tools/index.js'
 	export default {
 		data() {
 			return {
@@ -401,6 +411,7 @@
 				}
 			},
 			async toImage() {
+				//使用html2canvas
 				var that = this;
 				await that.resetEditType();
 				if (that.loading) {
@@ -423,18 +434,46 @@
 				}).then((canvas) => {
 					that.loading = false;
 					uni.hideLoading()
-					let dataURL = canvas.toDataURL("image/png");
+					//https://blog.csdn.net/qinleo6/article/details/109725952
+					let dataURL = canvas.toDataURL("image/png", 1); //转成base64压缩 image/png  image/jpeg
+					//再转成blob，再转成file文件流 20200609
+					var arr = dataURL.split(','),
+						mime = arr[0].match(/:(.*?);/)[1],
+						bstr = atob(arr[1]),
+						n = bstr.length,
+						u8arr = new Uint8Array(n);
+					while (n--) {
+						u8arr[n] = bstr.charCodeAt(n);
+					}
+					let blob = new Blob([u8arr], {
+						type: mime
+					});
+					let file = new window.File([blob], Date.parse(new Date()) + '.jpg', {
+						type: 'image/jpeg'
+					});
+					let formData = new FormData();
+					formData.append("file", file);
+					console.log(file)
+					//end
 					that.poptype = "showNewImg";
-					that.$store.state.portrait = [{
-						"path": dataURL,
-						"imgType": 'base64Img',
-						"upload_percent": 0
-					}];
-					console.log("portrait:", that.$store.state.portrait)
-					// that.uImageTap();///上传到COS
 
+					// that.$store.state.portrait = [blob];
+					// console.log("portrait:", that.$store.state.portrait)
+					// setTimeout(() => {
+					// 	that.uImageTap(); ///上传到COS
+					// }, 500);
 					// that.newImg = "http://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/data/image_doc/1623056782061.png";
+					
 					that.newImg = dataURL;
+					// base64ToPath(dataURL)
+					// 	.then(path => {
+					// 		console.log("base64ToPath：：", path)
+					// 		that.newImg = path;
+					// 	})
+					// 	.catch(error => {
+					// 		console.error("base64ToPath：：", error)
+					// 		that.newImg = dataURL;
+					// 	})
 				});
 			},
 			resetEditType() {

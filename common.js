@@ -28,13 +28,17 @@ var api = {
 		}
 	},
 	"dev": {
-		"interface": "http://api-head.wsshanghai.com", //接口
+		"interface": "http://api-head.wsshanghai.com", //接口//api.jobpgroup.com
 		"domain": "http://portrait.bdmartech.com/",
 		"cosConfig": { //`https://jobpassport-1259247972.cos.ap-shanghai.myqcloud.com/...`
-			"Bucket": 'plbs-test-1257286922',
+			// "Bucket": 'plbs-test-1257286922',
+			// "Region": 'ap-shanghai',
+			// "SecretId": 'AKIDXt0yjgKr41jBMK7YrunRpztscbJe4W2J',
+			// "SecretKey": 'dERJOGpTMlZXYVhQRHdVcnlvR2JsejJaOEIxazFRdEY'
+			"Bucket": 'jobpassport-1259247972',
 			"Region": 'ap-shanghai',
-			"SecretId": '',
-			"SecretKey": ''
+			"SecretId": 'AKIDRbLQM4DqRnKgpzR1NlEUWP9jD7pJt1K3',
+			"SKey": 'bU5uemhCU1VIdGI2U1dQNGJ1bE9td3dhekE4UldUQ1Y='
 		},
 		"wx": {
 			"AppID": "wxb33e824504e4a764",
