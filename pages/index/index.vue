@@ -456,32 +456,39 @@
 					//Canvas2Image
 					let dataURL = canvas.toDataURL("image/png", 0.6); //转成base64压缩 image/png  image/jpeg
 					let imgName = Date.parse(new Date()) + '.png';
-					// // //再转成blob，再转成file文件流 20200609
-					// var arr = dataURL.split(','),
-					// 	mime = arr[0].match(/:(.*?);/)[1],
-					// 	bstr = atob(arr[1]),
-					// 	n = bstr.length,
-					// 	u8arr = new Uint8Array(n);
-					// while (n--) {
-					// 	u8arr[n] = bstr.charCodeAt(n);
-					// }
-					// let blob = new Blob([u8arr], {
-					// 	type: mime
-					// });
-					// let file = new window.File([blob], imgName, {
-					// 	type: 'image/png'
-					// });
-					// let formData = new FormData();
-					// formData.append("file", file);
-					// // console.log(blob)
-					// //end
+					// //再转成blob，再转成file文件流 20200609
+					var arr = dataURL.split(','),
+						mime = arr[0].match(/:(.*?);/)[1],
+						bstr = atob(arr[1]),
+						n = bstr.length,
+						u8arr = new Uint8Array(n);
+					while (n--) {
+						u8arr[n] = bstr.charCodeAt(n);
+					}
+					let blob = new Blob([u8arr], {
+						type: mime
+					});
+					let file = new window.File([blob], imgName, {
+						type: 'image/png'
+					});
+					let formData = new FormData();
+					formData.append("file", file);
+					// console.log(blob)
+					//end
 
 					that.poptype = "showNewImg";
 					that.$store.state.portrait = dataURL;
 					if (that.$store.state.systemInfo.platform == 'ios') {
 						// let Blob = that.dataURLtoBlob(dataURL);
-					} else {}
-					that.newImg = dataURL;
+						var _data = dataURL.replace(/^data:image\/\w+;base64,/, "");
+						//转换为Buffer对象
+						var buffer = Buffer.from(_data, 'base64');
+						that.putToCos({
+							buffer
+						});
+					} else {
+						that.newImg = dataURL;
+					}
 					// console.log("portrait:", that.$store.state.portrait)
 					// ----------
 					// setTimeout(() => {
@@ -500,7 +507,7 @@
 					// 	.then(path => {
 					// 		console.log(path)
 					// 		that.loclPath = path;
-					// 		that.putToCos(blob, file, formData, path);
+					// 		that.putToCos({blob, file, formData, path});
 					// 	})
 					// 	.catch(error => {
 					// 		console.error(error)
@@ -534,7 +541,10 @@
 				that.putToCos("", theBlob, "", "");
 				// return theBlob;
 			},
-			putToCos(blob, file, formData, path) {
+			putToCos(parms = {}) {
+				/*
+					{blob, file, formData, path, buffer}
+				*/
 				var that = this;
 				var configs = that.upImgCos;
 
@@ -561,7 +571,7 @@
 					Bucket: cosConfig.Bucket,
 					Region: cosConfig.Region,
 					Key: configs.path + configs.photoType + Date.parse(new Date()) / 1000 + ".png",
-					FilePath: path
+					FilePath: parms.path
 				};
 				// cos.postObject(opt, (err, data) => {
 				// 	// console.log("err:", err)
@@ -578,13 +588,14 @@
 				// 	}
 				// });
 				// ----------
+				console.log("parms.buffer:", parms.buffer)
 				cos.putObject({
 					Bucket: configs.Bucket,
 					Region: configs.cosConfig.Region,
 					Key: configs.path + configs.photoType + Date.parse(new Date()) / 1000 + ".png",
-					StorageClass: 'STANDARD',
-					Body: file, // 上传文件对象
-					ServerSideEncryption: 'AES-256',
+					// StorageClass: 'STANDARD',
+					ContentType: 'image/png',
+					Body: parms.buffer, // 上传文件对象
 					onProgress: function(progressData) {
 						console.log(JSON.stringify(progressData));
 					}
