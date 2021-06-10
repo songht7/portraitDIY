@@ -473,7 +473,7 @@
 						//转换为Buffer对象
 						var buffer = Buffer.from(_data, 'base64');
 						that.putToCos({
-							file: buffer
+							file: blob
 						});
 					} else {
 						that.newImg = dataURL;
@@ -547,41 +547,48 @@
 						callback(authorization);
 					}
 				});
+				let fileName = Date.parse(new Date()) / 1000 + ".png"
 				let opt = {
 					Bucket: cosConfig.Bucket,
 					Region: cosConfig.Region,
-					Key: configs.path + configs.photoType + Date.parse(new Date()) / 1000 + ".png",
-					FilePath: parms.file
+					Key: configs.path + configs.photoType + fileName
 				};
-				// cos.postObject(opt, (err, data) => {
+				var __callBack = function(err, data) {
+					if (err == null) {
+						// console.log(`%c 腾讯云上传(成功返回地址):${data.headers.Location}`, 'color:#1AAD19');
+						// upload_picture_list[j]['path_server'] = data.headers.Location;
+						let path_server = `https://${opt.Bucket}.cos.${opt.Region}.myqcloud.com/${opt.Key}`;
+						console.log("path_server:", path_server)
+						that.newImg = path_server;
+					} else {
+						console.log(`%c 腾讯云上传失败:${JSON.stringify(err)}`, 'color:#f00');
+						return;
+					}
+				}
+				// --- postObject -------
+				// cos.postObject({
+				// 	...opt,
+				// 	FilePath: parms.file
+				// }, (err, data) => {
 				// 	// console.log("err:", err)
 				// 	// console.log("data:", data)
-				// 	if (err == null) {
-				// 		// console.log(`%c 腾讯云上传(成功返回地址):${data.headers.Location}`, 'color:#1AAD19');
-				// 		// upload_picture_list[j]['path_server'] = data.headers.Location;
-				// 		let path_server = `https://${opt.Bucket}.cos.${opt.Region}.myqcloud.com/${opt.Key}`;
-				// 		console.log("path_server:", path_server)
-				// 		that.newImg = path_server;
-				// 	} else {
-				// 		console.log(`%c 腾讯云上传失败:${JSON.stringify(err)}`, 'color:#f00');
-				// 		return;
-				// 	}
+				// 	__callBack(err, data)
 				// });
-				// ----------
+				// --- putObject -------
 				console.log("parms.file:", parms.file)
 				cos.putObject({
-					Bucket: configs.Bucket,
-					Region: configs.cosConfig.Region,
-					Key: configs.path + configs.photoType + Date.parse(new Date()) / 1000 + ".png",
-					// StorageClass: 'STANDARD',
+					...opt,
+					StorageClass: 'STANDARD',
 					ContentType: 'image/png',
-					Body: parms.file, // 上传文件对象
+					Body: {...parms}, // 上传文件对象
 					onProgress: function(progressData) {
 						console.log(JSON.stringify(progressData));
 					}
 				}, function(err, data) {
+					__callBack(err, data)
 					console.log("putToCos:", err, data)
 				});
+
 			},
 			resetEditType() {
 				this.$refs.imageWrapper.editType = "";
