@@ -118,6 +118,7 @@
 
 <script>
 	var html2canvas = require("@/common/html2canvas.min.js");
+	//Canvas2Image https://blog.csdn.net/qinleo6/article/details/109725952
 	import Canvas2Image from '@/common/canvas2image'
 	import QRCode from "@/common/qrcode.js";
 	var cQRcode;
@@ -442,66 +443,44 @@
 				}).then((canvas) => {
 					that.loading = false;
 					uni.hideLoading()
-					//https://blog.csdn.net/qinleo6/article/details/109725952
-					//Canvas2Image
-					// var img = Canvas2Image.convertToImage(
-					// 	canvas,
-					// 	canvas.width,
-					// 	canvas.height
-					// );
-					// console.log("Toimg:", img)
-					// img.style.width = "100%";
-					// img.style.height = "100%";
-					// document.getElementById("ImgWrapper").appendChild(img);
-					//Canvas2Image
 					let dataURL = canvas.toDataURL("image/png", 0.6); //转成base64压缩 image/png  image/jpeg
 					let imgName = Date.parse(new Date()) + '.png';
-					// //再转成blob，再转成file文件流 20200609
-					var arr = dataURL.split(','),
-						mime = arr[0].match(/:(.*?);/)[1],
-						bstr = atob(arr[1]),
-						n = bstr.length,
-						u8arr = new Uint8Array(n);
-					while (n--) {
-						u8arr[n] = bstr.charCodeAt(n);
-					}
-					let blob = new Blob([u8arr], {
-						type: mime
-					});
-					let file = new window.File([blob], imgName, {
-						type: 'image/png'
-					});
-					let formData = new FormData();
-					formData.append("file", file);
-					// console.log(blob)
-					//end
 
 					that.poptype = "showNewImg";
 					that.$store.state.portrait = dataURL;
 					if (that.$store.state.systemInfo.platform == 'ios') {
 						// let Blob = that.dataURLtoBlob(dataURL);
+						// //dataURL转成blob，再转成file文件流
+						var arr = dataURL.split(','),
+							mime = arr[0].match(/:(.*?);/)[1],
+							bstr = atob(arr[1]),
+							n = bstr.length,
+							u8arr = new Uint8Array(n);
+						while (n--) {
+							u8arr[n] = bstr.charCodeAt(n);
+						}
+						let blob = new Blob([u8arr], {
+							type: mime
+						});
+						let file = new window.File([blob], imgName, {
+							type: 'image/png'
+						});
+						let formData = new FormData();
+						formData.append("file", file);
+						// console.log(blob)
+						//end
 						var _data = dataURL.replace(/^data:image\/\w+;base64,/, "");
 						//转换为Buffer对象
 						var buffer = Buffer.from(_data, 'base64');
 						that.putToCos({
-							buffer
+							file: buffer
 						});
 					} else {
 						that.newImg = dataURL;
 					}
 					// console.log("portrait:", that.$store.state.portrait)
 					// ----------
-					// setTimeout(() => {
-					// 	//that.uImageTap(); ///上传到COS
-					// }, 500);
-					// ----------
 					// that.newImg = "http://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/data/image_doc/1623056782061.png";
-					// ----------
-					// if (that.$store.state.systemInfo.platform == 'ios') {
-					// 	var reg = new RegExp("data:image/jpeg;base64,", "");
-					// 	dataURL = dataURL.replace(reg, "");
-					// 	console.log("iosaaa:", dataURL)
-					// }
 					// ----------
 					// base64ToPath(dataURL)
 					// 	.then(path => {
@@ -543,7 +522,8 @@
 			},
 			putToCos(parms = {}) {
 				/*
-					{blob, file, formData, path, buffer}
+					{file}
+					file【file, blob,formData, path, buffer】
 				*/
 				var that = this;
 				var configs = that.upImgCos;
@@ -571,7 +551,7 @@
 					Bucket: cosConfig.Bucket,
 					Region: cosConfig.Region,
 					Key: configs.path + configs.photoType + Date.parse(new Date()) / 1000 + ".png",
-					FilePath: parms.path
+					FilePath: parms.file
 				};
 				// cos.postObject(opt, (err, data) => {
 				// 	// console.log("err:", err)
@@ -588,14 +568,14 @@
 				// 	}
 				// });
 				// ----------
-				console.log("parms.buffer:", parms.buffer)
+				console.log("parms.file:", parms.file)
 				cos.putObject({
 					Bucket: configs.Bucket,
 					Region: configs.cosConfig.Region,
 					Key: configs.path + configs.photoType + Date.parse(new Date()) / 1000 + ".png",
 					// StorageClass: 'STANDARD',
 					ContentType: 'image/png',
-					Body: parms.buffer, // 上传文件对象
+					Body: parms.file, // 上传文件对象
 					onProgress: function(progressData) {
 						console.log(JSON.stringify(progressData));
 					}
