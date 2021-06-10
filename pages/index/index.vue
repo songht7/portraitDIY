@@ -449,7 +449,6 @@
 					that.poptype = "showNewImg";
 					that.$store.state.portrait = dataURL;
 					if (that.$store.state.systemInfo.platform == 'ios') {
-						// let Blob = that.dataURLtoBlob(dataURL);
 						// //dataURL转成blob，再转成file文件流
 						var arr = dataURL.split(','),
 							mime = arr[0].match(/:(.*?);/)[1],
@@ -473,7 +472,7 @@
 						//转换为Buffer对象
 						var buffer = Buffer.from(_data, 'base64');
 						that.putToCos({
-							file: blob
+							file: buffer
 						});
 					} else {
 						that.newImg = dataURL;
@@ -508,17 +507,14 @@
 				let __Blob = new Blob([u8arr], {
 					type: mime
 				});
-				let imgName = Date.parse(new Date()) + '.png';
-				that.blobToFile(__Blob, imgName);
-				// return __Blob;
+				return __Blob;
 			},
-			blobToFile: function(theBlob, fileName) { //将blob转换为file
+			blobToFile: function(theBlob) { //将blob转换为file
 				var that = this;
 				theBlob.lastModifiedDate = new Date();
-				theBlob.name = fileName;
-				console.log("blobToFile:", theBlob)
-				that.putToCos("", theBlob, "", "");
-				// return theBlob;
+				theBlob.name = Date.parse(new Date()) + '.png';
+				//that.putToCos({file:theBlob});
+				return theBlob;
 			},
 			putToCos(parms = {}) {
 				/*
