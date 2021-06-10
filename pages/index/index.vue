@@ -449,30 +449,8 @@
 					that.poptype = "showNewImg";
 					that.$store.state.portrait = dataURL;
 					if (that.$store.state.systemInfo.platform == 'ios') {
-						// //dataURL转成blob，再转成file文件流
-						var arr = dataURL.split(','),
-							mime = arr[0].match(/:(.*?);/)[1],
-							bstr = atob(arr[1]),
-							n = bstr.length,
-							u8arr = new Uint8Array(n);
-						while (n--) {
-							u8arr[n] = bstr.charCodeAt(n);
-						}
-						let blob = new Blob([u8arr], {
-							type: mime
-						});
-						let file = new window.File([blob], imgName, {
-							type: 'image/png'
-						});
-						let formData = new FormData();
-						formData.append("file", file);
-						// console.log(blob)
-						//end
-						var _data = dataURL.replace(/^data:image\/\w+;base64,/, "");
-						//转换为Buffer对象
-						var buffer = Buffer.from(_data, 'base64');
 						that.putToCos({
-							file: buffer
+							file: that.dataURLtoBlob(dataURL)
 						});
 					} else {
 						that.newImg = dataURL;
@@ -494,27 +472,25 @@
 					// ----------
 				});
 			},
-			dataURLtoBlob: function(dataurl) { //将base64转换为blob
-				var that = this;
-				var arr = dataurl.split(','),
-					mime = arr[0].match(/:(.*?);/)[1],
-					bstr = atob(arr[1]),
-					n = bstr.length,
-					u8arr = new Uint8Array(n);
-				while (n--) {
-					u8arr[n] = bstr.charCodeAt(n);
-				}
-				let __Blob = new Blob([u8arr], {
-					type: mime
-				});
-				return __Blob;
-			},
 			blobToFile: function(theBlob) { //将blob转换为file
 				var that = this;
 				theBlob.lastModifiedDate = new Date();
 				theBlob.name = Date.parse(new Date()) + '.png';
 				//that.putToCos({file:theBlob});
 				return theBlob;
+			},
+			dataURLtoBlob(dataurl) { //将base64转换为blob
+				var arr = dataurl.split(',');
+				var mime = arr[0].match(/:(.*?);/)[1];
+				var bstr = atob(arr[1]);
+				var n = bstr.length;
+				var u8arr = new Uint8Array(n);
+				while (n--) {
+					u8arr[n] = bstr.charCodeAt(n);
+				}
+				return new Blob([u8arr], {
+					type: mime
+				});
 			},
 			putToCos(parms = {}) {
 				/*
@@ -574,12 +550,20 @@
 				console.log("parms.file:", parms.file)
 				cos.putObject({
 					...opt,
-					StorageClass: 'STANDARD',
-					ContentType: 'image/png',
-					Body: {...parms}, // 上传文件对象
+					Body: parms.file,
+					onTaskReady: function(tid) {
+						console.log('onTaskReady', tid);
+					},
+					onTaskStart: function(info) {
+						console.log('onTaskStart', info);
+					},
 					onProgress: function(progressData) {
 						console.log(JSON.stringify(progressData));
-					}
+					},
+					Headers: {
+						// 万象持久化接口，上传时持久化
+						// 'Pic-Operations': '{"is_pic_info": 1, "rules": [{"fileid": "test.jpg", "rule": "imageMogr2/thumbnail/!50p"}]}'
+					},
 				}, function(err, data) {
 					__callBack(err, data)
 					console.log("putToCos:", err, data)
