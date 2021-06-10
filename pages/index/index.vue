@@ -70,7 +70,7 @@
 						</block>
 						<block v-if="eCode=='xinda2021'">
 							<view class="editBtn-confirm-box">
-								<view class="editBtn-confirm" @click="toImage">完成</view>
+								<view class="editBtn-confirm" @click="toImage">确认</view>
 							</view>
 						</block>
 					</view>
@@ -101,11 +101,12 @@
 			<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100' :bgStye="bgStye"
 				@hidePopup="togglePopup('')">
 				<view id="Generated">
-					<!-- <image class="imgs uni-newimg" v-if="newImg" :src='newImg.replace(/[\r\n]/g, "")' mode="aspectFit">
-					</image> -->
+					<!-- newImg.replace(/[\r\n]/g, "") -->
+					<!-- <image class="imgs uni-newimg" id="NewImg" v-if="newImg" :src='newImg' mode="aspectFit"></image> -->
 					<img class="imgs" id="NewImg" v-if="newImg" :src='newImg' alt="">
+					<!-- 	<view class="imgs" id="ImgWrapper"></view> -->
 					<view>长按保存图片</view>
-					<!-- <view>{{newImg.replace(/[\r\n]/g, "")}}</view> -->
+					<!-- <view>{{newImg}}</view> -->
 					<view class="gen-btns">
 						<view class="close-btn" @click="togglePopup('')">返回</view>
 					</view>
@@ -117,6 +118,7 @@
 
 <script>
 	var html2canvas = require("@/common/html2canvas.min.js");
+	import Canvas2Image from '@/common/canvas2image'
 	import QRCode from "@/common/qrcode.js";
 	var cQRcode;
 	import sunuiUpimgTencent from '@/components/sunui-upimg/sunui-upimg-tencent.vue';
@@ -154,6 +156,7 @@
 				eCode: "aleinqi", //后台对应企业code: aleinqi, xinda
 				base64Img: "",
 				tempFilePath: "",
+				loclPath: "", //转义后图的本地路径
 				cropFixed: true, //true false,
 				cropWidth: 250, //裁切比 宽
 				cropHeight: 250, //裁切比 高
@@ -440,65 +443,98 @@
 					that.loading = false;
 					uni.hideLoading()
 					//https://blog.csdn.net/qinleo6/article/details/109725952
-					let dataURL = canvas.toDataURL("image/png", 1); //转成base64压缩 image/png  image/jpeg
-					//再转成blob，再转成file文件流 20200609
-					var arr = dataURL.split(','),
-						mime = arr[0].match(/:(.*?);/)[1],
-						bstr = atob(arr[1]),
-						n = bstr.length,
-						u8arr = new Uint8Array(n);
-					while (n--) {
-						u8arr[n] = bstr.charCodeAt(n);
-					}
-					let blob = new Blob([u8arr], {
-						type: mime
-					});
-					let file = new window.File([blob], Date.parse(new Date()) + '.png', {
-						type: 'image/png'
-					});
-					let formData = new FormData();
-					formData.append("file", file);
-					console.log(blob)
-					//end
+					//Canvas2Image
+					// var img = Canvas2Image.convertToImage(
+					// 	canvas,
+					// 	canvas.width,
+					// 	canvas.height
+					// );
+					// console.log("Toimg:", img)
+					// img.style.width = "100%";
+					// img.style.height = "100%";
+					// document.getElementById("ImgWrapper").appendChild(img);
+					//Canvas2Image
+					let dataURL = canvas.toDataURL("image/png", 0.6); //转成base64压缩 image/png  image/jpeg
+					let imgName = Date.parse(new Date()) + '.png';
+					// // //再转成blob，再转成file文件流 20200609
+					// var arr = dataURL.split(','),
+					// 	mime = arr[0].match(/:(.*?);/)[1],
+					// 	bstr = atob(arr[1]),
+					// 	n = bstr.length,
+					// 	u8arr = new Uint8Array(n);
+					// while (n--) {
+					// 	u8arr[n] = bstr.charCodeAt(n);
+					// }
+					// let blob = new Blob([u8arr], {
+					// 	type: mime
+					// });
+					// let file = new window.File([blob], imgName, {
+					// 	type: 'image/png'
+					// });
+					// let formData = new FormData();
+					// formData.append("file", file);
+					// // console.log(blob)
+					// //end
+
 					that.poptype = "showNewImg";
-
-					// that.$store.state.portrait = blob;
-					console.log("portrait:", that.$store.state.portrait)
-					// setTimeout(() => {
-					// 	that.uImageTap(); ///上传到COS
-					// }, 500);
-					let ff = that.convertBase64UrlToBlob(dataURL);
-					console.log("ff:", ff, formData)
-					that.putToCos(file);
-					// that.newImg = "http://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/data/image_doc/1623056782061.png";
-
+					that.$store.state.portrait = dataURL;
+					if (that.$store.state.systemInfo.platform == 'ios') {
+						// let Blob = that.dataURLtoBlob(dataURL);
+					} else {}
 					that.newImg = dataURL;
+					// console.log("portrait:", that.$store.state.portrait)
+					// ----------
+					// setTimeout(() => {
+					// 	//that.uImageTap(); ///上传到COS
+					// }, 500);
+					// ----------
+					// that.newImg = "http://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/data/image_doc/1623056782061.png";
+					// ----------
+					// if (that.$store.state.systemInfo.platform == 'ios') {
+					// 	var reg = new RegExp("data:image/jpeg;base64,", "");
+					// 	dataURL = dataURL.replace(reg, "");
+					// 	console.log("iosaaa:", dataURL)
+					// }
+					// ----------
 					// base64ToPath(dataURL)
 					// 	.then(path => {
-					// 		console.log("base64ToPath：：", path)
-					// 		that.newImg = path;
+					// 		console.log(path)
+					// 		that.loclPath = path;
+					// 		that.putToCos(blob, file, formData, path);
 					// 	})
 					// 	.catch(error => {
-					// 		console.error("base64ToPath：：", error)
+					// 		console.error(error)
 					// 		that.newImg = dataURL;
 					// 	})
+					// ----------
 				});
 			},
-			convertBase64UrlToBlob(urlData) {
-				var bytes = window.atob(urlData.split(',')[1]); //去掉url的头，并转换为byte
-
-				//处理异常,将ascii码小于0的转换为大于0
-				var ab = new ArrayBuffer(bytes.length);
-				var ia = new Uint8Array(ab);
-				for (var i = 0; i < bytes.length; i++) {
-					ia[i] = bytes.charCodeAt(i);
+			dataURLtoBlob: function(dataurl) { //将base64转换为blob
+				var that = this;
+				var arr = dataurl.split(','),
+					mime = arr[0].match(/:(.*?);/)[1],
+					bstr = atob(arr[1]),
+					n = bstr.length,
+					u8arr = new Uint8Array(n);
+				while (n--) {
+					u8arr[n] = bstr.charCodeAt(n);
 				}
-
-				return new Blob([ab], {
-					type: 'image/png'
+				let __Blob = new Blob([u8arr], {
+					type: mime
 				});
+				let imgName = Date.parse(new Date()) + '.png';
+				that.blobToFile(__Blob, imgName);
+				// return __Blob;
 			},
-			putToCos(file) {
+			blobToFile: function(theBlob, fileName) { //将blob转换为file
+				var that = this;
+				theBlob.lastModifiedDate = new Date();
+				theBlob.name = fileName;
+				console.log("blobToFile:", theBlob)
+				that.putToCos("", theBlob, "", "");
+				// return theBlob;
+			},
+			putToCos(blob, file, formData, path) {
 				var that = this;
 				var configs = that.upImgCos;
 
@@ -525,7 +561,7 @@
 					Bucket: cosConfig.Bucket,
 					Region: cosConfig.Region,
 					Key: configs.path + configs.photoType + Date.parse(new Date()) / 1000 + ".png",
-					FilePath: file
+					FilePath: path
 				};
 				// cos.postObject(opt, (err, data) => {
 				// 	// console.log("err:", err)
@@ -535,6 +571,7 @@
 				// 		// upload_picture_list[j]['path_server'] = data.headers.Location;
 				// 		let path_server = `https://${opt.Bucket}.cos.${opt.Region}.myqcloud.com/${opt.Key}`;
 				// 		console.log("path_server:", path_server)
+				// 		that.newImg = path_server;
 				// 	} else {
 				// 		console.log(`%c 腾讯云上传失败:${JSON.stringify(err)}`, 'color:#f00');
 				// 		return;
@@ -543,17 +580,13 @@
 				// ----------
 				cos.putObject({
 					Bucket: configs.Bucket,
-					/* 必须 */
 					Region: configs.cosConfig.Region,
-					/* 存储桶所在地域，必须字段 */
 					Key: configs.path + configs.photoType + Date.parse(new Date()) / 1000 + ".png",
-					/* 必须 */
-					ContentType: "image/png",
+					StorageClass: 'STANDARD',
 					Body: file, // 上传文件对象
 					ServerSideEncryption: 'AES-256',
-					taskId:"",
 					onProgress: function(progressData) {
-						//console.log(JSON.stringify(progressData));
+						console.log(JSON.stringify(progressData));
 					}
 				}, function(err, data) {
 					console.log("putToCos:", err, data)

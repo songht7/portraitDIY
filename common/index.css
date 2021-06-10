@@ -402,7 +402,9 @@ page {
 	height: 100%;
 	width: 35%;
 	padding: 20upx 0;
-	text-indent: -99999999px;
+	color: #007bc8;
+	font-weight: 600;
+	/* text-indent: -99999999px; */
 }
 
 .xinda2021 .ctgs {
