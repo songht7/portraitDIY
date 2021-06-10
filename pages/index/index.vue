@@ -106,7 +106,7 @@
 					<img class="imgs" id="NewImg" v-if="newImg" :src='newImg' alt="">
 					<!-- 	<view class="imgs" id="ImgWrapper"></view> -->
 					<view>长按保存图片</view>
-					<!-- <view>{{newImg}}</view> -->
+					<view>{{newImg}}</view>
 					<view class="gen-btns">
 						<view class="close-btn" @click="togglePopup('')">返回</view>
 					</view>
@@ -519,11 +519,12 @@
 						callback(authorization);
 					}
 				});
-				let fileName = Date.parse(new Date()) / 1000 + ".png"
+				let fileName = Date.parse(new Date()) / 1000 + ".png";
+				let platform = that.$store.state.systemInfo.platform;
 				let opt = {
 					Bucket: cosConfig.Bucket,
 					Region: cosConfig.Region,
-					Key: configs.path + configs.photoType + fileName
+					Key: configs.path + configs.photoType + '-' + platform + '-' + fileName
 				};
 				var __callBack = function(err, data) {
 					if (err == null) {
@@ -562,7 +563,7 @@
 					},
 					Headers: {
 						// 万象持久化接口，上传时持久化
-						// 'Pic-Operations': '{"is_pic_info": 1, "rules": [{"fileid": "test.jpg", "rule": "imageMogr2/thumbnail/!50p"}]}'
+						'Pic-Operations': '{"is_pic_info": 1, "rules": [{"fileid": "test.jpg", "rule": "imageMogr2/thumbnail/!50p"}]}'
 					},
 				}, function(err, data) {
 					__callBack(err, data)
