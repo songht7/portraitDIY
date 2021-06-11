@@ -4,6 +4,8 @@
  * tm: theme主题 =1(1:1) =2(2:3)
  * ib: imgBgEdit编辑照片是否可编辑（放大缩小旋转），默认false,1=true
  * hp: homePage是否有首页（添加图片），默认false,1=true
+ * showTst: 图片生成后的地址显示 默认false
+ * qrtst：二维码调试 默认false
  * ********************************************************
  * 信达2020 ?eCode=xinda&tm=1
  * 信达2021 ?eCode=xinda2021&tm=2&ib=1&hp=1

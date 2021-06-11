@@ -106,7 +106,10 @@
 					<img class="imgs" id="NewImg" v-if="newImg" :src='newImg' alt="">
 					<!-- 	<view class="imgs" id="ImgWrapper"></view> -->
 					<view>长按保存图片</view>
-					<view>{{newImg}}</view>
+					<block class="showTst" v-if='showTst'>
+						<!-- <view>{{newImg}}</view> -->
+						<view><textarea class="textarea" v-model="base64Head"></textarea></view>
+					</block>
 					<view class="gen-btns">
 						<view class="close-btn" @click="togglePopup('')">返回</view>
 					</view>
@@ -127,6 +130,7 @@
 	import uniPopup from '@/components/uni-popup.vue';
 	import ImageCropper from "@/components/invinbg-image-cropper/invinbg-image-cropper.vue";
 	let COS = require('@/components/sunui-upimg/tencent-cos/cos-wx-sdk-v5.js');
+	import bbb from '@/common/bbb.js';
 	import {
 		Base64
 	} from 'js-base64';
@@ -154,8 +158,10 @@
 				wmSize: "0.5", //水印缩放大小
 				QRColor: 0, //水印前景色
 				qrtst: false, //水印测试
+				showTst: false, //图片链接显示
 				eCode: "aleinqi", //后台对应企业code: aleinqi, xinda
 				base64Img: "",
+				base64Head: "", //合成头像的64图
 				tempFilePath: "",
 				loclPath: "", //转义后图的本地路径
 				cropFixed: true, //true false,
@@ -237,6 +243,7 @@
 			var _company = option.company ? option.company : "";
 			that.imgBgEdit = option.ib == 1 ? true : false;
 			that.homePage = option.hp == 1 ? true : false;
+			that.showTst = option.showTst ? option.showTst : false;
 			that.hasHome = that.homePage;
 			//that.waterState = ws;//url判断是否显示QR 现接接口
 			that.qrtst = _qrtst; //qr测试
@@ -310,8 +317,13 @@
 									}
 									that.imgList[imgKey] = [...cList, ..._list];
 								}
+								if (imgKey == 'box' && that.customStyle == "xinda2021") {
+									//相框默认第一个
+									that.frame = that.imgList[imgKey][0]['original_src'];
+								}
+								// console.log(imgKey);
 								// console.log('------imgList-------');
-								console.log(that.imgList);
+								console.log("that.imgList：", that.imgList);
 							}
 						}
 					};
@@ -411,7 +423,7 @@
 				var that = this;
 				that.maskImg = [];
 				if (that.eCode == 'xinda2021') {
-					that.frame = "/static/xinda/logo-box2.png"
+					// that.frame = "/static/xinda/logo-box2.png"
 				} else {
 					that.frame = "";
 				}
@@ -449,10 +461,19 @@
 					that.poptype = "showNewImg";
 					that.$store.state.portrait = dataURL;
 					if (that.$store.state.systemInfo.platform == 'ios') {
-						that.putToCos({
-							file: that.dataURLtoBlob(dataURL)
-						});
+						let __dataURL = canvas.toDataURL(); //转成base64压缩 image/png  image/jpeg
+						that.base64Head = __dataURL;
+						if (that.showTst) {
+							that.putToCos({
+								file: that.dataURLtoBlob(bbb)
+							});
+						} else {
+							that.putToCos({
+								file: that.dataURLtoBlob(__dataURL)
+							});
+						}
 					} else {
+						that.base64Head = dataURL;
 						that.newImg = dataURL;
 					}
 					// console.log("portrait:", that.$store.state.portrait)
