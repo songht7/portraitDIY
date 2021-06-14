@@ -36,7 +36,7 @@ var api = {
 			// "Bucket": 'plbs-test-1257286922',
 			// "Region": 'ap-shanghai',
 			// "SecretId": 'AKIDXt0yjgKr41jBMK7YrunRpztscbJe4W2J',
-			// "SecretKey": 'dERJOGpTMlZXYVhQRHdVcnlvR2JsejJaOEIxazFRdEY'
+			// "SecretKey": 'dERJOGpTMlZXYVhQRHdVcnlvR2JsejJaOEIxazFRdEY'//EBsJ2WmnbgW6X3KL5Zqrc9j49G8oNgkk
 			"Bucket": 'jobpassport-1259247972',
 			"Region": 'ap-shanghai',
 			"SecretId": 'AKIDRbLQM4DqRnKgpzR1NlEUWP9jD7pJt1K3',
