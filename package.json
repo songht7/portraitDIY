@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "cos-js-sdk-v5": "^1.2.12"
+    "cos-js-sdk-v5": "^1.2.12",
+    "html2canvas": "^1.0.0-rc.7"
   }
 }
