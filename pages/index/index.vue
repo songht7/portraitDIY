@@ -300,15 +300,15 @@
 		},
 		onReady() {
 			var that = this;
-			this.$nextTick(() => {
-				uni.createSelectorQuery().select(".portrait-box").boundingClientRect(data => {
-					this.canvasWidth = data.width
-					this.canvasHeight = data.height
-					let ptx = uni.createCanvasContext('mycanvas');
-					// ptx.getContext('2d');
-					that.PortraitCanvas = ptx;
-				}).exec()
-			})
+			// this.$nextTick(() => {
+			// 	uni.createSelectorQuery().select(".portrait-box").boundingClientRect(data => {
+			// 		this.canvasWidth = data.width
+			// 		this.canvasHeight = data.height
+			// 		let ptx = uni.createCanvasContext('mycanvas');
+			// 		// ptx.getContext('2d');
+			// 		that.PortraitCanvas = ptx;
+			// 	}).exec()
+			// })
 		},
 		components: {
 			sunuiUpimgTencent,
