@@ -15,8 +15,12 @@
 				</block>
 				<view class="p-boxxx">
 					<view class="portrait-box" v-show="!selectImg">
-						<imageWrapper ref="imageWrapper" :imgBg="imgBg" :imgBgEdit="imgBgEdit" :waterState="waterState"
-							:watermark="watermark" :wmSize="wmSize" :maskImg="maskImg" :frame="frame">
+						<canvas v-show="!cvPortrait" canvas-id="mycanvas" class="mycanvas" :data-width="canvasWidth"
+							:data-height="canvasHeight"
+							:style="{width:canvasWidth+'px',height:canvasHeight+'px'}"></canvas>
+						<imageWrapper v-show="cvPortrait" ref="imageWrapper" :imgBg="imgBg" :imgBgEdit="imgBgEdit"
+							:waterState="waterState" :watermark="watermark" :wmSize="wmSize" :maskImg="maskImg"
+							:frame="frame">
 							<view class="text" v-if="slots">
 								头像
 							</view>
@@ -71,6 +75,7 @@
 						<block v-if="eCode=='xinda2021'">
 							<view class="editBtn-confirm-box">
 								<view class="editBtn-confirm" @click="toImage">确认</view>
+								<!-- <view class="editBtn-confirm" @click="cvImage">确认</view> -->
 							</view>
 						</block>
 					</view>
@@ -162,6 +167,10 @@
 				eCode: "aleinqi", //后台对应企业code: aleinqi, xinda
 				base64Img: "",
 				base64Head: "", //合成头像的64图
+				cvPortrait: true, //ios canvas绘画
+				canvasWidth: "", //ios canvas绘画
+				canvasHeight: "", //ios canvas绘画
+				PortraitCanvas: "",
 				tempFilePath: "",
 				loclPath: "", //转义后图的本地路径
 				cropFixed: true, //true false,
@@ -171,7 +180,8 @@
 					"src": "/static/default.jpg",
 					"rotate": 0,
 					"scale": 2.5,
-					"delt": 0
+					"delt": 0,
+					"position": {}
 				},
 				imgBgEdit: false, //背景图是否可编辑
 				maskImg: [],
@@ -290,6 +300,15 @@
 		},
 		onReady() {
 			var that = this;
+			this.$nextTick(() => {
+				uni.createSelectorQuery().select(".portrait-box").boundingClientRect(data => {
+					this.canvasWidth = data.width
+					this.canvasHeight = data.height
+					let ptx = uni.createCanvasContext('mycanvas');
+					// ptx.getContext('2d');
+					that.PortraitCanvas = ptx;
+				}).exec()
+			})
 		},
 		components: {
 			sunuiUpimgTencent,
@@ -430,6 +449,15 @@
 				if (that.hasHome) {
 					that.homePage = true;
 				}
+			},
+			cvImage() {
+				let that = this;
+				var ctx = that.PortraitCanvas;
+				console.log("================cvImagecvImagecvImage==================");
+				// let src = 'http://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/data/image_doc/1623207305713.png';
+				let src = that.imgBg.src;
+				ctx.drawImage(src, that.imgBg.position.x, that.imgBg.position.y, 150, 100)
+				ctx.draw()
 			},
 			async toImage() {
 				//使用html2canvas

@@ -67,6 +67,13 @@ page {
 	background-image: linear-gradient(#FFFFFF, #FFFFFF);
 }
 
+#mycanvas {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	
+}
+
 .portrait-main {
 	min-height: calc(100% - 690upx);
 	background-image: linear-gradient(#151c26, #242b3b);
@@ -75,7 +82,8 @@ page {
 .imgs {
 	width: 100%;
 }
-.uni-newimg{
+
+.uni-newimg {
 	height: 80%;
 }
 
