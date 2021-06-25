@@ -1,0 +1,113 @@
+.page{
+	.lucknumb{
+		border: 1px solid #999;
+		border-radius: 100%;
+		width: 50upx;
+		height: 50upx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		align-content: center;
+		margin: 0 10upx 10upx 0;
+	}
+	.common-btn{
+		margin: 30upx;
+		height: 50upx;
+		width: fit-content;
+		line-height: 50upx;
+		padding: 0 20upx;
+		border-radius: 8px;
+		border: 1px solid #989FB3;
+		font-size: 24upx;
+		font-weight: 400;
+		color: #575B66;
+		display: flex;
+		align-items: center;
+	}
+	.lottery-main{
+		display: flex;
+		margin-bottom: 20rpx;
+		align-items: center;
+		image{
+			width: 80rpx;
+			height: 80rpx;
+			border-radius: 50%;
+		}
+		.name{
+			margin: 0 20rpx;
+		}
+	}
+	.lottery-popup{
+		.lotterying-title {
+			position: relative;
+			bottom: -128upx;
+			text-align: center;
+			z-index: 1;
+			font-size: 32upx;
+			font-family: PingFang-SC-Bold, PingFang-SC;
+			font-weight: bold;
+			color: #FFFFFF;
+			line-height: 32upx;
+			text-shadow: 0px 2upx 2upx rgba(224, 99, 35, 0.5);
+		}
+		.lotterying-head {
+			width: 408upx;
+			height: 93upx;
+			position: relative;
+			bottom: -64upx;
+			left: 50%;
+			transform: translate(-50%);
+		}
+		.lotterying {
+			width: 590upx;
+			padding: 100upx 0 36upx;
+			background: #FEFCED;
+			border-radius: 30upx;
+			border: 20upx solid #FFE499;
+		
+			.see-winner-footer {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+		
+			.lotterying-close-icon {
+				color: rgba(255, 228, 153, 1);
+				position: absolute;
+				top: 160upx;
+				right: 40upx;
+			}
+		
+			.see-winner-btn {
+				margin: 0 auto;
+				width: 250upx;
+				height: 72upx;
+				border-radius: 40upx;
+				border: 2upx solid #FFAA1D;
+				font-size: 26upx;
+				font-family: PingFangSC-Regular, PingFang SC;
+				font-weight: 400;
+				color: #FFAA1D;
+				text-align: center;
+				line-height: 72upx;
+			}
+		
+			.lotterying-prize-winner {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-wrap: wrap;
+				width: calc(100% + 44upx);
+		
+				image {
+					margin-right: 44upx;
+					margin-bottom: 44upx;
+					width: 90upx;
+					height: 90upx;
+					border: 4upx solid #FFF1CC;
+					border-radius: 50%;
+				}
+			}
+		}
+	}
+}

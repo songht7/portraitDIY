@@ -23,6 +23,11 @@
 				}
 			}
 		}, {
+			"path": "pages/lucky/index",
+			"style": {
+				"navigationBarTitleText": "抽奖"
+			}
+		}, {
 			"path": "pages/index/lucky",
 			"style": {
 				"navigationBarTitleText": "瑞彼得2021年会抽奖活动",
