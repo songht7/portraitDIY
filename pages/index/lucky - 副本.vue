@@ -10,7 +10,7 @@
 				<view class="numb" @click="start(1)">
 					开始
 				</view>
-				<block v-for="(obj,k) in numb" :key="k" v-show="false">
+				<block v-for="(obj,k) in numb" :key="k"  v-show="false">
 					<view class="numb">
 						{{obj}}
 					</view>
@@ -64,7 +64,7 @@
 			that.getAction();
 			that.getLucked();
 			that.getmyLuck();
-			// that.LuckyDraw(1);
+			that.LuckyDraw(1);
 		},
 		onReady() {
 			var that = this;
@@ -78,15 +78,8 @@
 					key: 'rbdAction',
 					success: function(res) {
 						that.lucky = parseInt(res.data.lucky);
-						let leng = parseInt(res.data.luckyCount)
-						that.luckyCount = leng;
-						let pleng = parseInt(res.data.pCount)
-						that.pCount = pleng;
-						var json = [];
-						for (var i = 0; i < pleng; i++) {
-							json.push(i + 1)
-						}
-						console.log("json::", json)
+						that.luckyCount = parseInt(res.data.luckyCount);
+						that.pCount = parseInt(res.data.pCount);
 					}
 				});
 			},
@@ -401,7 +394,7 @@
 				let maxNum = that.pCount;
 				let minNum = that.minNum;
 				r0 = setInterval(() => {
-					// let r = (minNum, maxNum) => (Math.random() * (max - min + 1) | 0) + min;
+					// let r = parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
 					let r = (minAdd + 1) <= maxNum ? (minAdd + 1) : 1;
 					if (!that.StorageLucked.includes(r)) {
 						// console.log(minNum, maxNum, r)
