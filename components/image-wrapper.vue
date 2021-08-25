@@ -228,7 +228,7 @@
 				// console.log(e)
 				let type = e.currentTarget.dataset.type;
 				let key = e.currentTarget.dataset.key;
-				this.setPosition(type, key, e.detail)
+				// this.setPosition(type, key, e.detail)
 			},
 			setPosition(type, key, dtl) {
 				let that = this;
