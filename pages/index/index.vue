@@ -487,9 +487,9 @@
 							// that.base64Head = dataURL;
 							// that.newImg = dataURL;
 						}
-							that.base64Head = dataURL;
-							that.newImg = dataURL;
-							
+						that.base64Head = dataURL;
+						that.newImg = dataURL;
+
 						// console.log("portrait:", that.$store.state.portrait)
 						// ----------
 						// that.newImg = "http://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/data/image_doc/1623056782061.png";
