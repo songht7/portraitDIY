@@ -71,7 +71,7 @@ page {
 	position: absolute;
 	height: 100%;
 	width: 100%;
-	
+
 }
 
 .portrait-main {
@@ -363,6 +363,14 @@ page {
 		width: 95%;
 		height: 95%;
 	} */
+
+
+/*theme3 2:3 ios：缩小*/
+.theme-2.t2ios .p-boxxx {
+	/* width: 50%;
+	left: 25%; */
+	/* transform: scale(1.8) */
+}
 
 /*xinda2021*/
 .xinda2021 .home-box {

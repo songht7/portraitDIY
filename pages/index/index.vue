@@ -1,5 +1,6 @@
 <template>
-	<view :class="['content',theme,customStyle]" :style="{'height':homePage?'100%':'auto'}">
+	<view :class="['content',theme,customStyle,$store.state.systemInfo.platform == 'ios'?'t2ios':'']"
+		:style="{'height':homePage?'100%':'auto'}">
 		<view class="uni-padding-wrap uni-common-mt">
 			<block v-if="homePage">
 				<view class="home-box">
@@ -106,8 +107,9 @@
 					<img class="imgs" id="NewImg" v-if="newImg" :src='newImg' alt="">
 					<!-- 	<view class="imgs" id="ImgWrapper"></view> -->
 					<view>长按保存图片</view>
+					<view class="imgErr" v-if="imgErr">{{imgErr}}</view>
 					<block class="showTst" v-if='showTst'>
-						<!-- <view>{{newImg}}</view> -->
+						<view>{{newImg}}</view>
 						<view><textarea class="textarea" v-model="base64Head"></textarea></view>
 					</block>
 					<view class="gen-btns">
@@ -120,7 +122,7 @@
 </template>
 
 <script>
-	// var html2canvas = require("@/common/html2canvas.min.js");
+	// var html2canvas = require("@/common/html2canvas-1.3.2.js");
 	import html2canvas from 'html2canvas'
 	//Canvas2Image https://blog.csdn.net/qinleo6/article/details/109725952
 	import Canvas2Image from '@/common/canvas2image'
@@ -167,6 +169,7 @@
 				cropFixed: true, //true false,
 				cropWidth: 250, //裁切比 宽
 				cropHeight: 250, //裁切比 高
+				imgErr: "", //图片生成错误信息
 				imgBg: {
 					"src": "/static/default.jpg",
 					"rotate": 0,
@@ -446,53 +449,67 @@
 				uni.showLoading({
 					title: "正在生成..."
 				})
-				html2canvas(obj, {
+				var __platform = that.$store.state.systemInfo.platform;
+				let opts = {
 					backgroundColor: "transparent",
 					useCORS: true, //网络图片
 					allowTaint: true,
 					tainttest: true,
+					scale: __platform == 'ios' ? window.devicePixelRatio / 2 : window.devicePixelRatio,
 					width: width,
 					height: height
-				}).then((canvas) => {
-					that.loading = false;
-					uni.hideLoading()
-					let dataURL = canvas.toDataURL("image/png", 0.6); //转成base64压缩 image/png  image/jpeg
-					let imgName = Date.parse(new Date()) + '.png';
+				};
+				(window.html2canvas || html2canvas)(obj, opts)
+				// html2canvas(obj, opts)
+				.then(canvas => {
+						that.loading = false;
+						uni.hideLoading()
+						let dataURL = canvas.toDataURL("image/png", 0.6); //转成base64压缩 image/png  image/jpeg
+						let imgName = Date.parse(new Date()) + '.png';
 
-					that.poptype = "showNewImg";
-					that.$store.state.portrait = dataURL;
-					if (that.$store.state.systemInfo.platform == 'ios') {
-						let __dataURL = canvas.toDataURL(); //转成base64压缩 image/png  image/jpeg
-						that.base64Head = __dataURL;
-						if (that.showTst) {
-							that.putToCos({
-								file: that.dataURLtoBlob(bbb)
-							});
+						that.poptype = "showNewImg";
+						that.$store.state.portrait = dataURL;
+						if (__platform == 'ios') {
+							dataURL = canvas.toDataURL("image/jpeg", 0.8); //转成base64压缩 image/png  image/jpeg
+							// that.base64Head = dataURL;
+							// if (that.showTst) {
+							// 	that.putToCos({
+							// 		//file: that.dataURLtoBlob(bbb)
+							// 		file: that.dataURLtoBlob(dataURL)
+							// 	});
+							// } else {
+							// 	that.putToCos({
+							// 		file: that.dataURLtoBlob(dataURL)
+							// 	});
+							// }
 						} else {
-							that.putToCos({
-								file: that.dataURLtoBlob(__dataURL)
-							});
+							// let u=''
+							// that.base64Head = dataURL;
+							// that.newImg = dataURL;
 						}
-					} else {
-						that.base64Head = dataURL;
-						that.newImg = dataURL;
-					}
-					// console.log("portrait:", that.$store.state.portrait)
-					// ----------
-					// that.newImg = "http://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/data/image_doc/1623056782061.png";
-					// ----------
-					// base64ToPath(dataURL)
-					// 	.then(path => {
-					// 		console.log(path)
-					// 		that.loclPath = path;
-					// 		that.putToCos({blob, file, formData, path});
-					// 	})
-					// 	.catch(error => {
-					// 		console.error(error)
-					// 		that.newImg = dataURL;
-					// 	})
-					// ----------
-				});
+							that.base64Head = dataURL;
+							that.newImg = dataURL;
+							
+						// console.log("portrait:", that.$store.state.portrait)
+						// ----------
+						// that.newImg = "http://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/data/image_doc/1623056782061.png";
+						// ----------
+						// base64ToPath(dataURL)
+						// 	.then(path => {
+						// 		console.log(path)
+						// 		that.loclPath = path;
+						// 		that.putToCos({blob, file, formData, path});
+						// 	})
+						// 	.catch(error => {
+						// 		console.error(error)
+						// 		that.newImg = dataURL;
+						// 	})
+						// ----------
+					})
+					.catch(err => {
+						// do sth
+						that.imgErr = err;
+					});
 			},
 			blobToFile: function(theBlob) { //将blob转换为file
 				var that = this;
@@ -541,7 +558,9 @@
 						callback(authorization);
 					}
 				});
-				let fileName = Date.parse(new Date()) / 1000 + ".png";
+				var __platform = that.$store.state.systemInfo.platform;
+				let fileName = Date.parse(new Date()) / 1000 + (__platform == 'ios' ? '.jpg' : '.png');
+				// let fileName = Date.parse(new Date()) / 1000 + '.png';
 				let platform = that.$store.state.systemInfo.platform;
 				let opt = {
 					Bucket: cosConfig.Bucket,
